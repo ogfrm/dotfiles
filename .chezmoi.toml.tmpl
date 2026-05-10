@@ -1,6 +1,8 @@
+{{- $email := promptStringOnce . "email" "Email address" -}}
+# chezmoi execute-template --init --promptString "Email address=me@home.org" < ~/.local/share/chezmoi/.chezmoi.toml.tmpl
 [git]
     # Whenever a change is made to your source directory, chezmoi will commit the changes with an automatically-generated commit message (if autoCommit is true) and push them to your repo (if autoPush is true). autoPush implies autoCommit,
     autoCommit = true
     autoPush = true
-    # commitMessageTemplate = "{{ promptString \"Commit message\" }}"
-
+[data]
+    email = {{ $email | quote }}
