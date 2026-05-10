@@ -1,0 +1,16 @@
+# you can use template here
+README.md
+
+{{- if ( env "SHELL" | ne "/bin/bash" ) }}
+# not running Bash, so ignore Bash profile
+.bash_profile
+{{- else }}
+# using Bash, so not ignoring Bash profile
+{{- end }}
+
+{{- if ( env "SHELL" | ne "/bin/zsh" ) }}
+# not running Zsh, so ignore Zsh environment
+.zshenv
+{{- else }}
+# using Zsh, so not ignoring Zsh environment
+{{- end }}

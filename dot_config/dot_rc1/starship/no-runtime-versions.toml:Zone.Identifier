@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://starship.rs/presets/no-runtimes.html
+HostUrl=https://starship.rs/presets/toml/no-runtime-versions.toml

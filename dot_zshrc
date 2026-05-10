@@ -1,0 +1,35 @@
+[[ $- != *i* ]] && return # If not running interactively, don't do anything
+
+#https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+
+setopt AUTO_PUSHD           # Push the current directory visited on the stack. makes the standard cd command act like pushd
+setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
+setopt PUSHD_SILENT         # Do not print the directory stack after pushd or popd.
+
+alias history='history 1'
+alias h='\history -i 1  '  #start from 1 with time
+alias ep="$EDITOR $HOME/.zshrc"
+alias reload="source ~/.zshrc"
+
+# directory pushd  history with d see and jump back with 1-9 or 1-100
+alias d='dirs -v'
+for index ({1..9}) alias "$index"="cd +${index}"; unset index
+
+# Command line head / tail shortcuts
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+alias -g M="| most"
+alias -g LL="2>&1 | less"
+alias -g CA="2>&1 | cat -A"
+alias -g NE="2> /dev/null"
+alias -g NUL="> /dev/null 2>&1"
+alias -g P="2>&1| pygmentize -l pytb"
+
+
+if [[ $- =~ "i" ]]; then
+    for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
+	for f in ~/.config/.rc/zsh_*.zsh; do  source "$f"; done
+    for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
+fi
