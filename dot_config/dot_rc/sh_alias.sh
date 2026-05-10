@@ -37,7 +37,6 @@ if [ -x "$(command -v eza)" ]; then
   alias ldir="eza -aDl"  # Tree listing
   alias lx="eza -al -s extension"  # sort by extension
   alias lk="eza -al -s size"  # sort by extension
-  alias lk="eza -al -s size"  # sort by extension
         # name, size, extension, modified, changed, accessed, created, inode, type, none
 else
 #   alias ls='ls --color=always --time-style=+"%Y-%m-%d %H:%M:%S"' # add colors and file type extensions
@@ -71,5 +70,6 @@ path() {
 }
 
 ########################### CHEZMOI
+alias cz="chezmoi"
 alias czar="chezmoi apply && reload"
-alias czpush="chezmoi apply && reload"
+alias czpush="chezmoi git add . && chezmoi git -- commit -m 'test' && chezmoi git push"
