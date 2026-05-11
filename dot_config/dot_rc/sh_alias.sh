@@ -114,6 +114,22 @@ alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '   #recursive sea
     # -n, --line-number # -C, --context=NUM
 unset GREP_OPTIONS
 
+########################### CAT
+# If batcat exists
+if command -v batcat >/dev/null 2>&1; then
+    alias bat='batcat --color=always'
+    alias cat='bat'
+    alias catt='bat --paging=never --decorations=never'
+# Else if bat exists
+elif command -v bat >/dev/null 2>&1; then
+    alias bat='bat --color=always'
+    alias cat='bat'
+    alias catt='bat --paging=never --decorations=never'
+fi
+batcat --paging=never .bashrc
+alias fzfp='fzf --preview "cat {}"'
+alias fzfch='find ~/.config/cheat/cheatsheets/personal | sort | fzf --preview "cat --language bash {}"'
+
 
 ########################### CHEZMOI
 alias cz="chezmoi"

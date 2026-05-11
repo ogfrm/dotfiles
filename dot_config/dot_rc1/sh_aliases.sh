@@ -139,15 +139,6 @@ ftext() {
 
 alias fzfp='fzf --preview "cat {}"'
 alias fzfch='find ~/.config/cheat/cheatsheets/personal | sort | fzf --preview "cat {}"'
-if [ -x "$(command -v bat)" ]; then
-  alias cat='bat --color=always'
-  alias fzfp='fzf --preview "bat --color=always {}"'
-  alias fzfch='find ~/.config/cheat/cheatsheets/personal | sort | fzf --preview "bat --color=always --language bash {}"'
-elif [ -x "$(command -v batcat)" ]; then
-  alias cat='batcat --color=always'
-  alias fzfp='fzf --preview "batcat --color=always {}"'
-  alias fzfch='find ~/.config/cheat/cheatsheets/personal | sort | fzf --preview "batcat --color=always --language bash {}"'
-fi
 ch() {
   curl cheat.sh/$1
 }
