@@ -1,3 +1,14 @@
+# Add /home/$USER/bin to $PATH
+case :$PATH: in
+	*:/home/$USER/bin:*) ;;
+	*) PATH=/home/$USER/bin:$PATH ;;
+esac
+
+# Add /home/$USER/.local/bin to $PATH
+case :$PATH: in
+	*:/home/$USER/.local/bin:*) ;;
+	*) PATH=/home/$USER/.local/bin:$PATH ;;
+esac
 
 #######################################################
 # EXPORTS
@@ -30,14 +41,3 @@ export LESS_TERMCAP_se=$'\E[0m'         # se,rmso End standout  $(printf "\\e[0m
 export MANPAGER='less +Gg'
 export GROFF_NO_SGR=1
 
-# Add /home/$USER/bin to $PATH
-case :$PATH: in
-	*:/home/$USER/bin:*) ;;
-	*) PATH=/home/$USER/bin:$PATH ;;
-esac
-
-# Add /home/$USER/.local/bin to $PATH
-case :$PATH: in
-	*:/home/$USER/.local/bin:*) ;;
-	*) PATH=/home/$USER/.local/bin:$PATH ;;
-esac

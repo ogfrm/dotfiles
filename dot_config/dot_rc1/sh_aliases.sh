@@ -156,22 +156,7 @@ ch() {
 # Count all files (recursively) in the current folder
 alias countfiles="for t in files links directories; do echo \`find . -type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
 
-########################### GREP  # https://askubuntu.com/questions/1042234/modifying-the-color-of-grep
-export GREP_COLORS='mt=3;33'
 
-[ ! -f "/etc/alpine-release" ]; export GREP_OPTIONS='--color=auto' #deprecated
-if command -v rg &> /dev/null; then  # Check if ripgrep is installed
-    alias grep='rg' # Alias grep to rg if ripgrep is installed
-else
-    alias grep="/usr/bin/grep $GREP_OPTIONS"
-fi
-
-# alias grep="grep $GREP_OPTIONS"  #'always', 'never', or 'auto'
-alias egrep="grep -E $GREP_OPTIONS" # --extended-regexp
-alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '   #recursive search file
-    # -H, --with-filename  # -R, --dereference-recursive  likewise, but follow all symlinks
-    # -n, --line-number # -C, --context=NUM
-unset GREP_OPTIONS
 # alias diff='colordiff'
 if command -v colordiff > /dev/null 2>&1; then
     alias diff="colordiff -Nuar"

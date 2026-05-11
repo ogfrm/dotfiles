@@ -98,6 +98,23 @@ path() {
     }
 }
 
+########################### GREP  # https://askubuntu.com/questions/1042234/modifying-the-color-of-grep
+export GREP_COLORS='mt=3;33'
+[ ! -f "/etc/alpine-release" ]; export GREP_OPTIONS='--color=auto' #deprecated
+if command -v rg &> /dev/null; then  # Check if ripgrep is installed
+    alias grep='rg'
+else
+    alias grep="/usr/bin/grep $GREP_OPTIONS"
+fi
+
+# alias grep="grep $GREP_OPTIONS"  #'always', 'never', or 'auto'
+alias egrep="grep -E $GREP_OPTIONS" # --extended-regexp
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '   #recursive search file
+    # -H, --with-filename  # -R, --dereference-recursive  likewise, but follow all symlinks
+    # -n, --line-number # -C, --context=NUM
+unset GREP_OPTIONS
+
+
 ########################### CHEZMOI
 alias cz="chezmoi"
 alias czar="chezmoi apply && reload"
