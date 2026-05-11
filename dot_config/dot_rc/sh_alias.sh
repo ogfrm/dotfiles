@@ -23,8 +23,37 @@ alias .4='cd ../../../..' # ....
 alias .5='cd ../../../../..'
 alias bd='cd "$OLDPWD"' # cd into the old directory
 
+# Show a directory listing when using 'cd'
+function cd() {
+  new_directory="$*";
+  if [ $# -eq 0 ]; then
+    new_directory=${HOME};
+  fi;
+  builtin cd "${new_directory}" && /bin/ls -lhF --time-style=long-iso --color=auto --ignore=lost+found
+}
+function extract () {
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2)   tar xjvf $1    ;;
+      *.tar.gz)    tar xzvf $1    ;;
+      *.tar.xz)    tar xvf $1    ;;
+      *.bz2)       bzip2 -d $1    ;;
+      *.rar)       unrar2dir $1    ;;
+      *.gz)        gunzip $1    ;;
+      *.tar)       tar xf $1    ;;
+      *.tbz2)      tar xjf $1    ;;
+      *.tgz)       tar xzf $1    ;;
+      *.zip)       unzip2dir $1     ;;
+      *.Z)         uncompress $1    ;;
+      *.7z)        7z x $1    ;;
+      *.ace)       unace x $1    ;;
+      *)           echo "'$1' cannot be extracted via extract()"   ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
 ########################### FILE LS
-
 
 if [ -x "$(command -v eza)" ]; then
 # https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797

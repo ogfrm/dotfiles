@@ -42,15 +42,7 @@ function diffdir() {    # diffdir /path1 /path2
     diff -u <(find $1 -printf '%P %m\n' | sort) <(find $2 -printf '%P %m\n' | sort)
 }
 
-# Automatically do an ls after each cd, z, or zoxide
-# cd ()
-# {
-# 	if [ -n "$1" ]; then
-# 		builtin cd "$@" && ls
-# 	else
-# 		builtin cd ~ && ls
-# 	fi
-# }
+
 
 
 ########################### FILE Commands
