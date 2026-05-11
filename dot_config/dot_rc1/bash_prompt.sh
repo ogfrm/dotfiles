@@ -1,22 +1,66 @@
 #https://en.wikipedia.org/wiki/ANSI_escape_code
 # https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
 # https://misc.flogisoft.com/bash/tip_colors_and_formatting
-# for (( i = 30; i < 100; i++ )); do
-#     echo -e "\033[0;"$i"m Normal: (0;$i); \033[01;"$i"m Light: (1;$i)";
-#     echo -e "\e[0;"$i"m Normal: (0;$i); \e[01;"$i"m Light: (1;$i)";
-# #     ii=`expr $i - 30`
-# done
-# for (( i = 0; i < 16; i++ )); do
-#     printf "$(tput setaf $i) tput $i"
-# done
+# \e=\033=\x1B
+# https://linuxcommand.org/lc3_adv_tput.php
+# https://misc.flogisoft.com/bash/tip_colors_and_formatting
+for fg_color in {0..7}; do
+    set_foreground=$(tput setaf $fg_color)
+    fg=`expr $fg_color + 30`
+    # echo "$set_foreground" | \cat -v
+    # for bg_color in {0..7}; do
+    #     set_background=$(tput setab $bg_color)
+    #     echo -n $set_background$set_foreground
+    #     printf ' F: %s B:  %s ' $fg_color $bg_color   # printf "$(tput sgr0)$(tput setaf $i) tput $i"
+    # done
+    # echo $(tput sgr0)
+    for bg_color in {0..7}; do
+        bg=`expr $bg_color + 40`
+        echo -e -n "\e[0m\e[0;${bg};${fg}m"
+        printf ' F:%s B: %s ' $fg $bg   # printf "$(tput sgr0)$(tput setaf $i) tput $i"
+        echo -e -n "\e[0m\e[1;${bg};${fg}m BL"
+        echo -e -n "\e[0m\e[4;${bg};${fg}m UL"
+    done
+    echo -e "\e[0m"
+    fg=`expr $fg_color + 90`
+    # echo "$set_foreground" | \cat -v
+    for bg_color in {0..7}; do
+        bg=`expr $bg_color + 100`
+        echo -e -n "\e[0m\e[0;${bg};${fg}m"
+        printf ' F:%s B:%s ' $fg $bg   # printf "$(tput sgr0)$(tput setaf $i) tput $i"
+        echo -e -n "\e[0m\e[1;${bg};${fg}m BL"
+        echo -e -n "\e[0m\e[4;${bg};${fg}m UL"
+    done
+    echo -e "\e[0m"
+done
 
+rev	Start reverse video
+blink	Start blinking text
+invis	Start invisible text
+smso	Start “standout” mode
+rmso	End “standout” mode
+0	Black
+1	Red
+2	Green
+3	Yellow
+4	Blue
+5	Magenta
+6	Cyan
+7	White
+8	Not used
+9	Reset to default color
 # tput setaf <value>	Set foreground color
-# tput ssetab <value>	Set background color
+# tput setab <value>	Set background color
 # The first number in the color code specifies the typeface:
-# 0 Normal
-# 1 Bold (bright)
-# 2 Dim
-# 4 Underlined# Black        0;30     Dark Gray     1;30
+# 0 sgr0 reset all
+# 1 bold  21 reset
+# 2 Dim  22 reset
+# 4 Underlined smul  24 rmul reset
+# 5 blink 25 reset
+# 7 reverse back and front 27 reset
+# 8 hidden invis  28 reset
+
+# Black        0;30     Dark Gray     1;30
 # Red          0;31     Light Red     1;31
 # Green        0;32     Light Green   1;32
 # Brown/Orange 0;33     Yellow        1;33

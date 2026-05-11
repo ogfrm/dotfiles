@@ -8,7 +8,7 @@
 # fi
 MYSHELL=`basename $(readlink /proc/$$/exe)`
 # MYSHELL=`ps -cp "$$" -o command=""`
-echo "You are using $MYSHELL"
+# echo "You are using $MYSHELL"
 
 
 #############   FZF

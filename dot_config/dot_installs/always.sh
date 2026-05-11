@@ -1,1 +1,1 @@
-sudo apt install jq git
+sudo apt install jq git tree

@@ -1,19 +1,67 @@
 [[ $- != *i* ]] && return # If not running interactively, don't do anything
+# http://zsh.sourceforge.net/Doc/Release/Options.html
+# https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+# some useful options (man zshoptions)
 
-#https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+###################################  HISTORY
+HISTFILE=~/.zsh_history  # ~/.zhistory
+HISTSIZE=1000 # Set history size
+SAVEHIST="${HISTSIZE}" # Set the number of lines in $HISTFILE
 
+# export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
+
+# Enable history search with up and down arrows
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+[[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
+[[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
+
+setopt append_history
+setopt inc_append_history # All terminal sessions append to the history file immediately as commands are entered
+setopt EXTENDED_HISTORY   # save timestamp of command and duration
+setopt hist_expire_dups_first # when trimming history, lose oldest duplicates first
+setopt hist_ignore_all_dups # When a duplicate command is entered, remove the oldest duplicate
+setopt hist_ignore_space # remove command line from history list when first character on the line is a space
+setopt hist_reduce_blanks # Remove extra blanks from each command line being added to history
+
+setopt share_history # Reads the history file every time history is called Share history across terminals
+
+# setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
+# setopt HIST_IGNORE_DUPS          # Do not enter command lines into the history list if duplicates of the previous.
+# setopt HIST_SAVE_NO_DUPS         # When writing out the history file, older commands that duplicate newer ones are omitted
+
+#####################################################
+setopt no_beep # Don't beep on error
+# unsetopt BEEP
+setopt interactive_comments # Allow comments even in interactive shells (especially for Muness)
+setopt auto_cd # If you type foo, and it isn't a command, and it is a directory in your cdpath, go there
+setopt pushd_ignore_dups # don't push multiple copies of the same directory onto the directory stack
+setopt always_to_end # When completing from the middle of a word, move the cursor to the end of the word
+setopt auto_menu # show completion menu on successive tab press. needs unsetop menu_complete to work
+setopt auto_name_dirs # any parameter that is set to the absolute name of a directory immediately becomes a name for that directory
+setopt complete_in_word # Allow completion from within a word/phrase
+unsetopt menu_complete # do not autoselect the first completion entry
+setopt correct # spelling correction for commands
+setopt nonomatch # Stop annoying error when using asterisk in shell commands (i.e. scp server:*.txt .)
+setopt extendedGlob # extended globbing, awesome!
+setopt promptsubst # Turn on command substitution in the prompt (and parameter expansion and arithmetic expansion).
+stty stop undef # Disable ctrl-s to freeze terminal.
+zle_highlight=('paste:none') # stop pasted text being highlighted in terminals
+
+############ CD History
 setopt AUTO_PUSHD           # Push the current directory visited on the stack. makes the standard cd command act like pushd
 setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
 setopt PUSHD_SILENT         # Do not print the directory stack after pushd or popd.
-
+# directory pushd  history with d see and jump back with 1-9 or 1-100
+alias d='dirs -v'
+for index ({1..9}) alias "$index"="cd +${index}"; unset index
+####
 alias history='history 1'
 alias h='\history -i 1  '  #start from 1 with time
 alias ep="$EDITOR $HOME/.zshrc"
 alias reload="source ~/.zshrc"
-
-# directory pushd  history with d see and jump back with 1-9 or 1-100
-alias d='dirs -v'
-for index ({1..9}) alias "$index"="cd +${index}"; unset index
 
 # Command line head / tail shortcuts
 alias -g H='| head'
@@ -27,9 +75,6 @@ alias -g NE="2> /dev/null"
 alias -g NUL="> /dev/null 2>&1"
 alias -g P="2>&1| pygmentize -l pytb"
 
-
-if [[ $- =~ "i" ]]; then
-    for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
-	for f in ~/.config/.rc/zsh_*.zsh; do  source "$f"; done
-    for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
-fi
+for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
+for f in ~/.config/.rc/zsh_*.zsh; do  source "$f"; done
+for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done

@@ -1,4 +1,4 @@
-echo $(date +%T) .bashrc
+# echo $(date +%T) .bashrc
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc) # for examples
 
@@ -153,5 +153,5 @@ alias d='dirs -v'
 for index in {1..9}; do alias "$index"="pushd +${index}";unset index; done
 
 for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
-for f in ~/.config/.rc/bash_*.sh; do  source "$f"; done
+# for f in ~/.config/.rc/bash_*.sh; do  source "$f"; done
 for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
