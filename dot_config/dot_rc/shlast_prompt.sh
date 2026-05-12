@@ -1,5 +1,5 @@
 # og_setprompt=starship
-# og_setprompt=posh
+og_setprompt=posh
 if [ "${og_setprompt}" = 'starship' ]; then
   # in does not support  transient prompt (when command executed prompt it self deleted command and output remains) on zsh
 	if ! [ -x "$(command -v starship)" ]; then return; fi
@@ -45,9 +45,18 @@ elif [ "${og_setprompt}" = 'posh' ]; then
 	# [ ! -x "$(command -v oh-my-posh)" ] && source ~/.apps/prompts/ohmyposh.sh
 
 	# eval "$(oh-my-posh init ${MYSHELL})"
-  # oh-my-posh config export --output ~/.config/myposh_current.json
-  # oh-my-posh config export --output ~/.config/myposh_current.toml --format toml
-	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp.toml)"
-	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp.toml)"
-	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/.rc/posh_samples/1_shell.omp.json)"
+  # oh-my-posh config export --output ~/.config/myposh_default.json
+  # oh-my-posh config export --output ~/.config/myposh_default.toml --format toml
+
+# catppuccin.omp.json  tokyonight_storm.omp.json
+
+  # oh-my-posh config export --output ~/.config/myposh_current.toml --format toml    # .json .yaml
+  # oh-my-posh config export --config ~/.config/ohmyposh/slim.omp.json --output ~/.config/slim.omp.jsom.toml --format toml
+  # oh-my-posh config export --config ~/.config/prompt.myposh.omp.json --output ~/.config/prompt.myposh.omp.json.toml --format toml
+  # oh-my-posh config export --config ~/.config/prompt.myposh.omp-02.json --output ~/.config/prompt.myposh.omp.json-02.toml --format toml
+	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp.json)"
+	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp-02.json)"
+	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/myposh.zen.omp.toml)"
+	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/myposh_my.omp.toml)"
+
 fi

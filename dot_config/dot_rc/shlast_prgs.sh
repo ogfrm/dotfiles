@@ -1,15 +1,6 @@
 
-# if [ -n "$BASH_VERSION" ]; then
-#   MYSHELL=bash
-# elif [ -n "$ZSH_VERSION" ]; then
-#   MYSHELL=zsh
-# else
-#   MYSHELL=unknown
-# fi
-MYSHELL=`basename $(readlink /proc/$$/exe)`
-# MYSHELL=`ps -cp "$$" -o command=""`
-# echo "You are using $MYSHELL"
-
+# if [ -n "$BASH_VERSION" ]; then   [ -n "$ZSH_VERSION" ]
+MYSHELL=`basename $(readlink /proc/$$/exe)` # MYSHELL=`ps -cp "$$" -o command=""`
 
 #############   FZF
 # CTRL + R: Replaces the standard history search.
@@ -28,19 +19,15 @@ fi
 [ -f "$fzfdir/shell/completion.${MYSHELL}" ] && source "$fzfdir/shell/completion.${MYSHELL}"
 [ -f "$fzfdir/shell/key-bindings.${MYSHELL}" ] && source "$fzfdir/shell/key-bindings.${MYSHELL}"
 
-# set FZF_DEFAULT_OPTS="--color=bg+:24 --border=bold --border=rounded --layout=reverse --margin=3% --color=dark,bg+:24"
-
-# Preview files in a window on the right using 'bat' or 'cat'
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "cat {}"'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "cat {}"' # Preview files on right 'bat' or 'cat'
+# export FZF_DEFAULT_OPTS="--color=bg+:24 --border=bold --border=rounded --layout=reverse --margin=3% --color=dark,bg+:24"
 
 # Use ripgrep (rg) if installed for faster, cleaner searches
 if type rg &>/dev/null; then
   export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
 fi
 
-# https://github.com/Aloxaf/fzf-tab
-
-# https://github.com/junegunn/fzf-git.sh
+# https://github.com/junegunn/fzf-git.sh  # ^G+^B braches ^F files
 [ -d "${fzfdir}-git" ] || (sudo git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfdir}-git)
 [ -f "${fzfdir}-git/fzf-git.sh" ] && source "$fzfdir-git/fzf-git.sh"
 
@@ -59,6 +46,7 @@ else
     fi
 fi
 
-[ -f /usr/share/autojump/autojump.sh ] && source /usr/share/autojump/autojump.sh || echo
-# # terraform auto complete
-# [ -f "/usr/bin/terraform" ] && complete -C /usr/bin/terraform terraform
+#######################################################
+# Shell integrations
+#######################################################
+# eval "$(zoxide init --cmd cd zsh)"

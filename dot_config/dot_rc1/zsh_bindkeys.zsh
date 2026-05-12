@@ -1,5 +1,5 @@
 
-# Use emacs keybindings even if our EDITOR is set to vi
+# Use emacs keybindings even if our EDITOR is set to vi https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html
 bindkey -e
 
 #control arrow keys
@@ -30,6 +30,7 @@ bindkey -e
 
 # Custom ZSH Binds
 # bindkey '^ ' autosuggest-accept
+# bindkey '^f' autosuggest-accept  # Ctrl-f to accept suggestion  (emac key binding is already sets this)
 
 # https://www.zsh.org/mla/users/2014/msg00266.html
 
@@ -38,8 +39,8 @@ autoload -U edit-command-line
 zle -N edit-command-line
 bindkey '^x^e' edit-command-line
 
-# Restore history searching with ^r
-bindkey '^r' history-incremental-search-backward
+# Restore history searching with ^r   USE FZF Instead
+# bindkey '^r' history-incremental-search-backward
 
 # This makes Alt+Left cd "back" in history, and Alt+Up move up a directory
 # zle user-defined ZLE widgets which can be bound to keystrokes in interactive shells

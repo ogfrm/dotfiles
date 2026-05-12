@@ -71,16 +71,15 @@ red='\[\e[0;31m\]'
 lred='\[\e[1;31m\]'
 green='\[\e[0;32m\]'
 lgreen='\[\e[1;32m\]'
-brown='\[\e[0;33m\]'
 yellow='\[\e[1;33m\]'
 blue='\[\e[0;34m\]'
 lblue='\[\e[1;34m\]'
-purple='\[\e[0;35m\]'
-lpurple='\[\e[1;35m\]'
+# purple='\[\e[0;35m\]'
+# lpurple='\[\e[1;35m\]'
 cyan='\[\e[0;36m\]'
 lcyan='\[\e[1;36m\]'
 lgray='\[\e[0;37m\]'
-white='\[\e[1;37m\]'
+# white='\[\e[1;37m\]'
 reset='\[\e[0m\]' # no color  # "\001$(tput sgr0)\002"
 dim='\[\e[2m\]' # "\001$(tput dim)\002"
 rev='\[\e[7m\]' # "\001$(tput dim)\002"
@@ -100,7 +99,6 @@ LINE_STRAIGHT="$LINE_COLOR\342\[\224\200\]"        # ─
 LINE_BOTTOM_CORNER="\n$LINE_COLOR\342\[\224\224\]$LINE_STRAIGHT$LINE_STRAIGHT"   # └──
 LINE_UPPER_CORNER="$LINE_COLOR\342\[\224\214\]$LINE_STRAIGHT"      # ┌───
 ERROR_CHAR="\342\[\234\227\]"   # ✗
-C3="\342\[\225\274\]"  # ╼
 
 P_ERROR="\$([[ \$? != 0 ]] && echo \"$red[$ERROR_CHAR]\")$(if [[ ${EUID} == 0 ]]; then echo $lred; else echo $lgray; fi)"
 P_CLOCK="$BRACKET_COLOR[$CLOCK_COLOR\t$BRACKET_COLOR]$LINE_STRAIGHT"
@@ -122,7 +120,7 @@ case "$og_setprompt" in
         # https://www.learnlinux.tv/10-linux-terminal-tips-and-tricks-to-enhance-your-workflow/
      ;;
    2)
-        export PS1="$dim[\t] $green\u@\h$brown\w\$$reset" # [hh:mm:ss] user@host workingdir$
+        export PS1="$dim[\t] \[\e[0;32m\]\u@\h$\[\e[0;33m\]\w\\[\e[0m\]" # [hh:mm:ss] user@host workingdir$ green brown reset
    ;;
 
 esac

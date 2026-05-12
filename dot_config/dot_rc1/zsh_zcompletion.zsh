@@ -1,14 +1,3 @@
-# https://zsh.sourceforge.io/Doc/Release/Completion-System.html
-#ZSH Autocomplete
-#The autoload command load a file containing shell commands. Zsh will look in Zsh file search path, defined in the variable $fpath, and search a file called compinit. When compinit is found, its content will be loaded as a function
-#fpath=($HOME/.local/share/zsh/completions $fpath) # Setup a custom completions directory
-# zmodload loads a module supplied with Zsh itself. Modules are written in the C programming language.
-# autoload declares a function to be loaded on demand from your $fpath. Functions are written in Zsh’s shell script language.
-
-autoload -Uz compinit
-compinit
-#compinit -i # Initialize all completions on $fpath and ignore (-i) all insecure files
-# zmodload -i zsh/complist
 
 _comp_options+=(globdots) # With hidden files
 # zstyle ':completion:*' menu select

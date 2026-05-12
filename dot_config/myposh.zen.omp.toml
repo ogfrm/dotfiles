@@ -12,8 +12,13 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   [[blocks.segments]]
     type = 'path'
     style = 'plain'
+    # style = 'diamond'
+    # leading_diamond = ""
+    # trailing_diamond = ""
+    # style = "powerline"
+    # powerline_symbol = ""
     background = 'transparent'
-    foreground = 'blue'
+    foreground = 'green'
     template = '{{ .Path }}'
 
     [blocks.segments.properties]
@@ -59,6 +64,8 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
     ]
     background = 'transparent'
     template = '❯'
+    # template = '{{ if eq .Shell "fish"}}fish$ {{else}}& {{end}} '
+    # template = '{{ if .Env.TMUX}}tmux> '
 
 [transient_prompt]
   foreground_templates = [
@@ -68,6 +75,7 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   background = 'transparent'
   template = '❯ '
 
+# when entering multiline command
 [secondary_prompt]
   foreground = 'magenta'
   background = 'transparent'
