@@ -47,11 +47,9 @@ case "$og_setprompt" in
 
 		# Set the prompt
 		newline=$'\n'
-		UNICORN_UTF8=$'\360\237\246\204'
-		FIRE_UTF8=$'\xF0\x9F\x94\xA5'
+		UNICORN_UTF8=$'\360\237\246\204' # 🦄
+		FIRE_UTF8=$'\xF0\x9F\x94\xA5'  # 🔥
 		prompt="%F{35}%* [%j]${git_prompt} [%m:%F{75}%f%F{69}%c%f%F{35}] %#%f ${newline}$FIRE_UTF8 "
-		# prompt='%F{35}%* [%j]${git_prompt} [%m:%F{75}%f%F{69}%c%f%F{35}] %#%f ${newline}🦄 '
-
 	# %T	System time (HH:MM).
 	# %*	System time (HH:MM:SS).
 	# %D	System date (YY-MM-DD).
@@ -68,11 +66,3 @@ case "$og_setprompt" in
 esac	#
 
 
-# Note: use hexdump -b to get one-bye octal display of the emoji (needed for when ≠ computers use ≠ commandLine tools)
-# Ex: printf "U1F525\n"|hexdump -v -e '"\\" 1/1 "%03o"' ; echo
-
-# UNICORN_UTF8=$'\360\237\246\204'
-# FIRE_UTF8=$'\xF0\x9F\x94\xA5'
-# LEAVE_SPACE=\^[a-zA-Z0-9_]*$\
-
-# echo "Riding an ${UNICORN_UTF8} ${LEAVE_SPACE} out of a ${FIRE_UTF8} ${LEAVE_SPACE} house."

@@ -34,26 +34,13 @@ if [ "${og_setprompt}" = 'starship' ]; then
 	esac
 	export STARSHIP_DISTRO="$ICON"
 
-
-	#curl -sS https://starship.rs/install.sh | sh
-	#curl -sS https://starship.rs/install.sh | sh -- sh -s -- --yes
-	#sh -c "echo -e 'y' | $(wget https://starship.rs/install.sh -O -)"
-	# echo -ne '\n'  |
-	# starship preset nerd-font-symbols > ~/.config/starship.toml
-	# starship preset no-nerd-font > ~/.config/starship.toml
-	# starship preset bracketed-segments > ~/.config/starship.toml
-	# starship preset plain-text-symbols > ~/.config/starship.toml
-	# starship preset no-runtime-versions > ~/.config/starship.toml
-	# starship preset no-empty-icons > ~/.config/starship.toml
-	# starship preset pure-preset > ~/.config/starship.toml
 	# starship preset pastel-powerline > ~/.config/starship.toml
-	# starship preset tokyo-night > ~/.config/starship.toml
-	export STARSHIP_CONFIG=~/.config/.rc/prompt.starship.toml
+	export STARSHIP_CONFIG=~/.config/starship_my.toml
 	eval "$(starship init ${MYSHELL})"
 
 elif [ "${og_setprompt}" = 'posh' ]; then
-	[ ! -x "$(command -v oh-my-posh)" ] && source ~/.apps/prompts/ohmyposh.sh
+	# [ ! -x "$(command -v oh-my-posh)" ] && source ~/.apps/prompts/ohmyposh.sh
 	# eval "$(oh-my-posh init ${MYSHELL})"
-	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/.rc/prompt.myposh.omp.json)"
+	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp.json)"
 	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/.rc/posh_samples/1_shell.omp.json)"
 fi

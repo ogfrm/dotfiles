@@ -28,7 +28,7 @@ export LS_COLORS='di=01;36'
 
 ##### Color for manpages in less makes manpages a little easier to read
 # sudo apt install terminfo   # termcap is obsolete and terminfo is it's newer replacement
-# echo "$(tput bold); $(tput setaf 2)" | cat -v # cat -v: Displays non-printing characters
+# echo "$(tput bold); $(tput setaf 2)" | \cat -v # cat -v: Displays non-printing characters
 # tput: Portable, readable, but slower (it runs a binary).Escape : Fast, direct, but hard-coded and less portable.
 # "ANSI foreground" (setaf)  (setab background) 0Black 1Red 2Green 3Yellow 4Blue 5Magenta 6Cyan 7White
 export LESS_TERMCAP_md=$'\E[01;32m' # Green  # md,bold Bold text  $(tput bold; tput setaf 2)
@@ -41,3 +41,4 @@ export LESS_TERMCAP_se=$'\E[0m'         # se,rmso End standout  $(printf "\\e[0m
 export MANPAGER='less +Gg'
 export GROFF_NO_SGR=1
 
+og_setprompt=starship

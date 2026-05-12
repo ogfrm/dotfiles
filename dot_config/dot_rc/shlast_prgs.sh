@@ -61,6 +61,6 @@ else
     fi
 fi
 
-[ -f /usr/share/autojump/autojump.sh ] &&  source /usr/share/autojump/autojump.sh
+[ -f /usr/share/autojump/autojump.sh ] && source /usr/share/autojump/autojump.sh || echo
 # # terraform auto complete
 # [ -f "/usr/bin/terraform" ] && complete -C /usr/bin/terraform terraform

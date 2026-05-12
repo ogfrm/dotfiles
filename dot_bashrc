@@ -153,5 +153,6 @@ alias d='dirs -v'
 for index in {1..9}; do alias "$index"="pushd +${index}";unset index; done
 
 for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
-# for f in ~/.config/.rc/bash_*.sh; do  source "$f"; done
+for f in ~/.config/.rc/bash_*.sh; do  source "$f"; done
+# [ -f ~/.config/.rc/shlast_*.sh ] && for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done || echo
 for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
