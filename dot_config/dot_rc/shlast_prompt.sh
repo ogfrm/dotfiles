@@ -1,4 +1,7 @@
+# og_setprompt=starship
+# og_setprompt=posh
 if [ "${og_setprompt}" = 'starship' ]; then
+  # in does not support  transient prompt (when command executed prompt it self deleted command and output remains) on zsh
 	if ! [ -x "$(command -v starship)" ]; then return; fi
 	# https://starship.rs/config/#prompt
 	# set an icon based on the distro
@@ -40,7 +43,11 @@ if [ "${og_setprompt}" = 'starship' ]; then
 
 elif [ "${og_setprompt}" = 'posh' ]; then
 	# [ ! -x "$(command -v oh-my-posh)" ] && source ~/.apps/prompts/ohmyposh.sh
+
 	# eval "$(oh-my-posh init ${MYSHELL})"
-	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp.json)"
+  # oh-my-posh config export --output ~/.config/myposh_current.json
+  # oh-my-posh config export --output ~/.config/myposh_current.toml --format toml
+	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp.toml)"
+	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/prompt.myposh.omp.toml)"
 	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/.rc/posh_samples/1_shell.omp.json)"
 fi

@@ -41,4 +41,3 @@ export LESS_TERMCAP_se=$'\E[0m'         # se,rmso End standout  $(printf "\\e[0m
 export MANPAGER='less +Gg'
 export GROFF_NO_SGR=1
 
-og_setprompt=starship

@@ -145,7 +145,8 @@ shopt -s dotglob
 shopt -s expand_aliases # expand aliases
 
 alias h='history'
-alias reload="source ~/.bashrc"
+# alias reload="source ~/.bashrc"
+alias reload="exec bash"
 alias ep="$EDITOR $HOME/.bashrc"
 
 # directory pushd  history with d see and jump back with 1-9 or 1-100

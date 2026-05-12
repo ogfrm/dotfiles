@@ -44,8 +44,6 @@ fi
 [ -d "${fzfdir}-git" ] || (sudo git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfdir}-git)
 [ -f "${fzfdir}-git/fzf-git.sh" ] && source "$fzfdir-git/fzf-git.sh"
 
-
-
 ################## Show system information at login
 if [ -v TMUX ]
 then

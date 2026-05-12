@@ -157,7 +157,6 @@ alias header='curl -I' # get web server headers
 # MISCELLANEOUS
 alias wget='wget -c'
 alias nano='sudo nano -iSw$'
-alias scxterm='bash $HOME/docker/scripts/xterm.sh'
 
 # SYSTEM MONITORING
 alias meminfo='free -m -l -t' # memory usage
