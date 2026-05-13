@@ -13,10 +13,10 @@ alias checkcommand="type -a" # a command is aliased and paths
 alias hgrep="fc -l 1 | grep"		#history search -E zfs shows time
 
 ########################### FILE Commands
-alias cp='cp -i'  #prompt before overwrite
+alias cp='cp -I'  #prompt before overwrite   use -I to prompt 3 and more files
 alias mv='mv -i'  #prompt before overwrite
 alias ln='ln -i'  # -iv
-alias rm="rm -i"
+alias rm="rm -I"  # -i
 alias rmd="rm -rf"
 
 if [ ! -f "/etc/alpine-release" ]; then
@@ -36,7 +36,6 @@ function chmodrec() {   # chmodrec . 755 644
 }
 #chmod -R 'u=rwX,g=rwX,o=rX'    # X sets x for dir or file(already set x at one of the u,g,o)
 # chmod -R +X
-
 
 ########################### DIR Manager
 alias cd..='cd ..'

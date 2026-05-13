@@ -1,8 +1,9 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Org Pastel
+
 format = """
 $shell\
-$env_var\
 [](#3B4252)\
 $os\
 $username\
@@ -47,9 +48,79 @@ disabled = false
 
 # An alternative to the username module which displays a symbol that
 # represents the current operating system
+# [os]
+# style = "bg:#9A348E"
+# disabled = false # Disabled by default
+
+# ~/.config/starship.toml
+
 [os]
-style = "bg:#9A348E"
-disabled = false # Disabled by default
+format = "on [$symbol ($name )]($style)"
+style = "bold blue"
+disabled = false
+
+[os.symbols]
+AIX = " "
+AlmaLinux = " "
+Alpaquita = " "
+Alpine = " "
+ALTLinux = " "
+Amazon = " "
+Android = " "
+AOSC = " "
+Arch = " "
+Artix = " "
+Bluefin = " "
+CachyOS = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Elementary = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = " "
+Gentoo = " "
+HardenedBSD = "󰞌 "
+Illumos = " "
+InstantOS = " "
+Ios = "󰀷 "
+Kali = " "
+Linux = " "
+Mabox = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+Nobara = " "
+OpenBSD = " "
+OpenCloudOS = " "
+openEuler = " "
+openSUSE = " "
+OracleLinux = "󰺡 "
+PikaOS = " "
+Pop = " "
+Raspbian = " "
+Redhat = "󱄛 "
+RedHatEnterprise = "󱄛 "
+Redox = "󰀘 "
+RockyLinux = " "
+Solus = " "
+SUSE = " "
+Ubuntu = "󰍲 "
+Ubuntu2 = " "
+Ultramarine = " "
+Unknown = " "
+Uos = " "
+Void = " "
+Windows = "󰍲 "
+Zorin = " "
+
+
 
 [directory]
 style = "bg:#434C5E"
@@ -174,9 +245,9 @@ variable = "STARSHIP_DISTRO"
 disabled = false
 
 [shell]
-fish_indicator = ""
-powershell_indicator = "_"
-unknown_indicator = "mystery shell"
-style = "bg:#FCA17D"
-#style = "cyan bold"
+bash_indicator = '󰈺 '
+fish_indicator = '󰈺 '
+powershell_indicator = '_'
+unknown_indicator = 'mystery shell'
+style = 'cyan bold'
 disabled = false

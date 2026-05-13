@@ -50,14 +50,6 @@ setopt EXTENDED_HISTORY   # save timestamp of command and duration
 setopt hist_expire_dups_first # when trimming history, lose oldest duplicates first
 setopt hist_reduce_blanks # Remove extra blanks from each command line being added to history
 
-# Enable history search with up and down arrows
-autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-
-[[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
-[[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
-
 #######################################################
 # OPTIONS    http://zsh.sourceforge.net/Doc/Release/Options.html  (man zshoptions)
 #######################################################
@@ -178,13 +170,70 @@ zinit snippet OMZP::command-not-found
 # zsh_add_plugin "Aloxaf/fzf-tab" # syntax highlighting for ZSH in standard repos
 
 #######################################################
-# Keybindings
+# Keybindings  https://www.zsh.org/mla/users/2014/msg00266.html
 #######################################################
+# Use emacs keybindings even if our EDITOR is set to vi https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html
 bindkey -e
-bindkey '^p' history-search-backward  # like if you type curl and press ^p it will show history starts with curl
-bindkey '^n' history-search-forward  # like if you type curl and press ^n it will show history starts with curl
 bindkey '^[w' kill-region
 
+# Enable history search with up and down arrows filters with begining of cmd
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+# printf '%q => %q\n' "${(@kv)key}"
+# [[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
+# [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
+bindkey '^[[A'  up-line-or-beginning-search    # Arrow up
+bindkey '^[OA'  up-line-or-beginning-search    # Arrow up application mode (like when ssh then come back)
+bindkey '^[[B'  down-line-or-beginning-search  # Arrow down
+bindkey '^[OB'  down-line-or-beginning-search
+
+# Move forward/backward one word with Ctrl+Left/Right  ensuring compatibility
+bindkey "\eOc" forward-word       # xterm/rxvt
+bindkey "\eOd" backward-word
+bindkey "\e[1;5C" forward-word   # xterm/iTerm2
+bindkey "\e[1;5D" backward-word
+bindkey "\e[5C" forward-word     # Some linux terminals
+bindkey "\e[5D" backward-word
+bindkey "\e\e[C" forward-word    # Alternative
+bindkey "\e\e[D" backward-word
+
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line # Control-x-e to open current line in $EDITOR, editing multiline commands.
+
+# bindkey -s '^s' 'ncdu^M'
+# bindkey -r "^u"
+# bindkey -r "^d"
+
+# bindkey '^f' autosuggest-accept  # Ctrl-f to accept suggestion  (emac key binding is already sets this)
+
+# This makes Alt+Left cd "back" in history, and Alt+Up move up a directory
+# zle user-defined ZLE widgets which can be bound to keystrokes in interactive shells
+cdUndoKey() {
+	popd 2> /dev/null
+    if (( $? == 0 )); then
+        for precmd in $precmd_functions; do
+            $precmd
+        done
+		zle && zle      reset-prompt
+    fi
+}
+cdParentKey() {
+	pushd .. > /dev/null
+    if (( $? == 0 )); then
+        local precmd
+        for precmd in $precmd_functions; do
+            $precmd
+        done
+		zle && zle      reset-prompt
+    fi
+}
+zle -N                 cdParentKey
+zle -N                 cdUndoKey
+bindkey '^[[1;3A'      cdParentKey
+bindkey '^[[1;3D'      cdUndoKey
 
 ###############################################
 for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done

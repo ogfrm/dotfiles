@@ -2,11 +2,7 @@
 # if [ -n "$BASH_VERSION" ]; then   [ -n "$ZSH_VERSION" ]
 MYSHELL=`basename $(readlink /proc/$$/exe)` # MYSHELL=`ps -cp "$$" -o command=""`
 
-#############   FZF
-# CTRL + R: Replaces the standard history search.
-# CTRL + T: Quickly find a file or directory in your current tree and paste its path directly into your command line.
-# ALT + C: Fuzzy search for a directory and cd into it instantly.
-# Git fzf ^G ( ? to show this list ^F Files ^B Branches ^T Tags ^R Remotes ^H commit Hashes ^S Stashes ^L reflogs ^W Worktrees ^E Each ref (git for-each-ref)
+#############   FZF   CTRL+R:  history search.  CTRL+T: find a file or directory ALT + C search for a directory and cd
 
 fzfdir=/usr/local/share/fzf   # $HOME/.local/share/fzf
 [ -d "$fzfdir" ] || (sudo git clone --depth 1 https://github.com/junegunn/fzf.git $fzfdir && sudo $fzfdir/install --bin)
@@ -27,7 +23,8 @@ if type rg &>/dev/null; then
   export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
 fi
 
-# https://github.com/junegunn/fzf-git.sh  # ^G+^B braches ^F files
+# Git fzf ^G ( ? this list ^F Files ^B Branches ^T Tags ^R Remotes ^H commit Hashes ^S Stashes ^L reflogs ^W Worktrees ^E Each ref (git for-each-ref)
+# https://github.com/junegunn/fzf-git.sh
 [ -d "${fzfdir}-git" ] || (sudo git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfdir}-git)
 [ -f "${fzfdir}-git/fzf-git.sh" ] && source "$fzfdir-git/fzf-git.sh"
 
