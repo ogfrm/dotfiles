@@ -21,10 +21,8 @@ Documents
 .bashrc*
 .profile*
 .bash_aliases
-.config/ghostty
-.config/git/cookies
-.config/psql
-.config/readline
+.config/.rc
+.config/.rc1
 .config/tmux
 .inputrc
 .ssh/id_rsa
