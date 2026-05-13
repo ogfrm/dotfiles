@@ -123,7 +123,13 @@
           "foreground": "#ffffff",
           "powerline_symbol": "",
           "style": "powerline",
-          "type": "shell"
+          "type": "shell",
+          "options": {
+            "mapped_shell_names": {
+              "pwsh": "\ue86c \ue683 \uebc7"
+
+            }
+          }
         },
         {
           "foreground": "#7a7a7a",
