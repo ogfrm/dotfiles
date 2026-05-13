@@ -1,0 +1,57 @@
+{{ if eq .chezmoi.osRelease.idLike "debian" -}}
+{{ $packages2 := list
+     "build-essential"
+     "fd-find"
+     "git-lfs"
+     "libfuse2"
+     "shellcheck"
+     "units"
+-}}
+{{ $packages := list
+     "bat"
+     "curl"
+     "fzf"
+     "git"
+     "jq"
+     "openssh-server"
+     "ripgrep"
+     "zsh" -}}
+{{ $snaps := list -}}
+{{ $classicSnaps := list -}}
+
+{{ if eq .chezmoi.osRelease.id "ubuntu" -}}
+{{   $packages = mustAppend $packages "btop" -}}
+{{ end -}}
+
+{{ if not .headless -}}
+{{   $packages = mustAppend $packages "xclip" -}}
+{{   $classicSnaps = mustAppend $classicSnaps "code" -}}
+{{ end -}}
+
+{{ if .personal -}}
+{{   $packages = mustAppend $packages "musl-tools" -}}
+{{   $classicSnaps = concat $classicSnaps (list "goreleaser" "snapcraft") -}}
+{{ end -}}
+
+{{ $sudo := "sudo " -}}
+{{ if eq .chezmoi.username "root" -}}
+{{   $sudo = "" -}}
+{{ end -}}
+
+#!/bin/bash
+
+set -eufo pipefail
+
+{{ $sudo }}apt-get update
+{{ $sudo }}apt-get install -y {{ $packages | join " " }}
+
+{{ if lookPath "snap" }}
+{{   range $snaps }}
+( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install {{ . }}
+{{   end }}
+{{   range $classicSnaps }}
+( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install --classic {{ . }}
+{{   end }}
+{{ end }}
+
+{{ end -}}

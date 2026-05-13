@@ -1,3 +1,4 @@
+{{- $headless := true -}}{{/* true if this machine does not have a screen and keyboard */}}
 {{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
 {{- $email := promptStringOnce . "email" "Email address" -}}
 # chezmoi execute-template --init --promptString "Email address=me@home.org" < ~/.local/share/chezmoi/.chezmoi.toml.tmpl
@@ -8,6 +9,7 @@
 [data]
     email = {{ $email | quote }}
     personal = {{ $personal }}
+    headless = {{ $headless }}
 
 
 # [github]
