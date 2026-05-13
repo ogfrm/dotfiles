@@ -1,0 +1,11 @@
+.*.sw*
+*.pyc
+.DS_Store
+.Python
+.envrc
+.idea
+.jj
+.pc
+.svn
+.vscode
+/tmp

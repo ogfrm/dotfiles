@@ -1,0 +1,64 @@
+#!/bin/bash
+
+set -eufo pipefail
+
+{{ $brews := list
+     "age"
+     "bat"
+     "btop"
+     "croc"
+     "curl"
+     "dockutil"
+     "eza"
+     "fd"
+     "fzf"
+     "gdu"
+     "gh"
+     "git"
+     "git-lfs"
+     "gnu-units"
+     "gnupg"
+     "go"
+     "golangci-lint"
+     "jless"
+     "jq"
+     "neovim"
+     "pinentry-mac"
+     "pkg-config"
+     "ripgrep"
+     "shellcheck"
+     "tmux"
+     "wget"
+     "xz" -}}
+{{ $casks := list
+     "1password-cli"
+     "visual-studio-code" -}}
+
+{{ if .personal -}}
+{{   $brews = concat $brews (list
+       "ffmpeg"
+       "node"
+       "yt-dlp") -}}
+{{   $casks = concat $casks (list
+       "balenaetcher"
+       "firefox"
+       "ghostty"
+       "google-chrome"
+       "google-earth-pro"
+       "hot"
+       "notunes"
+       "steam"
+       "tailscale-app"
+       "transmission"
+       "vagrant"
+       "vlc") -}}
+{{ end -}}
+
+brew bundle --file=/dev/stdin <<EOF
+{{ range ($brews | sortAlpha | uniq) -}}
+brew "{{ . }}"
+{{ end -}}
+{{ range ($casks | sortAlpha | uniq) -}}
+cask "{{ . }}"
+{{ end -}}
+EOF
