@@ -126,8 +126,8 @@
           "type": "shell",
           "options": {
             "mapped_shell_names": {
-              "pwsh": "\ue86c \ue683 \uebc7"
-
+              "pwsh": "\ue683"
+              // \ue86c \ue683 \uebc7
             }
           }
         },
