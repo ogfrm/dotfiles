@@ -119,15 +119,20 @@
       "newline": true,
       "segments": [
         {
-          "background": "#0077c2",
-          "foreground": "#ffffff",
-          "powerline_symbol": "",
-          "style": "powerline",
+          "background": "#2f2f2f",
+          "foreground": "#26C6DA",
+          // "powerline_symbol": "",
+          // "style": "powerline",
+          "leading_diamond": "▓",
+          "style": "diamond",
           "type": "shell",
           "options": {
             "mapped_shell_names": {
-              "pwsh": "\ue683"
+              "pwsh": "\ue683",
+              "bash": "#!",
+              "zsh": "%_"
               // \ue86c \ue683 \uebc7
+              // \ue760 \uf1183 \uebca
             }
           }
         },
@@ -178,9 +183,11 @@
   "console_title_template": "{{if .Root}}root :: {{end}}{{.Shell}} :: {{.Folder}}",
   "final_space": true,
   "transient_prompt": {
-    "background": "transparent",
+    // "background": "transparent",
     "foreground": "#7a7a7a",
-    "template": " ~#@❯ "
+    "background": "#2f2f2f",
+    // "foreground": "#26C6DA",
+    "template": " {{ .Shell }} ❯ "
   },
   "version": 4
 }
