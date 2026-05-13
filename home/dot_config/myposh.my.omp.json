@@ -119,9 +119,16 @@
       "newline": true,
       "segments": [
         {
+          "background": "#0077c2",
+          "foreground": "#ffffff",
+          "powerline_symbol": "",
+          "style": "powerline",
+          "type": "shell"
+        },
+        {
           "foreground": "#7a7a7a",
           "style": "plain",
-          "template": " ~#@❯ ",
+          "template": " ❯ ",
           "type": "text"
         }
       ],
