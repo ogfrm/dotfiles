@@ -1,5 +1,4 @@
 {{/* boolean feature tags */}}
-{{- $ephemeral := false -}}{{/* true if this machine is ephemeral, e.g. a cloud or VM instance */}}
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
 {{- "" -}}
 
@@ -49,7 +48,6 @@
 {{- end -}}
 
 [data]
-    ephemeral = {{ $ephemeral }}
     work = {{ $work }}
     hostname = {{ $hostname | quote }}
     osid = {{ $osID | quote }}
