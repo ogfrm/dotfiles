@@ -1,4 +1,0 @@
-font-feature = -calt, -liga, -dlig
-window-inherit-working-directory = false
-working-directory = home
-keybind = shift+enter=text:\x1b\r

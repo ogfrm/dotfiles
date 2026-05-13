@@ -1,3 +1,4 @@
+{{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
 {{- $email := promptStringOnce . "email" "Email address" -}}
 # chezmoi execute-template --init --promptString "Email address=me@home.org" < ~/.local/share/chezmoi/.chezmoi.toml.tmpl
 [git]
@@ -6,3 +7,17 @@
     autoPush = true
 [data]
     email = {{ $email | quote }}
+    personal = {{ $personal }}
+
+
+# [github]
+#     refreshPeriod = "12h"
+
+
+
+
+{{- if lookPath "podman" }}
+
+[docker]
+    command = "podman"
+{{- end }}

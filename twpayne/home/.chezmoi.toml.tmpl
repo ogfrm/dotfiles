@@ -2,7 +2,6 @@
 {{- $ephemeral := false -}}{{/* true if this machine is ephemeral, e.g. a cloud or VM instance */}}
 {{- $work := false -}}{{/* true if this machine is a work machine */}}
 {{- $headless := false -}}{{/* true if this machine does not have a screen and keyboard */}}
-{{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
 {{- "" -}}
 
 {{- $osID := .chezmoi.os -}}
@@ -52,11 +51,9 @@
 
 [data]
     ephemeral = {{ $ephemeral }}
-    email = {{ $email | quote }}
     work = {{ $work }}
     headless = {{ $headless }}
     hostname = {{ $hostname | quote }}
-    personal = {{ $personal }}
     osid = {{ $osID | quote }}
     zshPlugins = [
         "per-directory-history",
@@ -64,11 +61,7 @@
         "zsh-syntax-highlighting",
     ]
 
-{{- if lookPath "podman" }}
 
-[docker]
-    command = "podman"
-{{- end }}
 
 [github]
     refreshPeriod = "12h"

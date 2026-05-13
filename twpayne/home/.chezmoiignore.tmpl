@@ -1,16 +1,5 @@
-!.oh-my-zsh/plugins
-{{ range .zshPlugins }}
-!.oh-my-zsh/plugins/{{ . }}
-!.oh-my-zsh/plugins/{{ . }}/**
-{{- end }}
-.oh-my-zsh/cache/**
-.oh-my-zsh/plugins/**
-.oh-my-zsh/templates/**
-.oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
-
 {{ if ne .chezmoi.os "darwin" }}
 .chezmoiscripts/darwin/**
-.config/aerospace
 .config/homebrew
 .hammerspoon
 {{ end }}
@@ -32,12 +21,7 @@ Documents
 .config/psql
 .config/readline
 .config/tmux
-.gnupg
-.gnupg/**
 .inputrc
-.oh-my-zsh
-.oh-my-zsh/**
-.p10k.zsh
 .ssh/id_rsa
 .ssh/id_rsa.pub
 .tmux.conf
@@ -46,14 +30,6 @@ Documents
 {{ end }}
 
 {{ if not .personal }}
-.config/ghostty
-.config/ghostty/**
-.config/psql
-.config/psql/**
-.hammerspoon
-.hammerspoon/**
-.pypirc
-.psqlrc
 .ssh
 .ssh/**
 {{ end }}
