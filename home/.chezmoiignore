@@ -18,6 +18,8 @@ README.md
 .chezmoiscripts/windows/**
 Documents
 {{ else }}
+.bashrc*
+.profile*
 .bash_aliases
 .config/ghostty
 .config/git/cookies
