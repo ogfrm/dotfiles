@@ -17,7 +17,7 @@ if [ "${og_setprompt}" = 'starship' ]; then
 elif [ "${og_setprompt}" = 'posh' ]; then
 	# [ ! -x "$(command -v oh-my-posh)" ] && source ~/.apps/prompts/ohmyposh.sh
 
-	eval "$(oh-my-posh init ${MYSHELL})"
+	# eval "$(oh-my-posh init ${MYSHELL})"
   # oh-my-posh config export --output ~/.config/myposh_default.toml --format toml
 
   # oh-my-posh config export --config ~/.config/ohmyposh/slim.omp.json --output ~/.config/slim.omp.json.toml --format toml
@@ -28,7 +28,7 @@ elif [ "${og_setprompt}" = 'posh' ]; then
 	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/myposh.zen.omp.toml)"
 	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/slim.omp.json.toml)"
 	# eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/ohmyposh/slimfat.omp.json)"
-	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/myposh.my.omp.json)"
+	eval "$(oh-my-posh init ${MYSHELL} --config ~/.config/myposh.my.omp.yaml)"
 
   oh-my-posh config export --output ~/.config/myposh_current.yaml --format yaml    # .json .yaml
 
