@@ -1,6 +1,23 @@
-
 # if [ -n "$BASH_VERSION" ]; then   [ -n "$ZSH_VERSION" ]
 MYSHELL=`basename $(readlink /proc/$$/exe)` # MYSHELL=`ps -cp "$$" -o command=""`
+
+#######################################################
+# Shell integrations
+#######################################################
+# eval "$(zoxide init --cmd cd zsh)"
+
+# og_setprompt=starship
+og_setprompt=posh
+if [ "${og_setprompt}" = 'starship' ]; then
+	if ! [ -x "$(command -v starship)" ]; then return; fi
+	# https://starship.rs/config/#prompt
+	export STARSHIP_CONFIG=~/.config/starship_my.toml
+	eval "$(starship init ${MYSHELL})"
+elif [ "${og_setprompt}" = 'posh' ]; then
+	# [ ! -x "$(command -v oh-my-posh)" ] && source ~/.apps/prompts/ohmyposh.sh
+	eval "$(oh-my-posh init $(oh-my-posh get shell) --config ~/.config/myposh.my.omp.yaml)" # slimfat
+
+fi
 
 #############   FZF   CTRL+R:  history search.  CTRL+T: find a file or directory ALT + C search for a directory and cd
 
@@ -43,7 +60,3 @@ else
     fi
 fi
 
-#######################################################
-# Shell integrations
-#######################################################
-# eval "$(zoxide init --cmd cd zsh)"
