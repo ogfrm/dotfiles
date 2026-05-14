@@ -17,6 +17,7 @@ README.md
 {{ if ne .chezmoi.os "windows" }}
 .chezmoiscripts/windows/**
 Documents
+AppData
 {{ else }}
 .bashrc*
 .profile*

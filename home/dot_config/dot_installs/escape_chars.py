@@ -6,36 +6,32 @@
 # python3 -c "print('©'.encode('unicode_escape').decode())"
 # Output: \u00a9
 
-# import sys
-
-# def escape_special_chars(text):
-#     # Converts non-alphanumeric characters to \uXXXX format
-#     return "".join(f"\\u{ord(c):04x}" if not c.isalnum() else c for c in text)
-
-# for line in sys.stdin:
-#     sys.stdout.write(escape_special_chars(line))
-
-
 import sys
 import re
+from pathlib import Path
 
-# Read input
-input_text = sys.stdin.read()
-
-# Replace characters in the range E000-F8FF (Nerd Fonts PUA)
 def replace_with_unicode(match):
     char = match.group(0)
     return char.encode('unicode-escape').decode('utf-8')
 
-# return ascii(char)
+# Read from file if provided
+if len(sys.argv) > 1:
+    input_file = Path(sys.argv[1])
+    input_text = input_file.read_text(encoding="utf-8")
+else:
+    input_text = sys.stdin.read()
 
-# Regex to find Nerd Font symbols
-# result = re.sub(r'[\uE000-\uF8FF]', replace_with_unicode, input_text)
-# Include supplementary private-use planes too
+# Convert unicode characters
 result = re.sub(
     r'[\u2000-\uF8FF\U000F0000-\U0010FFFF]',
     replace_with_unicode,
     input_text
 )
 
-sys.stdout.write(result)
+# Save converted file
+if len(sys.argv) > 1:
+    output_file = input_file.with_suffix(input_file.suffix + ".converted")
+    output_file.write_text(result, encoding="utf-8")
+    print(f"Converted file saved as: {output_file}")
+else:
+    sys.stdout.write(result)

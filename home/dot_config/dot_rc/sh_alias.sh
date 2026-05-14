@@ -286,3 +286,44 @@ alias psmem10="/bin/ps -eo pmem,pcpu,pid,user,args | sort -k 1 -r | head -10 | c
 alias cz="chezmoi"
 alias czar="chezmoi apply && reload"
 alias czpush="chezmoi git add . && chezmoi git -- commit -m 'test' && chezmoi git push"
+
+############################## OH-MY-POSH
+ompex() {  # omp toml,json,yaml <file>
+  oh-my-posh config export --config $2 --output $2.$1 --format yaml    # .json .yaml
+}
+omp() {
+  eval "$(oh-my-posh init $(oh-my-posh get shell) --config $1)"
+}
+
+############################## Unicod
+ucget() {
+  python3 -c "print(\"$1\".encode(\"unicode_escape\").decode())"
+}
+
+ucconvert() {
+  python3 - <<'PY' "$1"
+import sys
+import re
+from pathlib import Path
+
+input = Path(sys.argv[1])
+text = input.read_text(encoding="utf-8")
+
+def repl(match):
+    return match.group(0).encode(
+        "unicode-escape"
+    ).decode("utf-8")
+
+result = re.sub(
+    r'[\u2000-\uF8FF\U000F0000-\U0010FFFF]',
+    repl,
+    text
+)
+
+output = input.with_suffix(input.suffix + ".converted")
+output.write_text(result, encoding="utf-8")
+
+print(f"Saved: {output}")
+PY
+}
+
