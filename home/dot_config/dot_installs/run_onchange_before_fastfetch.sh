@@ -1,3 +1,4 @@
+#!/bin/bash
 deb=$(curl -s https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest \
 | grep browser_download_url \
 | grep 'fastfetch-linux-amd64\.deb"' \
