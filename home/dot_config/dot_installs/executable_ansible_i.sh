@@ -10,7 +10,6 @@ app_install() {
 }
 
 app_uninstall() {
-
   command -v ansible >/dev/null 2>&1 || {
     echo "ansible not installed"
     return
