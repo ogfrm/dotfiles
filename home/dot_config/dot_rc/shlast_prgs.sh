@@ -12,11 +12,10 @@ og_setprompt=posh
 if [ "${og_setprompt}" = 'starship' ]; then
 	if ! [ -x "$(command -v starship)" ]; then return; fi
 	# https://starship.rs/config/#prompt
-	export STARSHIP_CONFIG=~/.config/starship_my.toml
+	export STARSHIP_CONFIG=~/.config/prompt.my.star.toml
 	eval "$(starship init ${MYSHELL})"
 elif [ "${og_setprompt}" = 'posh' ]; then
-	# [ ! -x "$(command -v oh-my-posh)" ] && source ~/.apps/prompts/ohmyposh.sh
-	eval "$(oh-my-posh init $(oh-my-posh get shell) --config ~/.config/myposh.my.omp.yaml)" # slimfat
+	eval "$(oh-my-posh init $(oh-my-posh get shell) --config ~/._my/prompt.my.omp.yaml)" # slimfat
 
 fi
 

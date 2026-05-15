@@ -22,6 +22,7 @@ AppData
 .bashrc*
 .profile*
 .bash_aliases
+.config
 .config/.installs
 .config/.rc
 .config/tmux
