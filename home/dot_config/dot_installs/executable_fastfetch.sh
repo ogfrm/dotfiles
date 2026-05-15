@@ -1,7 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-echo 222222
 if ! command -v fastfetch &> /dev/null; then
   deb=$(curl -s https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest \
   | grep browser_download_url \

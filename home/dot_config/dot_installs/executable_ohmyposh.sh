@@ -1,5 +1,4 @@
 #!/bin/bash
-echo 1111
 set -euo pipefail
 if ! command -v oh-my-posh &> /dev/null; then
 # if [ -x "$(command -v oh-my-posh)" ]; then
@@ -9,22 +8,14 @@ if ! command -v oh-my-posh &> /dev/null; then
   # oh-my-posh font install meslo
   oh-my-posh font install FiraCode
 
-  REPO_URL="https://github.com/JanDeDobbeleer/oh-my-posh.git"
-  TARGET_DIR="$HOME/.config/ohmyposh"
-
-  echo "Creating target directory..."
-  mkdir -p "$TARGET_DIR"
-
-  TMP_DIR="$(mktemp -d)"
-
-  echo "Cloning oh-my-posh repository..."
-  git clone --depth=1 "$REPO_URL" "$TMP_DIR"
-
-  echo "Copying themes folder..."
-  cp -r "$TMP_DIR/themes"/* "$TARGET_DIR/"
-
-  echo "Cleaning up..."
-  rm -rf "$TMP_DIR"
-
-  echo "Themes downloaded to: $TARGET_DIR"
+  THEMES_DIR="$HOME/.config/ohmyposh"
+  mkdir -p "$THEMES_DIR"
+  curl -s https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/contents/themes \
+  | jq -r '.[].name' \
+  | while IFS= read -r theme; do
+      # echo "Downloading $theme..."
+      curl -s -o "$THEMES_DIR/$theme" "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$theme"
+  done
 fi
+
+

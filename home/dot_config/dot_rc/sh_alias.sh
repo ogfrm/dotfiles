@@ -1,3 +1,44 @@
+# Add /home/$USER/bin to $PATH
+case :$PATH: in
+	*:/home/$USER/bin:*) ;;
+	*) PATH=/home/$USER/bin:$PATH ;;
+esac
+
+# Add /home/$USER/.local/bin to $PATH
+case :$PATH: in
+	*:/home/$USER/.local/bin:*) ;;
+	*) PATH=/home/$USER/.local/bin:$PATH ;;
+esac
+
+#######################################################
+# EXPORTS
+#######################################################
+# export TERM="xterm-256color"                      # getting proper colors
+
+if [ -x "$(command -v fresh)" ]; then
+  export EDITOR=fresh
+else
+  export EDITOR=nano   # nvim  /usr/bin/vim
+fi
+
+# To have colors for ls and all grep commands such as grep, egrep and zgrep
+# https://gist.github.com/thomd/7667642  https://geoff.greer.fm/lscolors/
+# The full list of attributes for LS_COLORS can be found with dircolors -p or dircolors
+export LS_COLORS='di=01;36'
+
+##### Color for manpages in less makes manpages a little easier to read
+# sudo apt install terminfo   # termcap is obsolete and terminfo is it's newer replacement
+export LESS_TERMCAP_md=$'\E[01;32m' # Green  # md,bold Bold text  $(tput bold; tput setaf 2)
+export LESS_TERMCAP_me=$'\E[0m'  # $(tput sgr0)  turn off bold, blink and underline   End all mode so, us, mb, md, and mr
+export LESS_TERMCAP_us=$'\E[01;36m' # 4-Blue  us,smul start underline   $(tput smul; tput setaf 4)
+export LESS_TERMCAP_ue=$'\E[0m'  # ue,rmul stop underline  $(tput rmul; tput sgr0)
+export LESS_TERMCAP_so=$'\E[01;44;33m' # so,smso start standout (search result /Like) $(tput bold; tput setab 4; tput setaf 3)
+export LESS_TERMCAP_se=$'\E[0m'         # se,rmso End standout  $(printf "\\e[0m")  $(tput rmso; tput sgr0)
+# export LESS_TERMCAP_mb=$'\E[01;31m'  # mb      blink     start blink
+export MANPAGER='less +Gg'
+export GROFF_NO_SGR=1
+
+
 # To temporarily bypass an alias, we precede the command with a \  like \ls
 ###########################   TERMINAL
 # alias hlp='less ~/.bashrc_help'
@@ -59,6 +100,12 @@ mkdirg() { # Create and go to the directory
 	mkdir -p "$1"
 	cd "$1"
 }
+
+if command -v colordiff > /dev/null 2>&1; then
+    alias diff="colordiff -Nuar"
+else
+    alias diff="diff -Nuar"
+fi
 
 function diffdir() {    # diffdir /path1 /path2
     # diff <(tree -ap $1) <(tree -ap $2)
@@ -294,6 +341,67 @@ ompex() {  # omp toml,json,yaml <file>
 omp() {
   eval "$(oh-my-posh init $(oh-my-posh get shell) --config $1)"
 }
+##############################   TLDR
+alias tldrf='tldr --list | fzf --preview "tldr {1}" --preview-window=right,60% | xargs tldr'
+
+export tldrLocal="$HOME/.local/share/tldr"
+tldrl() {
+  if [ -z "$1" ]; then
+    find  $tldrLocal -type f | sort | fzf --with-nth -1 --delimiter / --preview  "batcat --color=always --paging=never --number {}" --bind "enter:become(nano {})"
+  else
+    tldr $1
+    [ -f "$tldrLocal/$1.md" ] && cat "$tldrLocal/$1.md" || curl cheat.sh/$1
+  fi
+}
+# alias tldrll='find  $tldrLocal -type f | sort | fzf --with-nth -1 --delimiter / --preview  "batcat --color=always --paging=never --number {}"'
+# tldr -r .local/share/tldr/less.md
+tldre() {
+  [ ! -f "$tldrLocal/$1.md" ] && curl -s cheat.sh/$1 | sed 's/\x1b\[[0-9;]*[mK]//g' > "$tldrLocal/$1.md"
+  $EDITOR "$tldrLocal/$1.md"
+}
+ch() {
+  curl cheat.sh/$1
+}
+# ch() { curl cheat.sh/$1 | batcat --color=always  }
+
+
+
+
+########################### DOCKER
+alias docker-clean=' \
+  docker container prune -f ; \
+  docker image prune -f ; \
+  docker network prune -f ; \
+  docker volume prune -f '
+########################### GIT
+alias addup='git add -u'
+alias addall='git add .'
+alias branch='git branch'
+alias checkout='git checkout'
+alias clone='git clone'
+alias commit='git commit -m'
+alias fetch='git fetch'
+alias pull='git pull origin'
+alias push='git push origin'
+alias stat='git status'  # 'status' is protected name so using 'stat' instead
+alias tag='git tag'
+alias newtag='git tag -a'
+
+# bare git repo alias for managing my dotfiles
+# alias config="/usr/bin/git --git-dir=$HOME/dotfiles --work-tree=$HOME"
+
+# GitHub Titus Additions
+gcom() {
+	git add .
+	git commit -m "$1"
+}
+lazyg() {
+	git add .
+	git commit -m "$1"
+	git push
+}
+
+
 
 ############################## Unicod
 ucget() {
