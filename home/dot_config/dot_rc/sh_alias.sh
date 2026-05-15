@@ -54,7 +54,7 @@ alias checkcommand="type -a" # a command is aliased and paths
 alias hgrep="fc -l 1 | grep"		#history search -E zfs shows time
 
 ########################### FILE Commands
-alias cp='cp -I'  #prompt before overwrite   use -I to prompt 3 and more files
+alias cp='cp -i'  #prompt before overwrite
 alias mv='mv -i'  #prompt before overwrite
 alias ln='ln -i'  # -iv
 alias rm="rm -I"  # -i

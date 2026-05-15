@@ -4,7 +4,8 @@ MYSHELL=`basename $(readlink /proc/$$/exe)` # MYSHELL=`ps -cp "$$" -o command=""
 #######################################################
 # Shell integrations
 #######################################################
-# eval "$(zoxide init --cmd cd zsh)"
+# eval "$(zoxide init ${MYSHELL})"
+eval "$(zoxide init --cmd cd ${MYSHELL})"  # it will use cd instead of z   cdi instead of zi
 
 # og_setprompt=starship
 og_setprompt=posh
@@ -40,8 +41,7 @@ if type rg &>/dev/null; then
   export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
 fi
 
-# Git fzf ^G ( ? this list ^F Files ^B Branches ^T Tags ^R Remotes ^H commit Hashes ^S Stashes ^L reflogs ^W Worktrees ^E Each ref (git for-each-ref)
-# https://github.com/junegunn/fzf-git.sh
+# Git fzf ^G ( ? this list ^F Files ^B Branches ^T Tags ^R Remotes ^H commit Hashes ^S Stashes ^L reflogs ^W Worktrees ^E Each ref (git for-each-ref)   # https://github.com/junegunn/fzf-git.sh
 [ -d "${fzfdir}-git" ] || (sudo git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfdir}-git)
 [ -f "${fzfdir}-git/fzf-git.sh" ] && source "$fzfdir-git/fzf-git.sh"
 
