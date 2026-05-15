@@ -14,11 +14,17 @@
      "fzf"
      "git"
      "jq"
-     "openssh-server"
      "ripgrep"
      "zsh" -}}
 {{ $snaps := list -}}
 {{ $classicSnaps := list -}}
+
+{{ if eq .chezmoi.os "linux" -}}
+{{   if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{   $packages = mustAppend $packages "openssh-server" -}}{{/* WSL-specific code */ -}}
+{{   end -}}
+{{ end -}}
+
 
 {{ if eq .chezmoi.osRelease.id "ubuntu" -}}
 {{   $packages = mustAppend $packages "btop" -}}

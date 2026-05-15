@@ -2,8 +2,8 @@
 set -euo pipefail
 app_install() {
   command -v ansible >/dev/null 2>&1 && return
-  command -v pipx >/dev/null 2>&1 || sudo apt update; sudo apt install pipx -y;
-  pipx install ansible
+  command -v pipx >/dev/null 2>&1 || { sudo apt update && sudo apt install pipx -y; }
+  pipx install --include-deps ansible
   pipx install ansible-lint
   ansible-galaxy collection install community.general --force
   ansible-galaxy collection install community.docker --force

@@ -22,8 +22,8 @@ AppData
 .bashrc*
 .profile*
 .bash_aliases
+.config/.install
 .config/.rc
-.config/.rc1
 .config/tmux
 .inputrc
 .ssh/id_rsa
