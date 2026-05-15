@@ -344,7 +344,8 @@ omp() {
 ##############################   TLDR
 alias tldrf='tldr --list | fzf --preview "tldr {1}" --preview-window=right,60% | xargs tldr'
 
-export tldrLocal="$HOME/.local/share/tldr"
+export tldrLocal="$HOME/.local/share/chezmoi/dot_config/tldr_local"
+# export tldrLocal="$HOME/._config/tldr_local"
 tldrl() {
   if [ -z "$1" ]; then
     find  $tldrLocal -type f | sort | fzf --with-nth -1 --delimiter / --preview  "batcat --color=always --paging=never --number {}" --bind "enter:become(nano {})"
