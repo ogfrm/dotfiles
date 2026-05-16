@@ -45,17 +45,17 @@ fi
 [ -f "${fzfdir}-git/fzf-git.sh" ] && source "$fzfdir-git/fzf-git.sh"
 
 ################## Show system information at login
-if [ -v TMUX ]
-then
-    echo
-#    tmux list-panes -s | awk 'END { if(NR == 1 && $4 ~ "0/") system("neofetch")}'
-else
-    # -t makes the test test a file descriptor to see if it's a terminal  0=STDIN. if STDIN is a terminal then ...
-    # if test -t 1; then
-    if [ -t 0 ]; then
-        if [ -f /usr/bin/fastfetch ]; then
-            fastfetch
-        fi
-    fi
-fi
+# if [ -v TMUX ]
+# then
+#     echo
+# #    tmux list-panes -s | awk 'END { if(NR == 1 && $4 ~ "0/") system("neofetch")}'
+# else
+#     # -t makes the test test a file descriptor to see if it's a terminal  0=STDIN. if STDIN is a terminal then ...
+#     # if test -t 1; then
+#     if [ -t 0 ]; then
+#         if [ -f /usr/bin/fastfetch ]; then
+#             fastfetch
+#         fi
+#     fi
+# fi
 

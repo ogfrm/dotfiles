@@ -365,9 +365,6 @@ ch() {
 }
 # ch() { curl cheat.sh/$1 | batcat --color=always  }
 
-
-
-
 ########################### DOCKER
 alias docker-clean=' \
   docker container prune -f ; \
@@ -403,8 +400,9 @@ lazyg() {
 }
 
 ############################## Ansible
-alias anp='ansible-playbook local.yml'
-
+# alias anp='ansible-playbook local.yml'
+alias anp='czar; ANSIBLE_CONFIG=ansible.cfg ansible-playbook local.yml'
+alias anpug='anp -t update,upgrade,cleanup'
 
 ############################## Unicod
 ucget() {
