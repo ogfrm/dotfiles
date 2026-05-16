@@ -1,0 +1,67 @@
+---
+- name: Local | Set Initial Vars
+  hosts: all
+  gather_facts: false
+  pre_tasks:
+    - name: Local | set __p_starttime # noqa: run-once[task]
+      ansible.builtin.set_fact:
+        __p_starttime: "{{ now(utc=false, fmt='%Y%m%dT%H%M%S') }}"
+      delegate_to: localhost
+      run_once: true
+      tags: always
+
+  # roles:
+  #   - role: api
+  #     tags: api_restore,api_backup
+
+# - name: Proxmox VM Works 1
+#   hosts: pve_lxc, pve_kvm
+#   gather_facts: false
+#   roles:
+#     - role: pve_vm
+#       pve_vm__p_cnt: '1'
+
+# - name: Local | Run Roles
+#   hosts: all, !openwrt, !noruns
+#   gather_facts: false
+#   pre_tasks:
+#     - name: Local | First Check
+#       tags: always, 1st
+#       when: inventory_hostname_short != 'localhost'
+#       ansible.builtin.import_tasks: tasks/1st_check.yml
+
+  # roles:
+  #   # - role: tailscale
+  #   - role: backup
+  #     backup__r_cnt: '1'
+  #   - role: pve
+  #     when: "'pve' in group_names"
+  #   - role: system
+  #     system__r_cnt: '1'
+  #     become: true
+  #   - role: users
+  #   # - role: local
+  #   # - role: software
+  #   # - role: docker
+  #   - role: system
+  #     system__r_cnt: '2'
+  #     become: true
+  #   - role: backup
+  #     backup__r_cnt: '2'
+
+# - name: Proxmox VM Works 2
+#   hosts: pve_lxc, pve_kvm
+#   gather_facts: false
+#   roles:
+#     - role: pve_vm
+#       pve_vm__p_cnt: '2'
+
+- name: Last Tasks
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Changes Made
+      ansible.builtin.debug:
+        msg: "{{ __l_changed_tasks | d([]) | to_nice_yaml }}"
+      when: __l_changed_tasks | d([]) | length > 0
+      tags: always

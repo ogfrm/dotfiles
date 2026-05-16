@@ -1,0 +1,8 @@
+*__sifre.*
+.sifre/
+.vscode
+.ansible
+ansible_env
+.gitconfig
+.git
+files/server_configs/

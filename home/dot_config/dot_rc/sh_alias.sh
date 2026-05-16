@@ -402,6 +402,8 @@ lazyg() {
 	git push
 }
 
+############################## Ansible
+alias anp='ansible-playbook local.yml'
 
 
 ############################## Unicod
@@ -435,4 +437,5 @@ output.write_text(result, encoding="utf-8")
 print(f"Saved: {output}")
 PY
 }
+
 

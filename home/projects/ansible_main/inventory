@@ -1,0 +1,73 @@
+#https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html
+#https://docs.ansible.com/ansible/2.3/intro_inventory.html
+# There are two default groups: all and ungrouped.
+
+[ansible_server]
+localhost       ansible_connection=local
+
+[pve]
+pveoz1          ansible_host=192.168.11.30 ansible_port=22
+pve1            ansible_host=192.168.11.8 ansible_port=22
+pvemi           ansible_host=192.168.86.8 ansible_port=22
+pvevm1          ansible_host=192.168.11.51 ansible_port=22
+
+[pve_kvm]
+HAOS            ansible_host=192.168.11.16
+pvevm1
+
+[pve1_grp]
+oz               ansible_host=192.168.11.11
+oz10              ansible_host=192.168.11.10
+oz12              ansible_host=192.168.11.12
+oz14              ansible_host=192.168.11.14
+oz15              ansible_host=192.168.11.15
+oz17              ansible_host=192.168.11.17
+t861              ansible_host=192.168.11.61
+t862              ansible_host=192.168.11.62
+
+[pveoz1_grp]
+
+
+; oz[0:9]
+
+[pvemi_grp]
+mi               ansible_host=192.168.86.11
+mia              ansible_host=192.168.86.12
+misync           ansible_host=192.168.86.18
+
+[pve_lxc:children]
+pve1_grp
+pveoz1_grp
+pvemi_grp
+
+[template]
+[k3s]
+[oci]
+ooz1       ansible_host=150.136.88.248  # arm 4-24 us-ashburn-1    10.21.0.148  100.100.21.11   do-release-upgrade
+oayf1       ansible_host=132.145.132.182  # arm 4-24 us-ashburn-1 10.22.0.242  100.100.22.11   do-release-upgrade
+omigiray67   ansible_host=140.238.171.77   #zurich
+ooz551  ansible_host=143.47.47.40  # arm 3-18 eu-madrid-1  10.25.0.128  100.100.25.11   do-release-upgrade
+; oozg         ansible_host=140.238.222.186    #zurich
+[openwrt]
+[alpine]
+oz12
+mia
+[ubuntu]
+t861
+t862
+oz10
+oz14
+oz15
+oz17
+mi
+misync
+[noruns]
+HAOS
+
+# [all:vars]
+; ansible_user=root
+
+# [oracle:vars]
+# ansible_connection=ssh
+# ansible_ssh_pass=password
+# ansible_become_pass=password
