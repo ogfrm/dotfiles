@@ -1,6 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 if ! command -v oh-my-posh &> /dev/null; then
+  if ! command -v unzip &> /dev/null; then
+    if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y git unzip; fi
+    if command -v yum >/dev/null 2>&1; then sudo yum install -y git unzip; fi
+    if command -v pacman >/dev/null 2>&1; then sudo pacman -Sy --noconfirm git unzip; fi
+  fi
+
   curl -s https://ohmyposh.dev/install.sh | bash -s
   # oh-my-posh font install
   # oh-my-posh font install meslo
