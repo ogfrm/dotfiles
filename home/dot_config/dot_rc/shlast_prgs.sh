@@ -4,7 +4,7 @@ MYSHELL=`basename $(readlink /proc/$$/exe)` # MYSHELL=`ps -cp "$$" -o command=""
 #######################################################
 # Prompt
 #######################################################
-og_setprompt=posh
+og_setprompt=starship
 if [ "${og_setprompt}" = 'starship' ]; then   # https://starship.rs/config/#prompt
 	export STARSHIP_CONFIG=~/._my/prompt.my.star.toml
 	eval "$(starship init ${MYSHELL})"
