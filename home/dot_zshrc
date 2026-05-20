@@ -140,8 +140,8 @@ case "$og_setprompt" in
   1)
 		autoload -U colors && colors 		# Enable colors and change prompt:
 		newline=$'\n'
-		UNICORN_UTF8=$'\360\237\246\204' # 🦄
-		FIRE_UTF8=$'\xF0\x9F\x94\xA5'  # 🔥
+		UNICORN_UTF8=$'\360\[\237\246\204\]' # 🦄
+		FIRE_UTF8=$'\xF0\[\x9F\x94\xA5\]'  # 🔥
 		prompt="%F{35}%* [%j]${git_prompt} [%m:%F{75}%f%F{69}%c%f%F{35}] %#%f ${newline}$FIRE_UTF8 "
 	;;
 	*)
