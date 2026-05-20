@@ -9,7 +9,7 @@
 # # {{ include "fastfetch_i.sh" | sha256sum }}
 # ./fastfetch_i.sh
 # ./zoxide_i.sh
-# ./fresh_i.sh
+./fresh_i.sh
 # # {{ include "dotconfig/dot_rc/executable_nerdfonts_i.sh" | sha256sum }}
 # ./ripgrep_i.sh
 # ./starship_i.sh
