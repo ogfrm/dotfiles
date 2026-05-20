@@ -56,11 +56,11 @@ alias hgrep="fc -l 1 | grep"		#history search -E zfs shows time
 alias cp='cp -i'  #prompt before overwrite
 alias mv='mv -i'  #prompt before overwrite
 alias ln='ln -i'  # -iv
-alias rm="rm -I"  # -i
+# alias rm="rm -I"  # -i
 alias rmd="rm -rf"
 
 if [ ! -f "/etc/alpine-release" ]; then
-  alias rm="rm -i --preserve-root" # do not delete / or -I prompt if deleting more than 3 files at a time #
+  alias rm="rm -I --preserve-root" # do not delete / or -I prompt if deleting more than 3 files at a time #
   alias rmd="rm -rf --preserve-root" # do not delete / or -I prompt if deleting more than 3 files at a time #
   alias chown="chown --preserve-root"
   alias chmod="chmod --preserve-root"
