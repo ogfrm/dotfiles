@@ -2,27 +2,30 @@
 MYSHELL=`basename $(readlink /proc/$$/exe)` # MYSHELL=`ps -cp "$$" -o command=""`
 
 #######################################################
-# Shell integrations
+# Prompt
 #######################################################
-# eval "$(zoxide init ${MYSHELL})"
-eval "$(zoxide init --cmd cd ${MYSHELL})"  # it will use cd instead of z   cdi instead of zi
-
-# og_setprompt=starship
 og_setprompt=posh
-if [ "${og_setprompt}" = 'starship' ]; then
-  if ! command -v eza &>/dev/null; then return; fi
-	# https://starship.rs/config/#prompt
+if [ "${og_setprompt}" = 'starship' ]; then   # https://starship.rs/config/#prompt
 	export STARSHIP_CONFIG=~/._my/prompt.my.star.toml
 	eval "$(starship init ${MYSHELL})"
 elif [ "${og_setprompt}" = 'posh' ]; then
 	eval "$(oh-my-posh init $(oh-my-posh get shell) --config ~/._my/prompt.my.omp.yaml)" # slimfat
-
 fi
 
-#############   FZF   CTRL+R:  history search.  CTRL+T: find a file or directory ALT + C search for a directory and cd
+#######################################################
+# Shell integrations
+#######################################################
 
-fzfdir=/usr/local/share/fzf   # $HOME/.local/share/fzf
-[ -d "$fzfdir" ] || (sudo git clone --depth 1 https://github.com/junegunn/fzf.git $fzfdir && sudo $fzfdir/install --bin)
+if command -v zoxide &> /dev/null
+  eval "$(zoxide init --cmd cd ${MYSHELL})"  # --cmd will use cd instead of z   cdi instead of zi
+fi
+
+#######################################################
+# FZF integrations  CTRL+R:  history search.  CTRL+T: find a file or directory ALT + C search for a directory and cd
+#######################################################
+
+fzfdir=$HOME/.local/share/fzf  # /usr/local/share/fzf $HOME/.local/share/fzf
+[ -d "$fzfdir" ] || (git clone --depth 1 https://github.com/junegunn/fzf.git $fzfdir && $fzfdir/install --bin)
 
 if [[ ! "$PATH" == *$fzfdir/bin* ]]; then
    export PATH="${PATH:+${PATH}:}$fzfdir/bin"
@@ -32,7 +35,7 @@ fi
 [ -f "$fzfdir/shell/completion.${MYSHELL}" ] && source "$fzfdir/shell/completion.${MYSHELL}"
 [ -f "$fzfdir/shell/key-bindings.${MYSHELL}" ] && source "$fzfdir/shell/key-bindings.${MYSHELL}"
 
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "cat {}"' # Preview files on right 'bat' or 'cat'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --preview "cat {}"' # Preview files on right 'cat'
 # export FZF_DEFAULT_OPTS="--color=bg+:24 --border=bold --border=rounded --layout=reverse --margin=3% --color=dark,bg+:24"
 
 # Use ripgrep (rg) if installed for faster, cleaner searches

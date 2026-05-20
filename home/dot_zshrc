@@ -1,25 +1,10 @@
 
 [[ $- != *i* ]] && return # If not running interactively, don't do anything
 
-for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
-
-
-#######################################################
-# Zinit Plugins
-#######################################################
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git" # Set the directory we want to store zinit and plugins
-
-if [ ! -d "$ZINIT_HOME" ]; then
-   mkdir -p "$(dirname $ZINIT_HOME)"
-   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-fi
-source "${ZINIT_HOME}/zinit.zsh"
-
 #######################################################
 # Completion  https://zsh.sourceforge.io/Doc/Release/Completion-System.html
 #######################################################
 autoload -Uz compinit && compinit
-zinit cdreplay -q    # add after compinit to replay cache recommended
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # turn autocomplete to case insesitive
@@ -72,103 +57,9 @@ stty stop undef # Disable ctrl-s to freeze terminal.
 zle_highlight=('paste:none') # stop pasted text being highlighted in terminals
 
 # CD History
-setopt AUTO_PUSHD           # Push the current directory visited on the stack. makes the standard cd command act like pushd
+setopt AUTO_PUSHD           # Push the current directory visited on the stack. makes the standard cd command like pushd
 setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
 setopt PUSHD_SILENT         # Do not print the directory stack after pushd or popd.
-
-#######################################################
-# Aliases
-#######################################################
-alias history='history 1'
-alias h='\history -i 1  '  #start from 1 with time
-alias ep="$EDITOR $HOME/.zshrc"
-alias reload="source ~/.zshrc"
-
-# Command line head / tail shortcuts
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| grep'
-alias -g L="| less"
-alias -g M="| most"
-alias -g LL="2>&1 | less"
-alias -g CA="2>&1 | cat -A"
-alias -g NE="2> /dev/null"
-alias -g NUL="> /dev/null 2>&1"
-alias -g P="2>&1| pygmentize -l pytb"
-
-# directory pushd  history with d see and jump back with 1-9 or 1-100
-alias d='dirs -v'
-for index ({1..9}) alias "$index"="cd +${index}"; unset index
-
-#######################################################
-# Prompt  https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
-#######################################################
-og_setprompt=posh # starship posh 1 prompt
-case "$og_setprompt" in
-	prompt)
-		autoload -U promptinit 		# initialize advanced prompt support:
-		promptinit
-		prompt fade blue  # prompt -p  #list available   prompt -l  #list the prompts
-	;;
-  1)
-		autoload -U colors && colors 		# Enable colors and change prompt:
-		newline=$'\n'
-		UNICORN_UTF8=$'\360\237\246\204' # 🦄
-		FIRE_UTF8=$'\xF0\x9F\x94\xA5'  # 🔥
-		prompt="%F{35}%* [%j]${git_prompt} [%m:%F{75}%f%F{69}%c%f%F{35}] %#%f ${newline}$FIRE_UTF8 "
-	;;
-	*)
-    PS1="%m%#"
-  	# PS1="[%* - %D] %d %% "
-		# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
-	;;
-esac
-
-#######################################################
-# Zinit Plugins
-# For more plugins: https://github.com/unixorn/awesome-zsh-plugins https://github.com/MichaelAquilina/zsh-you-should-use
-#######################################################
-
-# zinit ice depth=1; zinit light romkatv/powerlevel10k
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab   # fzf to complition menu
-
-# Add in snippets
-zinit snippet OMZL::git.zsh  # OhMyZsh lib/git.zsh  (like git_prompt_info or parse_git_dirty) many Zsh themes uses
-# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins
-zinit snippet OMZP::git    # OhMyZsh plugin -> git  (alias ga gst glog)
-zinit snippet OMZP::sudo   # escape escape (doble esc) adds sudo to last command
-# zinit snippet OMZP::archlinux
-# zinit snippet OMZP::aws
-# zinit snippet OMZP::kubectl
-# zinit snippet OMZP::kubectx
-zinit snippet OMZP::command-not-found
-
-#######################################################
-# Manual Plugins
-#######################################################
-# zplugindir=/usr/share/zsh/plugins  # $HOME/.local/share/zsh/plugins /usr/local/share/zsh/plugins zplugindir=/usr/local/share
-# function zsh_add_file() {
-#     [ -f "$1" ] && source "$1"
-# }
-# function zsh_add_plugin() {
-#     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
-#     # sudo rm -rf "$zplugindir/$PLUGIN_NAME"
-#     [ ! -d "$zplugindir/$PLUGIN_NAME" ] && (
-#         sudo rm -f $HOME/.zcompdump
-#         sudo git clone $2 "https://github.com/$1.git" "$zplugindir/$PLUGIN_NAME"
-#     )
-#     #        git pull
-#     zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
-# }
-
-# # Plugins # Load ; should be last.
-# zsh_add_plugin "zsh-users/zsh-autosuggestions" # Suggestions based on your history
-# zsh_add_plugin "zsh-users/zsh-completions"
-# zsh_add_plugin "zsh-users/zsh-syntax-highlighting" # syntax highlighting for ZSH in standard repos
-# zsh_add_plugin "Aloxaf/fzf-tab" # syntax highlighting for ZSH in standard repos
 
 #######################################################
 # Keybindings  https://www.zsh.org/mla/users/2014/msg00266.html
@@ -236,5 +127,107 @@ zle -N                 cdUndoKey
 bindkey '^[[1;3A'      cdParentKey
 bindkey '^[[1;3D'      cdUndoKey
 
-###############################################
+#######################################################
+# Prompt  https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+#######################################################
+og_setprompt=1
+case "$og_setprompt" in
+	prompt)
+		autoload -U promptinit 		# initialize advanced prompt support:
+		promptinit
+		prompt fade blue  # prompt -p  #list available   prompt -l  #list the prompts
+	;;
+  1)
+		autoload -U colors && colors 		# Enable colors and change prompt:
+		newline=$'\n'
+		UNICORN_UTF8=$'\360\237\246\204' # 🦄
+		FIRE_UTF8=$'\xF0\x9F\x94\xA5'  # 🔥
+		prompt="%F{35}%* [%j]${git_prompt} [%m:%F{75}%f%F{69}%c%f%F{35}] %#%f ${newline}$FIRE_UTF8 "
+	;;
+	*)
+    PS1="%m%#"
+  	# PS1="[%* - %D] %d %% "
+		# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+	;;
+esac
+
+#######################################################
+# Aliases
+#######################################################
+alias history='history 1'
+alias h='\history -i 1  '  #start from 1 with time
+alias ep="$EDITOR $HOME/.zshrc"
+alias reload="source ~/.zshrc"
+
+# Command line head / tail shortcuts
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+alias -g M="| most"
+alias -g LL="2>&1 | less"
+alias -g CA="2>&1 | cat -A"
+alias -g NE="2> /dev/null"
+alias -g NUL="> /dev/null 2>&1"
+alias -g P="2>&1| pygmentize -l pytb"
+
+# directory pushd  history with d see and jump back with 1-9 or 1-100
+alias d='dirs -v'
+for index ({1..9}) alias "$index"="cd +${index}"; unset index
+
+
+#######################################################
+# Zinit Plugins more plugins: https://github.com/unixorn/awesome-zsh-plugins https://github.com/MichaelAquilina/zsh-you-should-use
+#######################################################
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git" # Set the directory we want to store zinit and plugins
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+zinit cdreplay -q    # Completion   add after compinit command  to replay cache recommended
+
+# zinit ice depth=1; zinit light romkatv/powerlevel10k
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab   # fzf to complition menu
+
+# Add in snippets
+zinit snippet OMZL::git.zsh  # OhMyZsh lib/git.zsh  (like git_prompt_info or parse_git_dirty) many Zsh themes uses
+# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins
+zinit snippet OMZP::git    # OhMyZsh plugin -> git  (alias ga gst glog)
+zinit snippet OMZP::sudo   # escape escape (doble esc) adds sudo to last command
+# zinit snippet OMZP::archlinux
+# zinit snippet OMZP::aws
+# zinit snippet OMZP::kubectl
+# zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+
+#######################################################
+# Manual Plugins
+#######################################################
+# zplugindir=/usr/share/zsh/plugins  # $HOME/.local/share/zsh/plugins /usr/local/share/zsh/plugins zplugindir=/usr/local/share
+# function zsh_add_file() {
+#     [ -f "$1" ] && source "$1"
+# }
+# function zsh_add_plugin() {
+#     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
+#     # sudo rm -rf "$zplugindir/$PLUGIN_NAME"
+#     [ ! -d "$zplugindir/$PLUGIN_NAME" ] && (
+#         sudo rm -f $HOME/.zcompdump
+#         sudo git clone $2 "https://github.com/$1.git" "$zplugindir/$PLUGIN_NAME"
+#     )
+#     #        git pull
+#     zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+# }
+
+# # Plugins # Load ; should be last.
+# zsh_add_plugin "zsh-users/zsh-autosuggestions" # Suggestions based on your history
+# zsh_add_plugin "zsh-users/zsh-completions"
+# zsh_add_plugin "zsh-users/zsh-syntax-highlighting" # syntax highlighting for ZSH in standard repos
+# zsh_add_plugin "Aloxaf/fzf-tab" # syntax highlighting for ZSH in standard repos
+
+for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
 for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
