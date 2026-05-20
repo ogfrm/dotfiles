@@ -16,7 +16,7 @@ fi
 # Shell integrations
 #######################################################
 
-if command -v zoxide &> /dev/null
+if command -v zoxide &> /dev/null; then
   eval "$(zoxide init --cmd cd ${MYSHELL})"  # --cmd will use cd instead of z   cdi instead of zi
 fi
 
