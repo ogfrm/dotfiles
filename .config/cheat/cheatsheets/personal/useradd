@@ -1,0 +1,2 @@
+sudo useradd uname -m (creates the home directory) -s /bin/bash (use this shell) -g users (include in group) -G groups (add athher groupsS) -r (system user)
+sudo useradd uname -r #system user

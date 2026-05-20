@@ -1,0 +1,296 @@
+---
+tags: [networking]
+---
+
+# To show hit for rules with auto refresh:
+
+watch --interval 0 'iptables -nvL | grep -v "0 0"'
+
+# To show hit for rule with auto refresh and highlight any changes since the last refresh:
+
+watch -d -n 2 iptables -nvL
+
+# To block port 902 and hide this port from nmap:
+
+iptables -A INPUT -i eth0 -p tcp --dport 902 -j REJECT --reject-with icmp-port-unreachable
+
+# Note, --reject-with accept:
+
+# icmp-net-unreachable
+
+# icmp-host-unreachable
+
+# icmp-port-unreachable <- Hide a port to nmap
+
+# icmp-proto-unreachable
+
+# icmp-net-prohibited
+
+# icmp-host-prohibited or
+
+# icmp-admin-prohibited
+
+# tcp-reset
+
+# To add a comment to a rule:
+
+iptables ... -m comment --comment "This rule is here for this reason"
+
+# To remove or insert a rule:
+
+# 1) Show all rules
+
+iptables -L INPUT --line-numbers
+
+# OR iptables -nL --line-numbers
+
+# Chain INPUT (policy ACCEPT)
+
+# num target prot opt source destination
+
+# 1 ACCEPT udp -- anywhere anywhere udp dpt:domain
+
+# 2 ACCEPT tcp -- anywhere anywhere tcp dpt:domain
+
+# 3 ACCEPT udp -- anywhere anywhere udp dpt:bootps
+
+# 4 ACCEPT tcp -- anywhere anywhere tcp dpt:bootps
+
+# 2.a) REMOVE (-D) a rule. (here an INPUT rule)
+
+iptables -D INPUT 2
+
+# 2.b) OR INSERT a rule.
+
+iptables -I INPUT {LINE_NUMBER} -i eth1 -p tcp --dport 21 -s 123.123.123.123 -j ACCEPT -m comment --comment "This rule is here for this reason"
+
+######################################## #http://linux-training.be/networking/ch14.html#:~:text=PREROUTING%20allows%20altering%20of%20packets,look%20at%20the%20NAT%20table.
+iptables -I INPUT 6 -m state --state NEW -p tcp --dport (new_ssh_port) -j ACCEPT
+iptables-save >iptables
+iptables-resotore <iptables
+
+# Chains
+
+The filter table is used for packet filtering.
+iptables -t filter -L
+
+- Input – incoming connections. For example, if a user attempts to SSH into your PC/server
+- Forward – This chain is used for incoming connections that aren’t actually being delivered locally. router – data is always being sent to it but rarely actually destined for the router itself
+- Output – This chain is used for outgoing connections. For example, if you try to ping howtogeek.com,
+
+When using iptables to lock down your system, remember that a lot of protocols will require two-way communication
+
+# Policy Chain Default Behavior
+
+iptables --policy INPUT DROP
+iptables --policy OUTPUT ACCEPT
+iptables --policy FORWARD DROP
+or -P
+iptables -L | grep policy
+
+# Respons
+
+- Accept – Allow the connection.
+- Drop – Drop the connection, act like it never happened.
+- Reject – drops but sends error
+
+# Commands
+
+iptables starts at the top of its list and goes through each rule until it finds one that it matches
+-A to append rules to the existing chain.
+-I [chain] [number] to specify the number it should be in the list.
+
+iptables -A INPUT -s 10.10.10.10 -j DROP #drop all from ip
+iptables -A INPUT -s 10.10.10.0/24 -j DROP #range
+iptables -A INPUT -s 10.10.10.0/255.255.255.0 -j DROP
+iptables -A INPUT -i eth1 -s 10.1.1.0/24 -p tcp -j ACCEPT
+iptables -A OUTPUT -o eth1 -d 10.1.1.0/24 -p tcp -j ACCEPT
+
+iptables -A INPUT -p tcp --dport ssh -s 10.10.10.10 -j DROP
+iptables -A INPUT -p udp --dport 51280 -s 10.10.10.10 -j DROP #drop 51280/udp from ip
+
+lo is loopback interface
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+# Ping iptables to allow a ping from or to your machine.
+
+iptables -A INPUT -p icmp --icmp-type any -j ACCEPT
+iptables -A OUTPUT -p icmp --icmp-type any -j ACCEPT
+The following command enables routing of icmp messages between networks.
+iptables -A FORWARD -p icmp --icmp-type any -j ACCEPT
+
+# destination port sourceport
+
+iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 22 -j ACCEPT
+
+# Connection States
+
+#ssh in connection is accepted from ip (new or already established connection)
+
+iptables -A INPUT -p tcp --dport ssh -s 10.10.10.10 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+#ssh out connection is accepted from ip if connection is already established new out connection ip is droped
+
+iptables -A OUTPUT -p tcp --sport 22 -d 10.10.10.10 -m state --state ESTABLISHED -j ACCEPT
+
+# The changes that you make to your iptables rules will be scrapped the next time that the iptables service gets restarted unless you execute a command to save the changes. This command can differ depending on your distribution:
+
+sudo /sbin/iptables-save
+iptables -L List the currently configured iptables rules
+-v packet and byte information,
+-n will list everything numerically. hostnames, protocols, and networks are listed as numbers.
+
+iptables -F To clear all the currently configured rules, you can issue the flush command.
+
+# practice: packet filtering
+
+1. Make sure you can ssh to your router-system when iptables is active.
+2. Make sure you can ping to your router-system when iptables is active.
+3. Define one of your networks as 'internal' and the other as 'external'. Configure the router to allow visits to a website (http) to go from the internal network to the external network (but not in the other direction).
+4. Make sure the internal network can ssh to the external, but not the other way around.
+   solution: packet filtering
+   A possible solution, where leftnet is the internal and rightnet is the external network.
+
+#!/bin/bash
+
+# first cleanup everything
+
+iptables -t filter -F
+iptables -t filter -X
+iptables -t nat -F
+iptables -t nat -X
+
+# default drop
+
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+
+# allow loopback device
+
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+# question 1: allow ssh over eth0
+
+iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 22 -j ACCEPT
+
+# question 2: Allow icmp(ping) anywhere
+
+iptables -A INPUT -p icmp --icmp-type any -j ACCEPT
+iptables -A FORWARD -p icmp --icmp-type any -j ACCEPT
+iptables -A OUTPUT -p icmp --icmp-type any -j ACCEPT
+
+# question 3: allow http from internal(leftnet) to external(rightnet)
+
+iptables -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth1 -p tcp --sport 80 -j ACCEPT
+
+# question 4: allow ssh from internal(leftnet) to external(rightnet)
+
+iptables -A FORWARD -i eth1 -o eth2 -p tcp --dport 22 -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth1 -p tcp --sport 22 -j ACCEPT
+
+# allow http from external(rightnet) to internal(leftnet)
+
+# iptables -A FORWARD -i eth2 -o eth1 -p tcp --dport 80 -j ACCEPT
+
+# iptables -A FORWARD -i eth1 -o eth2 -p tcp --sport 80 -j ACCEPT
+
+# allow rpcinfo over eth0 from outside to system
+
+# iptables -A INPUT -i eth2 -p tcp --dport 111 -j ACCEPT
+
+# iptables -A OUTPUT -o eth2 -p tcp --sport 111 -j ACCEPT
+
+# The nat table is used for address translation.
+
+iptables -t nat -L
+Chain PREROUTING (policy ACCEPT)
+target prot opt source destination
+
+Chain POSTROUTING (policy ACCEPT)
+target prot opt source destination
+
+Chain OUTPUT (policy ACCEPT)
+target prot opt source destination
+
+# network address translation
+
+about NAT
+A NAT device is a router that is also changing the source and/or target ip-address in packets. It is typically used to connect multiple computers in a private address range with the (public) internet. A NAT can hide private addresses from the internet.
+
+NAT was developed to mitigate the use of real ip addresses, to allow private address ranges to reach the internet and back, and to not disclose details about internal networks to the outside.
+
+The nat table in iptables adds two new chains. PREROUTING allows altering of packets before they reach the INPUT chain. POSTROUTING allows altering packets after they exit the OUTPUT chain.
+
+Use iptables -t nat -nvL to look at the NAT table. The screenshot below shows an empty NAT table.
+
+[root@RHEL5 ~]# iptables -t nat -nL
+
+SNAT (Source NAT)
+The goal of source nat is to change the source address inside a packet before it leaves the system (e.g. to the internet). The destination will return the packet to the NAT-device. This means our NAT-device will need to keep a table in memory of all the packets it changed, so it can deliver the packet to the original source (e.g. in the private network).
+
+Because SNAT is about packets leaving the system, it uses the POSTROUTING chain.
+
+Example The rule says that packets coming from 10.1.1.0/24 network and exiting via eth1 will get the source ip-address set to 11.12.13.14.
+
+iptables -t nat -A POSTROUTING -o eth1 -s 10.1.1.0/24 -j SNAT --to-source 11.12.13.14
+
+Of course there must be iptables filter setup to allow the packet to traverse from one network to the other.
+
+SNAT example setup
+This example script uses a typical nat setup. The internal (eth0) network has access via SNAT to external (eth1) webservers (port 80).
+
+#!/bin/bash
+
+#
+
+# iptables script for simple classic nat websurfing
+
+# eth0 is internal network, eth1 is internet
+
+#
+
+echo 0 > /proc/sys/net/ipv4/ip_forward
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD DROP
+iptables -A FORWARD -i eth0 -o eth1 -s 10.1.1.0/24 -p tcp --dport 80 -j ACCEPT
+iptables -A FORWARD -i eth1 -o eth0 -d 10.1.1.0/24 -p tcp --sport 80 -j ACCEPT
+iptables -t nat -A POSTROUTING -o eth1 -s 10.1.1.0/24 -j SNAT --to-source 11.12.13.14
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+# IP masquerading
+
+IP masquerading is very similar to SNAT, but is meant for dynamic interfaces. Typical example are broadband 'router/modems' connected to the internet and receiving a different ip-address from the isp, each time they are cold-booted.
+
+iptables -t nat -A POSTROUTING -o eth1 -s 10.1.1.0/24 -j MASQUERADE
+
+# DNAT (Destination NAT)
+
+DNAT is typically used to allow packets from the internet to be redirected to an internal server (in your DMZ) and in a private address range that is inaccessible directly form the internet.
+
+This example script allows internet users to reach your internal (192.168.1.99) server via ssh (port 22).
+
+#!/bin/bash
+
+#
+
+# iptables script for DNAT
+
+# eth0 is internal network, eth1 is internet
+
+#
+
+echo 0 > /proc/sys/net/ipv4/ip_forward
+iptables -P INPUT ACCEPT
+iptables -P OUTPUT ACCEPT
+iptables -P FORWARD DROP
+iptables -A FORWARD -i eth0 -o eth1 -s 10.1.1.0/24 -j ACCEPT
+iptables -A FORWARD -i eth1 -o eth0 -p tcp --dport 22 -j ACCEPT
+iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 22 -j DNAT --to-destination 10.1.1.99
+echo 1 > /proc/sys/net/ipv4/ip_forward

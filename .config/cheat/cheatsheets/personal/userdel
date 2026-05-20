@@ -1,0 +1,2 @@
+sudo userdel uname
+sudo userdel -r uname #removes the home directory

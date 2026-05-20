@@ -1,0 +1,39 @@
+https://www.gnu.org/software/stow/manual/stow.html
+
+```bash
+sudo apt install stow` for Ubuntu or `sudo pacman -S stow` for Arch
+mkdir ~/dotfiles
+cp ~/.zshrc ~/dotfiles/
+mv ~/.zshrc ~/.zshrc.bak
+cd ~/dotfiles
+stow .
+stow --adopt .   # will copy org files to dotfiles overwrite then make link
+# OR by project
+mkdir ~/dotfiles/tmux/.config/tmux
+mkdir ~/neovim/.config/nvim
+stow --target=/home/venthur tmux
+# OR all
+stow --target=/home/venthur */
+
+git init
+git add .
+git commit -m "Initial commit"
+<!-- - Create a repository on GitHub (or another platform) and copy the repository URL. -->
+git remote add origin <repository-url>
+git push -u origin main
+
+#### Step 9: Create a README
+- Document dependencies and setup instructions in a `README.md` file:
+  ```markdown
+  # Dotfiles
+  ## Dependencies
+  - GNU Stow
+  - Git
+
+  ## Setup
+  1. Clone the repository: `git clone <repository-url>`
+  2. Navigate to the directory: `cd dotfiles`
+  3. Run Stow: `stow .`
+  ```
+
+```

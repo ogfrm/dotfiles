@@ -1,0 +1,4 @@
+# Disk diagnose
+smartctl -a /dev /sea
+smartctl -a /dev /nvme0
+smartctl -t  # test

@@ -1,0 +1,18 @@
+# To kill a process gracefully:
+kill -15 <pid>
+
+# To kill a process forcefully:
+kill -9 <pid>
+
+#########################################
+kill ID #kill the program
+kill -KILL ID #force close
+
+kill -l  #shows singnals 15 soft kill 
+kill -L  # show list of signals
+^z signal 19
+^c signal 2
+kill -19 PID
+kill -3 PID  # send quit command
+killall -9 gvim
+kill -s SIGKILL PID

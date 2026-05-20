@@ -1,0 +1,58 @@
+# To pretty print the json:
+jq "." < filename.json
+
+# To access the value at key "foo":
+jq '.foo'
+
+# To access first list item:
+jq '.[0]'
+
+# to slice and dice:
+jq '.[2:4]'
+jq '.[:3]'
+jq '.[-2:]'
+
+# to extract all keys from json:
+jq keys
+
+# to sort by a key:
+jq '.foo | sort_by(.bar)'
+
+# to count elements:
+jq '.foo | length'
+
+# print only selected fields:
+jq '.foo[] | {field_1,field_2}'
+
+# print selected fields as text instead of json:
+jq '.foo[] | {field_1,field_2} | join(" ")'
+
+# only print records where given field matches a value
+jq '.foo[] | select(.field_1 == "value_1")'
+
+
+############################################
+curl 'https://www.googleapis.com/books/v1/volumes?q=quilting' | jq '.items[0] | keys'
+curl 'https://www.googleapis.com/books/v1/volumes?q=quilting' | jq '.items[].selfLink'
+
+jq . <file>  # all objects
+jq '.team' <file>  # all team objects as list
+jq '.team[]' <file>  # all team objects as objects
+jq '.team[].name' <file>  # all team objects show only names
+jq -r '.team[].name' <file>  # all team objects show only names removes quotes
+jq '.team | lengh' <file>  # all team objects show only names removes quotes
+jq '.team[] | select(.salary >= 100000)' <file>  # all team objects as objects
+jq '.team[] | del(.skils)' <file>  # all team objects as objects
+jq --arg n "Dinesh" '.team[] | select(.name == $n)' <file>
+jq '.team[] | keys' <file>
+jq 'has("skills")'
+jq '.team[] | select(.skills | index("Java"))' <file> # find skil includes java
+
+curl -s 'https://api.github.com/repos/jqlang/jq/commits?per_page=5' | jq '.[0] | {message: .commit.message, name: .commit.committer.name}'
+
+sudo apt install yq #  yaml and others
+sudo apt install jqp # gui for jq
+curl -s 'https://api.github.com/repos/jqlang/jq/commits?per_page=5' | jqp
+sudo apt install gron #  json to grepable output
+curl -s 'https://api.github.com/repos/jqlang/jq/commits?per_page=5' | gron
+sudo apt install gojq #  has also yaml support --yaml-input --yaml-output

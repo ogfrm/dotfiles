@@ -1,0 +1,23 @@
+sudo systemctl restart fail2ban
+#________File2ban
+sudo apt install fail2ban
+systemctl status fail2ban
+
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo nano /etc/fail2ban/jail.local
+
+#ignoreip = 127.0.0.1/8 ::1 #You can enter your ip so it doesn't ban you
+
+sudo fail2ban-client status
+sudo fail2ban-client status sshd
+sudo fail2ban-client set sshd unbanip $IP
+sudo fail2ban-client status proxmox
+sudo fail2ban-regex /var/log/daemon.log /etc/fail2ban/filter.d/proxmox.conf
+sudo apparmor_status
+
+apache-auth
+apache-badbots
+
+cat /var/log/fail2ban.log
+cat /var/log/syslog
+iptables -L

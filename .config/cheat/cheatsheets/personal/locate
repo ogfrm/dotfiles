@@ -1,0 +1,10 @@
+###################
+
+sudo apt install plocate  # or mlocate(old)
+# it uses database to find
+sudo updatedb # update the database
+
+locate ssh_config
+locate -i SSH_CONFIG
+locate *.conf 
+locate -c *.conf # count 

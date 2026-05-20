@@ -1,0 +1,30 @@
+# Change a file's owner:
+chown <user> <file>
+
+# Change a file's owner and group:
+chown <user>:<group> <file>
+
+# Set user to match group value
+chown <user>: <file>
+
+# Set group to match user value
+chown :<group> <file>
+
+# Change a directory's owner recursively:
+chown -R <user> <directory>
+
+# Change ownership to match another file:
+chown --reference=<reference-file> <file>
+
+#########################################
+rwx #(read write execute)  (x for directory means you can enter the folder r list directory)
+421
+Owner-Ownergroup-other	owneruser - ownergroup
+
+sudo chown uname file
+sudo chown uname:gname file #change user and group
+sudo chown -R uname:gname file #Recursive
+
+sudo chmod (u|g|o)(+|-)(r|w|x) fname #-R recursive 
+sudo chmod ### fname
+sudo chmod +x  #user group and other

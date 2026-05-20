@@ -1,0 +1,2 @@
+sudo adduser uname
+sudo adduser uname groupname #add user to group

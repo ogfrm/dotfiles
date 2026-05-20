@@ -1,0 +1,63 @@
+---
+tags: [ packaging ]
+---
+# To find packages matching <phrase>:
+apt search <phrase>
+
+# To show information on a package:
+apt show <package>
+
+# To fetch package list:
+apt update
+
+# To download and install the updates and (UNLIKE apt-get) install new necessary packages:
+apt upgrade
+
+# To download and install the updates AND install new necessary packages
+# AND remove packages that stand in the way of the upgrade - use with caution!
+apt dist-upgrade
+
+# To perform a full system upgrade:
+apt update && apt upgrade # use dist-upgrade carefully if needed
+
+# To install package(s):
+apt install <package>...
+
+# To uninstall package(s):
+apt remove <package>...
+
+# To remove automatically all unused packages:
+apt autoremove
+
+# To list dependencies of a package:
+apt depends <package>...
+
+# To remove packages and delete their config files:
+apt purge <package>...
+
+# To list all packages installed
+apt list --installed
+
+################################
+apt update  #reposotory update
+apt upgrade
+apt dist-upgrade #No additional or removal package
+apt remove
+apt remove --purge app #purge program to and config files
+apt autoremove #remove no longer needed packages
+apt clean #cleans the program that downloaded if you need space
+apt --fix-broken install
+
+apt list --installed
+apt list --upgradeable
+apt list apache2
+apt list | grep nginx
+apt list | more
+apt list -a pkgNameHere
+apt list -a sudo
+apt list -a mariadb-server
+apt search firefox
+apt show firefox
+apt purge firefox
+cat /etc/apt/sources.list #repositoiries
+you can add  non-free after main

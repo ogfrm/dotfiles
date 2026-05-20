@@ -1,0 +1,14 @@
+# cd replacement remembers where you cd before
+# https://github.com/ajeetdsouza/zoxide
+# curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+# eval "$(zoxide init zsh)" # or bash add to .rc
+z documents
+z doc  # goes to documents
+zi doc # shows list with score
+zixode query --list --score doc
+zixode remove ~/documents  # removes from list 
+z doc subfolder  # finds subfolder and moves there
+z - # go back last
+z  # goes to home 
+
+# there are also pligins like for tmux

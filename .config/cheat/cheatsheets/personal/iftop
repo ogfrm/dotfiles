@@ -1,0 +1,4 @@
+#!/bin/bash
+#open port manager
+command -v iftop &>/dev/null || sudo apt-get install iftop -y
+#sudo iftop

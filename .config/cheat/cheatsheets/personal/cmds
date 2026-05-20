@@ -1,0 +1,268 @@
+[https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard]
+__________ Help
+cheat
+tldr
+cht.sh                      # curl cht.sh/...
+apropos <search>            # search commands (usb compress .....)
+man command                 # manual for command
+whatis command              # description of command
+__________ Terminal
+exit                        # ^d
+clear                       # ^l
+reset                       # reset screen
+!!                          # repeats the last command (sudo !! with sudo) echo !! > cpu.sh
+echo $?                     # last command exit code  0 success  NoZero error
+echo $RANDOM
+env                         # environment vars   Global variables UPPERCASE
+export
+unset
+printenv HOME
+PATH=$PATH:.
+__________ Shell
+/etc/profile                # change path
+~/.bash_profile
+~/.profile
+~/.bashrc
+/etc/skel/.bashrc  #skel new user default files
+bash #open a sub shell
+chsh <user> -s $(which zsh) #OR Edit /etc/passwd and change /bin/bash to /bin/zsh
+alias
+unalias
+
+
+progress                    # apt install progress   sudo progress --wait --command cmd  (dd) shows estimate
+cal		                    # calendar
+echo "3+4" | bc             # calculates
+cron		                # schedler
+
+_______   zsh
+bindkey
+showkey -a		# shows pressed key
+
+history 4v      # shows last 4
+!#              # history run the numbered command
+space command #will not save it to history
+HISTTIMEFORMAT="%Y-%m-%d %T "  #you can add to ~/.bashrc
+fc		        # edit the last command fc -l list fc -l 1 list from the bening
+# fc: usage: fc [-e ename] [-lnr] [first] [last] or fc -s [pat=rep] [command]
+
+__________ User Group
+su - uname              #change user
+sudo -s                 #change it to root account (even root is disabled)whoami
+adduser
+userdel
+passwd
+usermod -aG gname,g2 uname
+chage -l uname          #confirm expiration date
+useradd
+groups uname            #to see user groups
+gpasswd -a uname gname #add uname to group
+groupdel gname
+groupadd gname
+/etc/passwd             #All users
+/etc/group              #shows all groups
+/etc/default/useradd    #defaults for useradd
+/etc/shadow             #shows all encrypted passwords
+	2. column Days ago created, 3. days later can change passwd ,
+    4. days to require pass change, 5 reminded before pass chage 6. pass lock, 7 account expire
+/usr/sbin/nologin       #shell nologin
+finger user		#inspect other user
+
+
+__________ Apt
+dpkg
+apt
+dnf		                    # Fedora CentOS
+yum		                    # previous Centos use yum for apt
+packman                     # ArchLinux
+yay
+snap
+
+which command               # returs the path the exe
+whereis finger		        # all fingers
+aptitude			        # details list of apps installed
+___________Hardware info
+lsblk		                # hdd ssd
+lsusb	                    # usb devices
+lsusb -t                    # tree view
+lspci		                # pci buss
+lshw		                # hardware info
+lswh -html > hwinfo.html	# export html
+lshw -short
+lscpu
+cat /proc/cpuinfo
+https://www.linuxatemyram.com/
+free -m(megabyte) #memory usage   (buffer in disk - cached in memory  -/+ buffer/cached kismina bak)
+dmesg			            # shows dmesh log mostly hardware sudo dmesg | grep error
+
+top
+htop
+ctop                        # docker containers info
+powertop		            # power monitor
+
+uptime
+cat /etc/os-release         # shows distirubution
+cat /etc/hostname
+sudo hostname set-hostname newname
+hostnamectl                 # hostname
+timedatectl
+systemctl
+fastfetch
+__________ Process
+ps	-aux		            # running processes
+pstree
+pgrep firefox
+pidof name                  # shows the prosecc id
+kill
+pkill                       # Kill by name
+
+___________Test
+sysbench memory run		    # memory test
+iozone -a -I -b result.xls	# hdd test performance
+7z b                        # cpu test
+7z b -mm='*'                # each cpu
+
+pfetch
+uname                       # system information -a all
+
+__________ Network
+ip a
+ifconfig                    # apt install net-tools
+iperf3                      # speedtest in Network
+ipcalc 192.168.1.0/24       #	info about network subnet
+nmap
+cat /etc/resolv.conf	    # dnf info
+resulvectl status
+ping
+traceroute web
+netstat	-tulpn			    # open ports
+ss -tulpn	                # same netstat
+curl ifconfig.io		    # see external ip
+speedtest-cli --single for single connection  #internet speed test
+
+__________ Security
+ssh
+mosh                        # ssh replacement
+sudo
+visudo          # Edit sudoer file with error check if errow What Now # i reedit the file x exit without saving changes q will save the changes
+/etc/sudoers        # visudo
+fail2ban
+ufw
+unattended-upgrades --dry-run --debug
+iptables
+firewallD
+openssl passwd -1		    # generate hased password
+sshfs			            # remote dir mount
+
+__________ File Manager
+ls
+cd -                        # previous path
+j                           # autojump    tldr autojump
+pushd
+popd
+echo $OLDPWD
+~                           # home dir
+pwd                         # shows the current path
+cp -r                       # copy dir
+mv                          # move
+rm -rf                      # remove dir
+truncate -s 0 f1            # make it empty file
+diff f1 f2                  # if file is different
+colordiff		            # colored diff
+cmp			                # compare files
+touch file                  # create emty file (modified time)  touch linode{l. .10}
+chown
+file <fname>                # shows file type explanation
+tar
+gzip filename
+gunzip filename.gz
+trash                       # trash-cli      alias rm=trash -v
+shred	file	            # secure delete
+zip
+unzip
+
+ln                          # symbolic link
+find
+lsattr
+chattr (+-)i fname          # nobody can change file
+
+mc		                    # Midnight commander
+rsync
+rclone                      # (encrypte cloud backup)
+df                          # Disk usage
+du                          # Folder Sizes
+ncdu
+
+__________ File View
+echo
+cat
+batcat              # ** or bat   cat replacement with colors apt install bat
+watch		        # ** Continus command or file view
+head
+tail -fn <file>		# -f continious -n line count
+less /var/log/auth/log  # less show cat
+wc		            # word cont -l=line count
+awk
+column
+rev		            # reverse letters echo "Hello World" | rev #revers
+cut		            # cut some part
+tr		            # replace
+grep
+rg                  # ** grep replacement  'sudo apt install ripgrep'
+
+sed
+sort
+uniq
+shuf                # shuffles input
+
+__________ Log   Use tail/head/cat/less
+journalctl -u ssh	        # shows msg related ssh  -uf for continuous   services
+/var/log/syslog		        # cat /var/log/syslog | grep ssh
+/var/log/dmesg		        # tail -f /var/log/dmesg   #dif format of syslog  hardware problems
+/var/log/auth.log		    # login attempts  tail -f /var/log/aut.log
+/etc/apt/sources.list
+/etc/log/apt/history.log
+
+journalctl -u ssh   (or sshd)
+journalctl -f -u ssh   (follow mod)
+
+dmesg #shows dmesh log
+last				        # shows /var/log/wtmp
+lastb -adF			        # bad login attempts  /var/log/btmp
+
+####	Fedora
+/var/log/boot.log	        # fedora boot logs
+/var/log/dnf.log	        # fedora installed packages
+
+lnav                # A curses-based log file viewer that indexes log messages by type and time to make it easier to navigate through files quickly
+
+__________ Misc
+wget
+curl
+cmus        #media player
+
+__________ Fun
+cmatrix -a                  # matrix gibi  cmatrix -b -u 3   #`-b` for bold and `-u` for speed adjustment
+apt-get help                # easter egg
+apt-get moo                 # easter egg
+https://github.com/cmatsuoka/asciiquarium
+# Here are the links to go with the Rick Roll:
+https://www.reddit.com/r/selfhosted/comments/v3eh0x/rickroll_docker_image/
+https://hub.docker.com/r/kale5/rickroll
+
+figlet                      # ascii text
+hollywood                   # generates screen like codding
+aafire                      # fireplace      install libaa-lib
+rig                         # random info
+telnet telehack.com
+    starwars
+    clock
+    help
+telnet mapscii.net          # ascii world map
+telnet freechess.org
+
+
+_____  DOTFILEMMANEGER
+yadm        ## ** Yet Another Dotfiles Manager [https://yadm.io/docs/install#submodule]
+chezmoi
+stow       # creates symbolic links

@@ -1,0 +1,10 @@
+# shows info about file
+# Mod time is file content change
+# Change time is file meta data like permisions changed
+stat -c %y <file> # file modification time
+stat -c "Access: %x, Modified: %y, Change: %z" <file>
+stat -c $'Access: %x\nModified: %y\nChange: %z' <file>
+stat -c "%y %n" *.txt | sort -n
+stat -c "%y %n" *.txt | grep $(date +%Y-%m-%d)
+stat -f <file> # file system info 
+

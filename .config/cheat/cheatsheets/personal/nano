@@ -1,0 +1,10 @@
+^K  #cut the line
+^U  #paste
+^C  #help
+^W^T goto line number
+
+nano +linenumber file  #start at line number
+nano -v #view only mode
+
+sudo apt install spell
+^T  #spell check goto first error ^C exit spell check

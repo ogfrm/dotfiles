@@ -1,0 +1,148 @@
+# To start tmux:
+tmux
+
+# To detach from tmux:
+Ctrl-b d
+
+# To restore tmux session:
+tmux attach
+
+# To detach an already attached session (great if you are moving devices with different screen resolutions):
+tmux attach -d 
+
+# To display session:
+tmux ls
+
+# To rename session:
+Ctrl-b $
+
+# To switch session:
+Ctrl-b s
+
+# To start a shared session:
+tmux -S /tmp/your_shared_session
+chmod 777 /tmp/your_shared_session
+
+# To help screen (Q to quit):
+Ctrl-b ?
+
+# To scroll in window:
+Ctrl-b PageUp/PageDown
+
+# To reload configuration file
+Ctrl-b : source-file /path/to/file
+
+# To create a window:
+Ctrl-b c
+
+# To go next window:
+Ctrl-b n
+
+# To destroy a window:
+Ctrl-b x
+
+# To switch between windows:
+Ctrl-b [0-9]
+Ctrl-b Arrows
+
+# To split windows horizontally:
+Ctrl-b %
+
+# To split windows vertically:
+Ctrl-b "
+
+# To swap windows:
+Ctrl-b :swap-window -s [0-9] -t [0-9]
+
+############################################
+sudo apt install tmux
+
+Tmux attach Tmux a
+^B " Horizantal
+^B % Vertical
+^B x exit panel
+Exit
+^D kill panel
+^B arrow move between panes
+^B z Zoom in and out
+^B c create windows
+^B p previous
+^B n  next window
+^B & kill windows
+^B , rename window 
+^B d detach seasion
+Tmux list-sessions    Tmux ls
+Tmux attach -t # (session number)
+^B $ rename session
+Tmux rename-session -t 0 newname
+Tmux kill-session -t 0
+Tmux kill-server -t 0
+
+Tmux new -s "session name"
+^B s (Shows sessions and switch between
+^B w (Shows windows and switch betwen
+
+http://Tmuxcheatsheet.com
+Nano ~/.tmux.conf
+
+# Send prefix
+set-option -g prefix C-a
+unbind-key C-a
+bind-key C-a send-prefix
+
+# Use Alt-arrow keys to switch panes
+bind -n M-Left select-pane -L
+bind -n M-Right select-pane -R
+bind -n M-Up select-pane -U
+bind -n M-Down select-pane -D
+
+# Shift arrow to switch windows
+bind -n S-Left previous-window
+bind -n S-Right next-window
+
+# Mouse mode
+setw -g mouse on
+
+# Set easier window split keys
+bind-key v split-window -h
+bind-key h split-window -v
+
+# Easy config reload
+bind-key r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded."
+
+Mouse support
+s^A^Arrow resize
+^A 
+Alt-arrow switch panes
+Shift-arrow switch-windows
+^A h  horizantal
+^A v  vertical
+
+^A r (reload conf file)
+
+
+https://github.com/gpakosz/.tmux
+
+
+Oh My TMux Project: https://github.com/gpakosz/.tmux Best Tmux Documentation & Cheatsheet: https://github.com/rothgar/awesome-tmux
+
+From <https://www.youtube.com/watch?v=cPWEX2446B4&ab_channel=ChrisTitusTech> 
+
+Nano .tmux
+
+Install xclip
+
+if stuck
+You might have hit Ctrl+S, which turns off flow control in terminals and stops the terminal from accepting input. It is reenabled by pressing Ctrl+Q.
+
+From <https://superuser.com/questions/553330/vim-freezes-inside-tmux/553349#553349> 
+
+
+From man tmux:
+	The -A flag makes new-session behave like attach-session if session-name already exists; in this case, -D behaves like -d to attach-session.
+This can be shortened to rely on the default session name (which is 0):
+tmux new -As0
+Please also note that the -A option was introduced in tmux version 1.8 on 26 March 2013. For earlier versions, use:
+tmux attach || tmux
+
+From <https://unix.stackexchange.com/questions/103898/how-to-start-tmux-with-attach-if-a-session-exists>

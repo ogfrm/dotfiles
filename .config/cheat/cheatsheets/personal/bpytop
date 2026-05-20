@@ -1,0 +1,6 @@
+https://github.com/aristocratos/bpytop
+sudo apt install bpytop
+
+manual 
+sudo apt install python3 python3-pip
+pip3 install bpytop --upgrade

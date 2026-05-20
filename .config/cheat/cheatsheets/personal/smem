@@ -1,0 +1,4 @@
+##########
+Memory usage
+sudo apt install smem
+smem -s swap -r | head n5 # reverse sort swap 

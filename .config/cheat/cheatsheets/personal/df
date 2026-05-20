@@ -1,0 +1,13 @@
+# To print free disk space in a human-readable format:
+df -h
+
+# To print the disk for a given path:
+df -d <path>
+
+#####################
+df -h #disk space usage
+df -hT #includes type column
+df -i #number of files inodes
+df -h --excludesquashfs
+df -hT -x tmpfs #exclude tmpfs
+watch df -hTx tmpfs

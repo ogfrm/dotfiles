@@ -1,0 +1,24 @@
+# To create a symlink:
+ln -s <source-location> <symlink-location>
+
+# To symlink, while overwriting existing destination files
+ln -sf <source-location> <symlink-location>
+
+######################################
+symbolic = soft links
+ls -il #shows the inode number
+ln -s /full/path/source /full/path/dest/
+
+ln -s /relative/path/source currentdir/nename
+
+gets a new inode 
+if there is a hardlink for source file soft 
+
+hard links
+ln /path/source /path/dest/
+gets a same inode
+same object
+can not move to external or diffrent hard disks
+
+relative path works
+you can rename sourcefile

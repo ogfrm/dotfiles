@@ -1,0 +1,34 @@
+#############################################
+Arch linux package
+#https://www.learnlinux.tv/linux-essentials-the-pacman-command/
+pacman -Syy #update repository 
+pacman  -Syu #upgrade
+cat /etc/pacman.d/mirrorlist #repositories 
+sudo pacman -S htop #install
+sudo pacman -R htop #remove
+sudo pacman -Ss htop #search
+pacman -Qdt #not needed packages
+pacman -Ss <search-term>
+pacman -Qdt #show not needed packages
+
+
+https://aur.archlinux.org
+https://www.learnlinux.tv/linux-essentials-the-arch-user-repository/
+google chrome
+copy link location snap download
+wget
+tar -xvf google-chrome-tar.gz
+cd 
+sudo packman -S base-devel
+makepkg -s
+sudo packman -U google-chrome.....tar.zst
+
+-OR-
+
+sudo pacman -S git
+git clone https://aur.archlinux.org/yay.git
+makepkg -s
+sudo pacman -U yay-<version>.tar.xz
+Use yay to search for or install a package
+yay <package or search term>
+yay -Syu  #update all packages and aur packages

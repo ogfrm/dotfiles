@@ -1,0 +1,47 @@
+# To update every <interval> samples:
+top -i <interval>
+
+# To set the delay between updates to <delay> seconds:
+top -s <delay>
+
+# To set event counting to accumulative mode:
+top -a
+
+# To set event counting to delta mode:
+top -d
+
+# To set event counting to absolute mode:
+top -e
+
+# To not calculate statistics on shared libraries, also known as frameworks:
+top -F
+
+# To calculate statistics on shared libraries, also known as frameworks (default):
+top -f
+
+# To print command line usage information and exit:
+top -h
+
+# To order the display by sorting on <key> in descending order:
+top -o <key>
+
+############################
+	s #change the refresh seconds
+	i #hides the idle process press again to normal view
+	k  #kills  PID process
+	f  #choose to tap panel sort 
+	q #exit
+
+^B  # shows tree parent child process
+CPU  us= user space where programs run
+	sy=kernel space
+	ni= priority of process
+	id= idle
+	wa= waiting time process is waiting
+	
+RES= phycalmem used
+SHR= shared mem
+S+p sort by cpu
+S+m sort by mem
+k kill process
+d change refresh seconds

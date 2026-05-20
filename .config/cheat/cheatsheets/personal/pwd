@@ -1,0 +1,3 @@
+# Show the absolute path of your current working directory:
+pwd
+pwd -P   #  shows real paths not link

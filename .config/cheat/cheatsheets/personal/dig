@@ -1,0 +1,13 @@
+########
+# nslookup ignores OS dns record libraries
+# dig command relias on OS dns record libraries
+# if not installed
+#  apt install dnsutils  packman -S bind    dnf install bind-utils
+
+dig google.com      # you will see address  query time  time to live
+dig example.com MX    # mail exchange domain
+dig example.com TXT   # text records to be able to validate you own the domain
+dig example.com NS    # name space
+dig @8.8.8.8  example.com   # use google dns server
+dig +short example.com  # just shows ip
+dig +ttl example.com  # just shows time to live  How long record it should be in cache (it may be usefull to lower ttl if you are changing server)

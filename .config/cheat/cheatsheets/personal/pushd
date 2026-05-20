@@ -1,0 +1,16 @@
+# To pushes your current directory to the top of a stack while changing to the specified directory:
+pushd <directory>
+
+# To return use popd:
+popd
+
+##########################################
+pushd +1	# previous 1st dir
+pushd -0        # next 0
+pushd -n /etc	# add dir to stack without going in to it
+popd		# remove form stack
+popd +1
+popd -1
+dirs		# print the stacks
+dirs -v		# list with numbers
+dirs -c		# clear all stack

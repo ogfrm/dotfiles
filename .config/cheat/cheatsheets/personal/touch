@@ -1,0 +1,14 @@
+######################
+touch file1 file2  # create emty file (if file exist it changes the modified time
+touch $(seq 10).txt  # creates 1-10 files
+touch file{1..5} file{a..e}
+
+touch linode{l. .10}
+touch -d tomorrow file   #create with tomorrows date
+touch -t 202508021200 file
+touch -c file   # if not exist don't create
+touch -r file1  file2   # gets dates from file1
+touch -a file   # change access time
+touch -m file   # modification time
+touch -d "last year|5 hours|next thursday|nov 14" file1
+touch $(cat list1)

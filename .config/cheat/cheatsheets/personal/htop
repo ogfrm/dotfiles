@@ -1,0 +1,13 @@
+apt-get install htop
+load average #Lat 1Min , 5Min
+average number of waiting process for cpu      
+
+F9 kill SIGTERM (asks to close) of SIGKILL (teminates)
+Shift P # sort by cpu
+Shift M # sort by mem
+
+F2 setup 
+  to add CPU Average Select from available meters
+
+u user select by user
+F3 search

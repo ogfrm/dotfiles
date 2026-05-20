@@ -1,0 +1,72 @@
+####################################
+^d # logout exit
+^l # clear
+
+F11 #full screen
+
+^Shift++ font increase
+^- decrease
+^arrow word by word move
+Alt+Back delete word
+Fn Arrow End Home
+^+Shift C V copy paste
+^y paste
+^a begining
+^e ending
+^u delete before cursor cut
+^k delete after cursor cut
+^x+e (Multi line command ) opens the current command in editor
+
+## Navigation 🚀
+
+Alt + f/b - Move cursor to previous/next word
+Ctrl + a/e - Move cursor to beginning/end of command
+Ctrl + xx - Toggle between the start of line and current cursor position
+Ctrl + f/b - Move cursor to previous/next character
+
+## Editing ✏️
+
+Ctrl + x,e - Open command in editor
+Ctrl + k - Cut till end
+Ctrl + u - Delete whole line (zsh)/ cut until beginning (bash)
+Alt + w - Delete until beginning (zsh)
+Alt + l/u - Lowercase/Uppercase word
+Alt + c - Capitalize Word
+Ctrl + w - Cut previous word
+Alt + Del - Delete previous word
+Alt + d - Delete next word
+Alt +. or !$ - Previous commands last arguement
+!\* - All arguments of previous command
+Alt + t - Swap current word with previous
+Ctrl + t - Swap the last two characters before the cursor (typo).
+Esc + t - Swap the last two words before the cursor
+Ctrl + y - Paste
+Ctrl + \_ - Undo
+Alt + r - Cancel the changes, revert
+
+Ctrl + d Delete character under the cursor
+Ctrl + h Delete character before the cursor (Backspace)
+
+Moving the cursor:
+Ctrl + p Previous command (Up arrow)
+Ctrl + n Next command (Down arrow)
+
+## Process 📊
+
+Ctrl + l - Clear screen
+Ctrl + c - Interrupt/Kill
+Ctrl + d - Close Current Shell
+Ctrl + z - Background/Foreground job
+
+## History ⏳
+
+Ctrl + r - History search
+Ctrl + s - Go back to the next most recent command
+^abc­^­def - Run previous command, replacing abc with def
+
+## Modes 🕹️
+
+Ctrl +x,v - vi mode (zsh)
+set -o vi - Vi mode
+set -o emacs
+default Emacs setting

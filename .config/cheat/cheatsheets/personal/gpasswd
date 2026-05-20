@@ -1,0 +1,2 @@
+sudo gpasswd -a uname gname #add uname to group
+sudo gpasswd -d uname gname #remove user from group

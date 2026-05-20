@@ -1,0 +1,23 @@
+# To save results to <file>:
+ncdu -o <file>
+
+# To read from <file>:
+ncdu -f <file>
+
+# To save results to a compressed file:
+ncdu -o- | gzip > <file>
+
+# To read from a compressed file:
+zcat <file> | ncdu -f-
+
+##############################
+#NCurses disk usage
+sudo apt install ncdu
+sudo ncdu /etc
+sudo ncdu -x /  #not include mounted
+    d #delete
+#ncdu ~
+
+sudo apt install ncdu #install every server
+ncdu  
+sudo ncdu / -x #exclude attach file systems

@@ -1,0 +1,68 @@
+{{ if eq .chezmoi.osRelease.idLike "debian" -}}
+{{ $packages := list
+     "fd-find"
+     "tree"
+     "bat"
+     "curl"
+     "jq"
+     "ripgrep"
+     "ncdu"
+     "git"
+     "zsh"
+     "wget"
+     "rsync"
+     "sudo"
+     "nano"
+     "bash"
+     "htop"
+     "unzip"
+     "net-tools"
+     "tmux" -}}
+{{ $pipx := list
+     "tldr" -}}
+{{ $snaps := list -}}
+{{ $classicSnaps := list -}}
+
+{{ if eq .chezmoi.os "linux" -}}
+{{   if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{   $packages = mustAppend $packages "openssh-server" -}}{{/* WSL-specific code */ -}}
+{{   end -}}
+{{ end -}}
+
+
+{{ if eq .chezmoi.osRelease.id "ubuntu" -}}
+{{   $packages = mustAppend $packages "btop" -}}
+{{ end -}}
+
+{{ if not .headless -}}
+{{   $packages = mustAppend $packages "xclip" -}}
+{{   $classicSnaps = mustAppend $classicSnaps "code" -}}
+{{ end -}}
+
+{{ if .personal -}}
+{{   $packages = mustAppend $packages "musl-tools" -}}
+{{   $classicSnaps = concat $classicSnaps (list "goreleaser" "snapcraft") -}}
+{{ end -}}
+
+{{ $sudo := "sudo " -}}
+{{ if eq .chezmoi.username "root" -}}
+{{   $sudo = "" -}}
+{{ end -}}
+
+#!/bin/bash
+
+set -eufo pipefail
+
+{{ $sudo }}apt-get update
+{{ $sudo }}apt-get install -y {{ $packages | join " " }}
+
+{{ if lookPath "snap" }}
+{{   range $snaps }}
+( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install {{ . }}
+{{   end }}
+{{   range $classicSnaps }}
+( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install --classic {{ . }}
+{{   end }}
+{{ end }}
+
+{{ end -}}

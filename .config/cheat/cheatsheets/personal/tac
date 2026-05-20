@@ -1,0 +1,4 @@
+# Reverse cat command reverse the lines
+tac <file>  # reverse order
+tac -s seperator <file>
+tac -r -s regex <file>  

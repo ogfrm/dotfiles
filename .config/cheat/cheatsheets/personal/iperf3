@@ -1,0 +1,4 @@
+iperf3 -s #server
+iperf3 -c serverip  #client
+
+sudo apt install iperf3 -y  #speedtest

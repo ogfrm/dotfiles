@@ -1,0 +1,4 @@
+#################
+https://www.linuxatemyram.com/
+free -m(megabyte) #memory usage   (buffer in disk - cached in memory  -/+ buffer/cached kismina bak)
+free -h

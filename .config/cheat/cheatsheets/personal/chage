@@ -1,0 +1,5 @@
+chage -l uname #confirm expiration date 
+sudo chage -E 2021-10-01 neo #expire at that date 
+sudo chage -M 30 trinity  #30 days
+sudo chage -M -1 morpheus  #remove expiration
+sudo chage -m 7 morpheus  #can not change for 7 days

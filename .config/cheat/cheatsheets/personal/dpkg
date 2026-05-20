@@ -1,0 +1,27 @@
+---
+tags: [ packaging ]
+---
+# To install or upgrade a package:
+dpkg -i <deb-file>
+
+# To remove a package (including configuration files):
+dpkg -P <deb-file>
+
+# To list all installed packages with versions and details:
+dpkg -l
+
+# To determine whether a Debian package is installed:
+dpkg -s <deb-file> | grep Status
+
+#############################################
+dpkg -l pattern
+dpkg --list pattern
+apt list pattern
+apt list --installed pattern
+For example:
+dpkg --list 'x*'
+echo"Total installed packages on ${HOSTNAME}:|\ 
+(zgrep "installed " /var/log/dpkg.log* | wc -l)"  #count
+zgrep " installed " /var/log/dpkg.log*
+
+dpkg --get-selections

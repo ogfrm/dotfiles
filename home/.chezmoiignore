@@ -1,0 +1,56 @@
+# you can use template here
+README.md
+
+{{ if ne .chezmoi.os "darwin" }}
+.chezmoiscripts/darwin/**
+.config/homebrew
+.hammerspoon
+{{ end }}
+
+{{ if ne .chezmoi.os "linux" }}
+.chezmoiscripts/linux/**
+.hushlogin
+.local/bin/nvim
+.local/share/fonts
+projects
+{{ else if not (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}{{/* WSL-specific code */ -}}
+projects
+{{ end }}
+
+{{ if ne .chezmoi.os "windows" }}
+.chezmoiscripts/windows/**
+Documents
+AppData
+{{ else }}
+.bashrc*
+.profile*
+.bash_aliases
+.config
+.config/.installs
+.config/.rc
+.config/tmux
+.inputrc
+.ssh/id_rsa
+.ssh/id_rsa.pub
+.tmux.conf
+.zprofile
+.zshrc
+{{ end }}
+
+{{ if not .personal }}
+.ssh
+.ssh/**
+{{ end }}
+
+{{- if ( env "SHELL" | ne "/bin/bash" ) }}
+# not running Bash, so ignore Bash profile
+{{- else }}
+# using Bash, so not ignoring Bash profile
+{{- end }}
+
+{{- if ( env "SHELL" | ne "/bin/zsh" ) }}
+# not running Zsh, so ignore Zsh environment
+# .zshenv
+{{- else }}
+# using Zsh, so not ignoring Zsh environment
+{{- end }}

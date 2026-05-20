@@ -1,0 +1,5 @@
+##############
+which ls  			# shows location of binary ls
+which -a ls 			# shows all binaries of ls
+alias | which -i ls 		# shows real program alias like eza
+which --skip-dot  ls            # skip all dot dirs

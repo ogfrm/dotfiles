@@ -1,0 +1,19 @@
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(
+{{- range .zshPlugins }}
+  {{ . }}
+{{- end }}
+)
+{{ if .personal -}}
+export GITHUB_ACCESS_TOKEN={{ onepasswordRead "op://Personal/GitHub Metadata Read-Only Access Token/credential" | trim }}
+{{ end -}}
+export RIPGREP_CONFIG_PATH=~/.config/ripgrep/config
+
+{{- if .personal }}
+
+export CHEZMOI_GITHUB_ACCESS_TOKEN={{ onepasswordRead "op://chezmoi/chezmoi GitHub API Token/credential" | trim }}
+{{- end }}
+

@@ -1,0 +1,5 @@
+################
+hostame		# print hostname
+horname -i 	# ip address
+hostame -f 	# FQDN
+hostanem newname

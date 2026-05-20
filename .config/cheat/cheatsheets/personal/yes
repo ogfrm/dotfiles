@@ -1,0 +1,10 @@
+####
+yes  #  repeats send y continuesly
+yes "Hello" # repeats Hello
+yes | sudo apt upgrade
+yes | sudo apt remove --auto-remove vim-nox
+yes n 
+yes | head -n 5
+
+sudo apt install coreutils
+

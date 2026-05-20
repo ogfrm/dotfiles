@@ -1,0 +1,6 @@
+##############################################
+echo -e "\aHello Word"  #audio alert
+echo -e "this a\b linux server"  #\b is backspace it doesnot print a   
+echo -e "this a linux\c server"  #\c bundan sonrakini yazmaz. including @LF    
+echo -e "this a linux\n server"  #\n new line  \t tab
+echo "Log file $(date +'$D $T')"

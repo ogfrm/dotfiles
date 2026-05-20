@@ -1,0 +1,59 @@
+# To search a file for a pattern:
+grep <pattern> <file>
+
+# To perform a case-insensitive search (with line numbers):
+grep -in <pattern> <file>
+
+# To recursively grep for string <pattern> in <dir>:
+grep -R <pattern> <dir>
+
+# Read search patterns from a file (one per line):
+grep -f <pattern-file> <file>
+
+# Find lines NOT containing pattern:
+grep -v <pattern> <file>
+
+# Set how many lines to show before (-B) and after (-A) pattern:
+grep -B 3 -A 2 <pattern> <file>
+
+# To grep with regular expressions:
+grep "^00" <file>                                               # Match lines starting with 00
+grep -E "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" <file> # Find IP add
+
+# To find all files that match <pattern> in <dir>
+grep -rnw <dir> -e <pattern>
+
+# To exclude grep from your grepped output of ps:
+# (Add [] to the first letter. Ex: sshd -> [s]shd)
+ps aux | grep '[h]ttpd'
+
+# Colour in red {bash} and keep all other lines
+ps aux | grep -E --color 'bash|$'
+
+
+##################################
+cat /etc/ssh/ssh_config | grep Port
+cat /etc/ssh/ssh_config | grep -v Port  #not include Port
+grep Port /etc/ssh/ssh_config
+grep -n Port /etc/ssh/ssh_config  #shows line numbers
+grep -c Port /etc/ssh/ssh_config  #shows count
+grep -i Port /etc/ssh/ssh_config  #case insensitive
+grep Port *  #all files
+grep -r Port * #recursive ~
+grep -ri Error /var/log
+alias grep='grep --color=auto'
+| `grep -w "term" file`    | Match whole word only                                |
+| `grep -r "term" folder`  | Recursively search in all files in folder            |
+| `grep -o "term" file`    | Print only the matching part of the line             |
+| `grep -c "term" file`    | Count the number of matching lines                   |
+| `grep -inw "term" file`  | Combine case-insensitive, line numbers, and whole word|
+grep "^alias" .bashrc   # regular regex  ^ $ . [a-z] [^abc] \
+grep -E "Derek|ls"		# extended regex  () | ?
+grep -F "fixed string"
+grep -v "^#"      # do not contain commeted lines
+grep -r "pattern" dirpath  # recursive
+grep -Irl "pattern" dirpath # I=do not inclde binary  l=just return the file names
+grep -in    # i=ignore case  n=add line numbers
+-q # quite no output
+-s # suppress error message
+-m 2  # max number of match

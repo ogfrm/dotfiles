@@ -1,0 +1,5 @@
+# To switch to another user account:
+su <user>
+###########################################
+su - uname #change user
+sudo su - #root

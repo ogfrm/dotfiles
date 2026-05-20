@@ -1,0 +1,17 @@
+#!/bin/bash
+set -euo pipefail
+if ! command -v oh-my-posh &> /dev/null; then
+  curl -s https://ohmyposh.dev/install.sh | bash -s
+  # oh-my-posh font install
+  # oh-my-posh font install meslo
+  oh-my-posh font install FiraCode
+
+  THEMES_DIR="$HOME/.config/ohmyposh"
+  mkdir -p "$THEMES_DIR"
+  curl -s https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/contents/themes \
+  | jq -r '.[].name' \
+  | while IFS= read -r theme; do
+      # echo "Downloading $theme..."
+      curl -s -o "$THEMES_DIR/$theme" "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$theme"
+  done
+fi

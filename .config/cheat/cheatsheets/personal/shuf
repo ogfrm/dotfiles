@@ -1,0 +1,11 @@
+shuffles input
+
+shuf file1  #lines shuffles random order
+shuf -n 5 file1  #5 random lines
+seg 10 | shuf #random 1-10
+seg 10 | shuf -n 1  #random 1-10 1 number only
+seg 10 | shuf -o outfile
+shuf -n 4 -i 1-10 --repeat  #numbers can repeat
+shuf file1 -out outfile
+shuf -n 1 -i 1-10 -r   # repeat 
+shuf -n 0-9 -z # one line to \n 

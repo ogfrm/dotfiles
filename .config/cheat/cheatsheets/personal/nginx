@@ -1,0 +1,2 @@
+####################
+nginx -t # checks config is valid

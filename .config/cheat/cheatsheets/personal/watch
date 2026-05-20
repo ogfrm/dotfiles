@@ -1,0 +1,7 @@
+
+#####################################################
+watch command #repeats the command CTRL-C exit
+watch free -m #every 2 second
+watch -n 0.5 command #every 0.5 second
+watch -d command   #highlight the change
+watch 'command | grep ...'   #highlight the change

@@ -1,0 +1,27 @@
+# Use .chezmoiexternal.toml to tell cm to import dotfiles from a different repo
+# You can't include subdirectories from other projects like oh-my-zsh because you can't use git submodules
+# The section heading (the part with square brackets) is the destination path of the object being imported.
+# type is "archive" multi files "file" 1 file. If the url is a tarball then cm will unpack it.
+# default for refreshPeriod is never. To force a refresh, call cm --refresh-externals apply or cm -R apply.
+#
+# [".oh-my-zsh"]
+#     type = "archive"
+#     url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
+#     exact = true
+#     stripComponents = 1
+#     refreshPeriod = "168h"
+# [".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
+#     type = "archive"
+#     url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz"
+#     exact = true
+#     stripComponents = 1
+#     refreshPeriod = "168h"
+# [".oh-my-zsh/custom/themes/powerlevel10k"]
+#     type = "archive"
+#     url = "https://github.com/romkatv/powerlevel10k/archive/v1.15.0.tar.gz"
+#     exact = true
+#     stripComponents = 1
+# [".vim/autoload/plug.vim"]
+#     type = "file"
+#     url = "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+#     refreshPeriod = "168h"

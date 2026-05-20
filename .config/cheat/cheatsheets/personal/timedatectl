@@ -1,0 +1,33 @@
+# Set timezone
+timedatectl set-timezone Europe/Paris
+
+###########################################
+sudo timedatectl set-timezone America/New_York
+timedatectl
+timedatectl list-timezones
+
+$ echo $TZ
+Europe/Madrid$ date +%Z
+CEST
+$ date +%z
++0200
+$ timedatectl show
+$ timedatectl show -p Timezone
+$ ls -l /etc/localtime
+lrwxrwxrwx 1 user user 33 Dec 29 09:44 /etc/localtime -> /usr/share/zoneinfo/Europe/Madrid
+$ zdump /etc/localtime
+/etc/localtime  Tue May  3 08:16:16 2022 CEST
+$ cat /etc/timezone
+Europe/Madrid
+
+timedatectl | awk '/Time zone:/ {print $3}'
+
+
+sudo dpkg-reconfigure tzdata
+
+systemctl status systemd-timesyncd
+NTP Time
+sudo nano /etc/systemd/timesyncd.conf
+NTP=192.168.0.4
+sudo timedatectl set-net off
+sudo timedatectl set-ntp on

@@ -1,0 +1,12 @@
+########
+# nslookup ignores OS dns record libraries
+# dig command relias on OS dns record libraries
+# if not installed
+#  apt install dnsutils  packman -S bind    dnf install bind-utils
+
+nslookup google.com
+nslookup -query=mx example.com   # mail exchange domain
+nslookup -query=txt example.com   # text records
+nslookup -query=ns example.com   # name space
+nslookup example.com 8.8.8.8   # use google dns server
+time nslookup example.com  # see the time took

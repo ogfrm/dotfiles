@@ -1,0 +1,20 @@
+# To show a list of your current shell aliases:
+alias
+
+# To alias `ls -l` to `ll`:
+alias ll='ls -l'
+
+# To remove alias:
+unalias ll
+
+######################################################
+zsh
+global -g flag. aggressive. it replaces all occurrences of the alias name with the specified command.
+  alias -g qId="--query id -o tsv"
+   az aks show -n myaks2020 -g rg-demo --query id -o tsv
+   az aks show -n myaks2020 -g rg-demo qId	
+
+Suffix Aliases
+ -s flag.  can launch files with a specific extension (or suffix) in your favorite tool.
+	alias -s md=code  #opens md files with vscode type sample.md-> code smaple.md
+	alias -s {cs,ts,html}=code

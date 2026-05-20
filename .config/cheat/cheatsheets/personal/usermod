@@ -1,0 +1,13 @@
+# Add user to sudo group
+sudo usermod -aG sudo <username>
+
+##################################
+sudo usermod -aG gname,g2 uname
+sudo usermod -g gname uname #change the primary group og user
+
+
+sudo usermod -d /home/newfolder --move-home uname #change the home directory move old
+sudo usermod -l newname uname #change the username
+sudo usermod -L uname #lock out user
+sudo usermod -U uname #unlock out user
+sudo usermod uname -e 2022-08-22 #expire at that date

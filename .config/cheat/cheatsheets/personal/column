@@ -1,0 +1,4 @@
+################################################
+printf "Column1 Colum2\nfoo bar\n" | column -t 
+column -t -s "|" file1 
+column -t -s ":" -N "C1,C2..." -T "C5" /etc/passwd -o "|" #truncate C5

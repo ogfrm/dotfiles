@@ -1,0 +1,8 @@
+## ripgrep  grep replacement
+
+sudo apt install ripgrep
+[https://github.com/ibraheemdev/modern-unix]
+rg Port /etc/ssh/sshd_config
+rg Port  #recursive file search
+rg Port /path/
+rg Port file -r Replace  #replace Port with Replace not change in file

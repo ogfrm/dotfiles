@@ -1,0 +1,15 @@
+##########################
+su -
+cat /etc/sudoers
+
+ALL=(ALL:ALL) ALL # you are allow to 1-hosts 2 users to inpersonate 3 groups to inpersonate 4 coomands to use 
+sudo visudo #caches the errors
+
+uname  ALL=(ALL:ALL) ALL   #
+uname  ALL=(ALL:ALL) NOPASSWD: /usr/bin/apt,/usr/bin/rm   # just can use apt and rm
+
+%group ....
+
+visudo
+if errow What Now  # i reedit the file x exit without saving changes q will save the changes
+

@@ -1,0 +1,7 @@
+#######################
+
+# see how log it take to run command
+time sudo apt update 
+
+/usr/bin/time -o out.txt -a ls # output to file and appen to file
+

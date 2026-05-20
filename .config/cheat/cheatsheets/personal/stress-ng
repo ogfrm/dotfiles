@@ -1,0 +1,2 @@
+stress-ng --stressors
+stress-ng --cpu 0 --cpu-load 50 --io 1 --malloc 1 -t 10  #%50 cpu 1 io stresser 1 memoryalloc 10sec

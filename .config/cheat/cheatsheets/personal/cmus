@@ -1,0 +1,7 @@
+media player
+apt install cmus
+1 2--9 change views
+:add /path/music/
+c pause
+clear then add to refresh
+:q quit

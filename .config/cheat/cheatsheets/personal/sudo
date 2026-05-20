@@ -1,0 +1,6 @@
+# Preserve user environment when running command
+sudo -E <cmd>
+
+######################
+sudo -l  #what you are allow to do
+sudo -s  #change it to root account (even root is disabled)

@@ -1,0 +1,59 @@
+# To replace all occurrences of "day" with "night" and write to stdout:
+sed 's/day/night/g' <file>
+
+# To replace all occurrences of "day" with "night" within <file>:
+sed -i 's/day/night/g' <file>
+
+# To replace all occurrences of "day" with "night" on stdin:
+echo 'It is daytime' | sed 's/day/night/g'
+
+# To remove leading spaces:
+sed -i -r 's/^\s+//g' <file>
+
+# To remove empty lines and print results to stdout:
+sed '/^$/d' <file>
+
+# To replace newlines in multiple lines:
+sed ':a;N;$!ba;s/\n//g' <file>
+
+# To insert a line before a matching pattern:
+sed '/Once upon a time/i\Chapter 1'
+
+# To add a line after a matching pattern:
+sed '/happily ever after/a\The end.'
+
+###########################################
+sed 's/find/replace/' <oldfile >newfile #replace first find in every line
+sed 's/find/replace/g' <oldfile >newfile #replace all find
+echo 'find' | sed 's/find/replace/'
+
+sed -i 's/find/replace/' filename # replace in file
+sed -i.bak '1,4d'	# delete 1-4 lines replace in file but create .bak backup file	
+
+sed '/^[[:space:]]*$/d' <file>  # delete empty lines
+sed -i '1i\New Line\ <file>   # 1i before the 1st line
+sed '/pattern/i\New Line'     # enters new line before line contains pattern
+sed '/pattern/a\New Line'     # after the line
+
+tldr sed | sed '/line_pattern/d" delete line
+
+sed -e 's/the/The' -e 's/and/And'  # multible replace
+sed -e 's|the|The' -e 's|and|And'  @you can use other chararcter spcae | # .
+sed -n '/usr/p'   #print the lines
+.bashrc | sed -n '1,10p'  # print 1-10 lines 
+-n '10p' # just line 10
+-n '/alias/p'     # lines containing alias
+'/alias/d'        # delete all lines containing alias
+sed -i 's/ *$//' file  #replace ending spaces in file
+sed -i 's/[[:space:]]*$//' file  #replace ending tabs in file
+sed -i '/^$/d' file  #replace empty lines
+sed -i 's/[a-z]/\U&/g' file  #lower to upper    
+sed -i 's/[A-Z]/\L&/g' file  #lower to upper    
+sed 11g file #first 11 lines
+
+echo "This is a line " | sed 'y/aeio/AEIO/'   #replace all chars
+
+sed 's/old/new/g' file  # g=global all instances without it just the first
+sed 's/^old/new/gi' file  # i case insensitive Begining of line 
+sed -E 's/(old)/\U\1/g'     # -E extended regex  \U=upper  \1 group
+

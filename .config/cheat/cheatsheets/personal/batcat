@@ -1,0 +1,8 @@
+bat command
+
+#####  cat replacement
+
+batcat /var/log/syslog
+batcat --pageing=never /var/log/syslog # just shows the content
+batcat --show-all /var/log/syslog # shows white space chars
+# it will show the git file changes

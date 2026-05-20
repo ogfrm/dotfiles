@@ -1,0 +1,27 @@
+bindkey -l will give you a list of existing keymap names.
+bindkey -L will give you list with code to enter .zshrc file
+
+bindkey -M <keymap> will list all the bindings in a given keymap.
+bindkey -M emacs will show a specific map
+
+If you use the zsh command line in emacs mode, then the emacs keymap is likely to be most important for you.
+
+If you use it in vi mode, then you’d be interested in viins and vicmd.
+
+https://linux.die.net/man/1/zshzle
+
+showkey -a #shows the key code
+
+bindkey '^[[H' beginning-of-line #home key to begining of line
+bindkey '^[[F' end-of-line #end key end of line
+
+bindkey -s '^o' 'nano ~/.zshrc^M' or bindkey -s '^o' 'nano ~/.zshrc\n'
+
+\e, \E, = Escape
+^[ = Alt key (on some keyboards this is the same as escape)
+^? = Delete
+^X, ^ = Control
+
+To delete a key binding you can use bindkey -d $KEYS
+
+^[OA for ⬆️

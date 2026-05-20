@@ -1,0 +1,17 @@
+# To cut out the third field of text or stdoutput that is delimited by a #:
+cut -d# -f3
+
+####################################
+echo "This is a line " | cut -c 1-10 #get first 10 chars
+echo "This is a line " | cut -c 11- #get 11-end line
+cut -c 11- ~/.basch
+echo "This is a line " | cut -d " " -f4  #get 4.th field space
+cut -b 1 ~/.basch      # first char
+cut -b 7,8,9,10   or 7-10,21,4-6
+-b by byte
+-c by char
+-d by delemiter
+-f by field
+-s # do not print lines does not contain delimiter
+cut -f 1,2 -d " "  # seperated space 1,2nd fields   
+cut -d ":" -f 1 /etc/passwd

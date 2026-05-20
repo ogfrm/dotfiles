@@ -1,0 +1,38 @@
+# To list every process on the system:
+ps aux
+
+# To list a process tree:
+ps axjf
+
+# To list every process owned by foouser:
+ps -aufoouser
+
+# To list every process with a user-defined format:
+ps -eo pid,user,command
+
+# Exclude grep from your grepped output of ps.
+# Add [] to the first letter. Ex: sshd -> [s]shd
+ps aux | grep '[h]ttpd'
+
+#############################
+ps #running processes in this terminal sessions
+ps x #running processes in this user
+
+   STAT (lower s process leader)  (S sleep waiting for user input) (R running not sleeping) (T stoped) 
+ps -ux #you are running processes
+ps -aux #all user running processes
+ps -U username #users running processes
+ps -C Programname #programs ids
+ps --quick-pid #PID
+ps -He   #shows parent and child  (e system wide)
+ps -axjf # PPID parent id (PGID parent group PID) TPGID TerminalID UID users
+ps aux # %CPU %MEM
+ps -l  # user processes
+
+PRI (80) High is lower priority 
+NI (niceness) -20-20 higher the less priority  -20 is highest priority  
+
+sudo renice -10 -p #PID (decrease nices hisher priority
+renice 5 -p #PID
+renice -n #  -p #PID  (set actual number)
+nice -n 10 vim  (run with nice=10)

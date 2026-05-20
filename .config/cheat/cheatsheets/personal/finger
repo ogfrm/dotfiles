@@ -1,0 +1,18 @@
+### [The Basics Of The Finger Command On Linux](https://www.youtube.com/watch?v=8EwR64jMvYw)
+Deprecated but still useful for historical context.
+- Basic usage of `finger` to display the logged-in user details.
+- Enhanced usage with additional flags like `-m` for more detailed user information.
+- How users can create `.project` and `.plan` files in their home directory to share information like their plans, phone numbers, or office hours.
+
+```bash
+finger
+cat << EOF > ~/.project
+   My project is learning the Linux terminal commands.
+EOF
+cat << EOF > ~/.plan
+- Record tutorials every Monday, Wednesday, and Friday.
+- Available for office hours 9 AM - 5 PM CST.
+EOF
+
+finger -m $USER
+```

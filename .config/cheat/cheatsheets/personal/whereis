@@ -1,0 +1,6 @@
+################
+whereis ls
+whereis -b ls  # binary
+whereis -s ls  # source
+whereis -m ls  # man page
+whereis -g 'find*' 

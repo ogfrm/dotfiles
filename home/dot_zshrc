@@ -1,0 +1,240 @@
+
+[[ $- != *i* ]] && return # If not running interactively, don't do anything
+
+for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
+
+
+#######################################################
+# Zinit Plugins
+#######################################################
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git" # Set the directory we want to store zinit and plugins
+
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+#######################################################
+# Completion  https://zsh.sourceforge.io/Doc/Release/Completion-System.html
+#######################################################
+autoload -Uz compinit && compinit
+zinit cdreplay -q    # add after compinit to replay cache recommended
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # turn autocomplete to case insesitive
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"  # complition list is coloared add alias ls="ls --color"
+zstyle ':completion:*' menu no     # disable zsh completion menu so fzf fzf-tab plugin works
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'  # when cd <dir>  it will preview folder in fzf tab
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath' # add preview to zoxide
+
+#######################################################
+# History Configuration
+#######################################################
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=$HISTSIZE # Set the number of lines in $HISTFILE
+HISTDUP=erase
+# export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
+
+setopt append_history
+setopt share_history # Reads the history file every time history is called Share history across terminals
+setopt hist_ignore_space # remove command line from history list when first character on the line is a space
+setopt hist_ignore_all_dups # When a duplicate command is entered, remove the oldest duplicate
+# setopt hist_save_no_dups  # When writing out the history file, older commands that duplicate newer ones are omitted
+# setopt hist_ignore_dups  # Do not enter command lines into the history list if duplicates of the previous.
+setopt hist_find_no_dups         # Do not display a previously found event.
+setopt hist_expire_dups_first # when trimming history, lose oldest duplicates first
+
+setopt inc_append_history # All terminal sessions append to the history file immediately as commands are entered
+
+setopt EXTENDED_HISTORY   # save timestamp of command and duration
+setopt hist_reduce_blanks # Remove extra blanks from each command line being added to history
+
+#######################################################
+# OPTIONS    http://zsh.sourceforge.net/Doc/Release/Options.html  (man zshoptions)
+#######################################################
+setopt no_beep # Don't beep on error
+# unsetopt BEEP
+setopt interactive_comments # Allow comments even in interactive shells (especially for Muness)
+setopt auto_cd # If you type foo, and it isn't a command, and it is a directory in your cdpath, go there
+setopt pushd_ignore_dups # don't push multiple copies of the same directory onto the directory stack
+setopt always_to_end # When completing from the middle of a word, move the cursor to the end of the word
+setopt auto_menu # show completion menu on successive tab press. needs unsetop menu_complete to work
+setopt auto_name_dirs # any parameter that is set to the absolute name of a directory immediately becomes a name for that directory
+setopt complete_in_word # Allow completion from within a word/phrase
+unsetopt menu_complete # do not autoselect the first completion entry
+setopt correct # spelling correction for commands
+setopt nonomatch # Stop annoying error when using asterisk in shell commands (i.e. scp server:*.txt .)
+setopt extendedGlob # extended globbing, awesome!
+setopt promptsubst # Turn on command substitution in the prompt (and parameter expansion and arithmetic expansion).
+stty stop undef # Disable ctrl-s to freeze terminal.
+zle_highlight=('paste:none') # stop pasted text being highlighted in terminals
+
+# CD History
+setopt AUTO_PUSHD           # Push the current directory visited on the stack. makes the standard cd command act like pushd
+setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
+setopt PUSHD_SILENT         # Do not print the directory stack after pushd or popd.
+
+#######################################################
+# Aliases
+#######################################################
+alias history='history 1'
+alias h='\history -i 1  '  #start from 1 with time
+alias ep="$EDITOR $HOME/.zshrc"
+alias reload="source ~/.zshrc"
+
+# Command line head / tail shortcuts
+alias -g H='| head'
+alias -g T='| tail'
+alias -g G='| grep'
+alias -g L="| less"
+alias -g M="| most"
+alias -g LL="2>&1 | less"
+alias -g CA="2>&1 | cat -A"
+alias -g NE="2> /dev/null"
+alias -g NUL="> /dev/null 2>&1"
+alias -g P="2>&1| pygmentize -l pytb"
+
+# directory pushd  history with d see and jump back with 1-9 or 1-100
+alias d='dirs -v'
+for index ({1..9}) alias "$index"="cd +${index}"; unset index
+
+#######################################################
+# Prompt  https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+#######################################################
+og_setprompt=posh # starship posh 1 prompt
+case "$og_setprompt" in
+	prompt)
+		autoload -U promptinit 		# initialize advanced prompt support:
+		promptinit
+		prompt fade blue  # prompt -p  #list available   prompt -l  #list the prompts
+	;;
+  1)
+		autoload -U colors && colors 		# Enable colors and change prompt:
+		newline=$'\n'
+		UNICORN_UTF8=$'\360\237\246\204' # 🦄
+		FIRE_UTF8=$'\xF0\x9F\x94\xA5'  # 🔥
+		prompt="%F{35}%* [%j]${git_prompt} [%m:%F{75}%f%F{69}%c%f%F{35}] %#%f ${newline}$FIRE_UTF8 "
+	;;
+	*)
+    PS1="%m%#"
+  	# PS1="[%* - %D] %d %% "
+		# PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+	;;
+esac
+
+#######################################################
+# Zinit Plugins
+# For more plugins: https://github.com/unixorn/awesome-zsh-plugins https://github.com/MichaelAquilina/zsh-you-should-use
+#######################################################
+
+# zinit ice depth=1; zinit light romkatv/powerlevel10k
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab   # fzf to complition menu
+
+# Add in snippets
+zinit snippet OMZL::git.zsh  # OhMyZsh lib/git.zsh  (like git_prompt_info or parse_git_dirty) many Zsh themes uses
+# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins
+zinit snippet OMZP::git    # OhMyZsh plugin -> git  (alias ga gst glog)
+zinit snippet OMZP::sudo   # escape escape (doble esc) adds sudo to last command
+# zinit snippet OMZP::archlinux
+# zinit snippet OMZP::aws
+# zinit snippet OMZP::kubectl
+# zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+
+#######################################################
+# Manual Plugins
+#######################################################
+# zplugindir=/usr/share/zsh/plugins  # $HOME/.local/share/zsh/plugins /usr/local/share/zsh/plugins zplugindir=/usr/local/share
+# function zsh_add_file() {
+#     [ -f "$1" ] && source "$1"
+# }
+# function zsh_add_plugin() {
+#     PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
+#     # sudo rm -rf "$zplugindir/$PLUGIN_NAME"
+#     [ ! -d "$zplugindir/$PLUGIN_NAME" ] && (
+#         sudo rm -f $HOME/.zcompdump
+#         sudo git clone $2 "https://github.com/$1.git" "$zplugindir/$PLUGIN_NAME"
+#     )
+#     #        git pull
+#     zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+# }
+
+# # Plugins # Load ; should be last.
+# zsh_add_plugin "zsh-users/zsh-autosuggestions" # Suggestions based on your history
+# zsh_add_plugin "zsh-users/zsh-completions"
+# zsh_add_plugin "zsh-users/zsh-syntax-highlighting" # syntax highlighting for ZSH in standard repos
+# zsh_add_plugin "Aloxaf/fzf-tab" # syntax highlighting for ZSH in standard repos
+
+#######################################################
+# Keybindings  https://www.zsh.org/mla/users/2014/msg00266.html
+#######################################################
+# Use emacs keybindings even if our EDITOR is set to vi https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html
+bindkey -e
+bindkey '^[w' kill-region
+
+# Enable history search with up and down arrows filters with begining of cmd
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+# printf '%q => %q\n' "${(@kv)key}"
+# [[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
+# [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
+bindkey '^[[A'  up-line-or-beginning-search    # Arrow up
+bindkey '^[OA'  up-line-or-beginning-search    # Arrow up application mode (like when ssh then come back)
+bindkey '^[[B'  down-line-or-beginning-search  # Arrow down
+bindkey '^[OB'  down-line-or-beginning-search
+
+# Move forward/backward one word with Ctrl+Left/Right  ensuring compatibility
+bindkey "\eOc" forward-word       # xterm/rxvt
+bindkey "\eOd" backward-word
+bindkey "\e[1;5C" forward-word   # xterm/iTerm2
+bindkey "\e[1;5D" backward-word
+bindkey "\e[5C" forward-word     # Some linux terminals
+bindkey "\e[5D" backward-word
+bindkey "\e\e[C" forward-word    # Alternative
+bindkey "\e\e[D" backward-word
+
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line # Control-x-e to open current line in $EDITOR, editing multiline commands.
+
+# bindkey -s '^s' 'ncdu^M'
+# bindkey -r "^u"
+# bindkey -r "^d"
+
+# bindkey '^f' autosuggest-accept  # Ctrl-f to accept suggestion  (emac key binding is already sets this)
+
+# This makes Alt+Left cd "back" in history, and Alt+Up move up a directory
+# zle user-defined ZLE widgets which can be bound to keystrokes in interactive shells
+cdUndoKey() {
+	popd 2> /dev/null
+    if (( $? == 0 )); then
+        for precmd in $precmd_functions; do
+            $precmd
+        done
+		zle && zle      reset-prompt
+    fi
+}
+cdParentKey() {
+	pushd .. > /dev/null
+    if (( $? == 0 )); then
+        local precmd
+        for precmd in $precmd_functions; do
+            $precmd
+        done
+		zle && zle      reset-prompt
+    fi
+}
+zle -N                 cdParentKey
+zle -N                 cdUndoKey
+bindkey '^[[1;3A'      cdParentKey
+bindkey '^[[1;3D'      cdUndoKey
+
+###############################################
+for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
