@@ -9,10 +9,8 @@ while getopts ":urs" opt; do
   [[ $opt == r ]] && UNINSTALL=true
 done
 if [ "$UNINSTALL" = true ]; then
-  if command -v $RUNCOMMAND >/dev/null 2>&1
-    [[ -f "$HOME/.local/bin/$RUNCOMMAND" ]] && rm "$HOME/.local/bin/$RUNCOMMAND"
-    echo "$RUNCOMMAND uninstallation completed"
-  fi
+  [ -f "$HOME/.local/bin/$RUNCOMMAND" ] && rm "$HOME/.local/bin/$RUNCOMMAND"
+  echo "$RUNCOMMAND uninstallation completed"
   exit 0
 fi
 if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi

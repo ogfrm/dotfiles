@@ -6,7 +6,7 @@ while getopts ":urs" opt; do
   [[ $opt == r ]] && UNINSTALL=true
 done
 if [ "$UNINSTALL" = true ]; then # /usr/bin
-  if command -v $RUNCOMMAND >/dev/null 2>&1
+  if command -v $RUNCOMMAND >/dev/null 2>&1; then
     sudo apt remove ripgrep -y
     echo "ripgrep uninstallation completed"
   fi

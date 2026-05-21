@@ -7,7 +7,7 @@ while getopts ":urs" opt; do
   [[ $opt == r ]] && UNINSTALL=true
 done
 if [ "$UNINSTALL" = true ]; then
-  if command -v $RUNCOMMAND >/dev/null 2>&1
+  if command -v $RUNCOMMAND >/dev/null 2>&1; then
     sudo apt remove fastfetch -y
     echo "$RUNCOMMAND uninstallation completed"
   fi
