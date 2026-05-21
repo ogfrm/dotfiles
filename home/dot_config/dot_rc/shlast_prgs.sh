@@ -61,3 +61,7 @@ fi
 #         fi
 #     fi
 # fi
+
+if [[ ! "$PATH" == *$HOME/.config/.installs* ]]; then
+   export PATH="${PATH:+${PATH}:}$HOME/.config/.installs"
+fi
