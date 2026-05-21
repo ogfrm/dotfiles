@@ -12,7 +12,7 @@ while getopts ":urs" opt; do
 done
 if [ "$UNINSTALL" = true ]; then
   [ -f "$HOME/.local/bin/eza" ] && rm $HOME/.local/bin/eza
-  [ - f "/usr/local/bin/eza" ]sudo apt remove eza -y
+  [ -f "/usr/local/bin/eza" ] && sudo apt remove eza -y
   echo "$RUNCOMMAND uninstallation completed at $INSTALL_DIR"
   exit 0
 fi
