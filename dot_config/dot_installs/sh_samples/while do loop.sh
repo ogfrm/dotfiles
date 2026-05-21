@@ -1,20 +1,3 @@
-#!/bin/bash
-read turr;
-case $turr in
-   1) echo 1
-        echo 11111
-    ;;
-   2) echo 2;;
-   *) echo error;;
-esac   
-
-x=1
-while [[ $x -le 100 ]]
-do
-  (( x ++ ))
-done
-read -p "dddddd"
-
 x=1
 while read -r line;do
   echo "line $x $line"
@@ -44,7 +27,7 @@ for X in $(cat cities.txt); do
 done
 
 while true
-do 
+do
   break
 done
 
