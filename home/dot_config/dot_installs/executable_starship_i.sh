@@ -14,7 +14,7 @@ while getopts ":urs" opt; do
 done
 if [ "$UNINSTALL" = true ]; then
   [ -f "$INSTALL_DIR" ] && rm $INSTALL_DIR
-  [ -d "$THEMES_DIR" ] rm -rf $THEMES_DIR
+  [ -d "$THEMES_DIR" ] && rm -rf $THEMES_DIR
   echo "$RUNCOMMAND uninstallation completed at $INSTALL_DIR."
   exit 0
 fi

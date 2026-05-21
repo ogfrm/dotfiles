@@ -4,7 +4,7 @@ set -euo pipefail
 # winget install ajeetdsouza.zoxide   Invoke-Expression (& { (zoxide init powershell | Out-String) })
 RUNCOMMAND="zoxide" # ~/.local/bin/zoxide
 UPDATE=false && UNINSTALL=false
-while getopts ":urs" opt; do
+while getopts ":ur" opt; do
   [[ $opt == u ]] && UPDATE=true
   [[ $opt == r ]] && UNINSTALL=true
 done
