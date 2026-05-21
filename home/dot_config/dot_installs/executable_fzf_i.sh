@@ -10,7 +10,7 @@ while getopts ":u" opt; do
 done
 if command -v fzf >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 
-if command -v git >/dev/null 2>&1; then
+if ! command -v git >/dev/null 2>&1; then
   # Install dependencies
   if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y git; fi
   if command -v yum >/dev/null 2>&1; then sudo yum install -y git; fi
