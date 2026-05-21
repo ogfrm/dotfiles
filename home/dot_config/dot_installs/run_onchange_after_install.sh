@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for name in "curl" "unzip" "git" "wget"; do
+for name in "curl" "unzip" "git" "wget" "tar"; do
   if ! command -v $name >/dev/null 2>&1; then
     if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y $name;
     elif command -v yum >/dev/null 2>&1; then sudo yum install -y $name;
