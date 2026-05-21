@@ -5,7 +5,7 @@ UPDATE=false && UNINSTALL=false && SUDO=""
 INSTALL_DIR="$HOME/.local/share/fzf"
 while getopts ":u" opt; do
   [[ $opt == u ]] && UPDATE=true
-  [[ $opt == un ]] && UNINSTALL=true
+  [[ $opt == r ]] && UNINSTALL=true
   [[ $opt == s ]] && INSTALL_DIR="/usr/local/share/fzf" && SUDO="sudo"
 done
 if command -v fzf >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
