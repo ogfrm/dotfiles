@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-UPDATE=false
+UPDATE=false && UNINSTALL=false && SUDO=""
 INSTALL_DIR="$HOME/.local/share/fzf"
-SUDO=""
 while getopts ":u" opt; do
   [[ $opt == u ]] && UPDATE=true
+  [[ $opt == un ]] && UNINSTALL=true
   [[ $opt == s ]] && INSTALL_DIR="/usr/local/share/fzf" && SUDO="sudo"
 done
 if command -v fzf >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
-
+if [ "$UNINSTALL" = true ]; then
+  \rm -rf $INSTALL_DIR
+  echo "fzf uninstallation completed at $INSTALL_DIR."
+  exit 0
+fi
 if ! command -v git >/dev/null 2>&1; then
   # Install dependencies
   if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y git; fi
