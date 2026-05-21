@@ -13,7 +13,7 @@ while getopts ":urs" opt; do
   [[ $opt == s ]] && INSTALL_DIR="/user/local/bin" && SUDO="sudo"
 done
 if [ "$UNINSTALL" = true ]; then
-  [ -f "$INSTALL_DIR" ] && rm $INSTALL_DIR
+  [ -f "$INSTALL_DIR/$RUNCOMMAND" ] && rm $INSTALL_DIR/$RUNCOMMAND
   [ -d "$THEMES_DIR" ] && rm -rf $THEMES_DIR
   echo "$RUNCOMMAND uninstallation completed at $INSTALL_DIR."
   exit 0
