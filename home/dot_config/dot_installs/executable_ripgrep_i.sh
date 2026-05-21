@@ -1,7 +1,9 @@
+#!/bin/bash
+set -euo pipefail
 # /usr/bin/rg
 RUNCOMMAND="rg"
 UPDATE=false && UNINSTALL=false
-while getopts ":urs" opt; do
+while getopts ":ur" opt; do
   [[ $opt == u ]] && UPDATE=true
   [[ $opt == r ]] && UNINSTALL=true
 done
