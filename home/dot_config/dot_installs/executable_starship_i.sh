@@ -6,7 +6,7 @@ RUNCOMMAND="starship"
 THEMES_DIR="$HOME/.local/shares/starship/themes"
 
 UPDATE=false && UNINSTALL=false && SUDO=""
-INSTALL_DIR="--bin-dir $HOME/.local/bin"
+INSTALL_DIR="$HOME/.local/bin"
 while getopts ":urs" opt; do
   [[ $opt == u ]] && UPDATE=true
   [[ $opt == r ]] && UNINSTALL=true
@@ -15,7 +15,7 @@ done
 if [ "$UNINSTALL" = true ]; then
   [ -f "$INSTALL_DIR/$RUNCOMMAND" ] && rm $INSTALL_DIR/$RUNCOMMAND
   [ -d "$THEMES_DIR" ] && rm -rf $THEMES_DIR
-  echo "$RUNCOMMAND uninstallation completed at $INSTALL_DIR."
+  echo "$RUNCOMMAND uninstallation completed at $INSTALL_DIR"
   exit 0
 fi
 if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
