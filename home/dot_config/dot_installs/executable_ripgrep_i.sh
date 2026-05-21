@@ -1,3 +1,4 @@
+# /usr/bin/rg
 deb=$(curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest \
 | grep browser_download_url \
 | grep '\.deb"' \

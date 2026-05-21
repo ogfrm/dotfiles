@@ -7,6 +7,6 @@ if ! command -v fastfetch &> /dev/null; then
   | grep 'fastfetch-linux-amd64\.deb"' \
   | cut -d '"' -f 4)
   curl -LO "$deb" && sudo dpkg -i "$(basename "$deb")" && rm $(basename "$deb")
-  If dependencies fail after installation:
+  # If dependencies fail after installation:
   sudo apt-get install -f
 fi
