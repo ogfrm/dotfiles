@@ -1,5 +1,10 @@
 #!/bin/bash
 set -euo pipefail
+pwd
+SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+echo S=$SCRIPT_DIR
+pwd
+# rm $0  # Delete me
 
 echo 0
 UPDATE_ALL='' && UNINSTALL_ALL='' && SYSTEM_ALL=''
