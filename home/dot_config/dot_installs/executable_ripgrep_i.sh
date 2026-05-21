@@ -1,4 +1,19 @@
 # /usr/bin/rg
+RUNCOMMAND="rg"
+UPDATE=false && UNINSTALL=false
+while getopts ":urs" opt; do
+  [[ $opt == u ]] && UPDATE=true
+  [[ $opt == r ]] && UNINSTALL=true
+done
+if [ "$UNINSTALL" = true ]; then # /usr/bin
+  if command -v $RUNCOMMAND >/dev/null 2>&1
+    sudo apt remove ripgrep -y
+    echo "ripgrep uninstallation completed"
+  fi
+  exit 0
+fi
+if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
+
 deb=$(curl -s https://api.github.com/repos/BurntSushi/ripgrep/releases/latest \
 | grep browser_download_url \
 | grep '\.deb"' \
