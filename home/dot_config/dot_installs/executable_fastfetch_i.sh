@@ -1,14 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-UPDATE=false && UNINSTALL=false && SUDO=""
-INSTALL_DIR="$HOME/.local/share/fzf"
+UPDATE=false && UNINSTALL=false
 while getopts ":urs" opt; do
   [[ $opt == u ]] && UPDATE=true
   [[ $opt == r ]] && UNINSTALL=true
-  [[ $opt == s ]] && INSTALL_DIR="/usr/local/share/fzf" && SUDO="sudo"
 done
-if [ "$UNINSTALL" = true ]; then
+if [ "$UNINSTALL" = true && command -v fastfetch >/dev/null 2>&1 ]; then
   sudo apt remove fastfetch -y
   echo "fastfetch uninstallation completed at $INSTALL_DIR."
   exit 0
