@@ -20,6 +20,7 @@ done
 ./starship_i.sh
 ./zoxide_i.sh
 ./fzf_i.sh
+./eza_i.sh
 
 # system
 # # {{ include "fastfetch_i.sh" | sha256sum }}

@@ -8,11 +8,11 @@ INSTALL_DIR="$HOME/.local/bin"
 while getopts ":urs" opt; do
   [[ $opt == u ]] && UPDATE=true
   [[ $opt == r ]] && UNINSTALL=true
-  [[ $opt == s ]] && INSTALL_DIR="/user/local/bin" && SUDO="sudo"
+  [[ $opt == s ]] && INSTALL_DIR="/user/bin" && SUDO="sudo"
 done
 if [ "$UNINSTALL" = true ]; then
   [ -f "$HOME/.local/bin/eza" ] && rm $HOME/.local/bin/eza
-  [ -f "/usr/local/bin/eza" ] && sudo apt remove eza -y
+  [ -f "/usr/bin/eza" ] && sudo apt remove eza -y
   echo "$RUNCOMMAND uninstallation completed at $INSTALL_DIR"
   exit 0
 fi
@@ -22,7 +22,7 @@ if [[ -z $SUDO ]]; then
   # chown $USER:$USER eza
   chmod +x eza
   # sudo chown root:root eza
-  # sudo mv eza /usr/local/bin/eza
+  # sudo mv eza /usr/bin/eza
   mv eza "$INSTALL_DIR"
 else
   sudo apt update
