@@ -19,10 +19,10 @@ fi
 if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 if [[ -z $SUDO ]]; then
   wget -c https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz -O - | tar xz
-  sudo chmod +x eza
+  # chown $USER:$USER eza
+  chmod +x eza
   # sudo chown root:root eza
   # sudo mv eza /usr/local/bin/eza
-  chown $USER:$USER eza
   mv eza "$INSTALL_DIR"
 else
   sudo apt update
