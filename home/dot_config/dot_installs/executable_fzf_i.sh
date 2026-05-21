@@ -3,22 +3,24 @@ set -euo pipefail
 
 UPDATE=false && UNINSTALL=false && SUDO=""
 INSTALL_DIR="$HOME/.local/share/fzf"
-while getopts ":u" opt; do
+while getopts ":urs" opt; do
   [[ $opt == u ]] && UPDATE=true
   [[ $opt == r ]] && UNINSTALL=true
   [[ $opt == s ]] && INSTALL_DIR="/usr/local/share/fzf" && SUDO="sudo"
 done
-if command -v fzf >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 if [ "$UNINSTALL" = true ]; then
-  \rm -rf $INSTALL_DIR
+  $SUDO \rm -rf -- $INSTALL_DIR
   echo "fzf uninstallation completed at $INSTALL_DIR."
   exit 0
 fi
+if command -v fzf >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 if ! command -v git >/dev/null 2>&1; then
   # Install dependencies
-  if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y git; fi
-  if command -v yum >/dev/null 2>&1; then sudo yum install -y git; fi
-  if command -v pacman >/dev/null 2>&1; then sudo pacman -Sy --noconfirm git; fi
+  if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y git;
+  elif command -v yum >/dev/null 2>&1; then sudo yum install -y git;
+  elif command -v pacman >/dev/null 2>&1; then sudo pacman -Sy --noconfirm git;
+  elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y git
+  fi
 fi
 # Clone or update
 if [ ! -d "$INSTALL_DIR" ]; then

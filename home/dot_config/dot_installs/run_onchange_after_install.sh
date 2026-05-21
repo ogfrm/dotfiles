@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # ./nerdfonts_i.sh install CascadiaCode FiraCode Meslo JetBrainsMono
 # ./pipx_i.sh
 # ./ansible_i.sh
