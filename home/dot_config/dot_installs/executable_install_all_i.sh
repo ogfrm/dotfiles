@@ -27,9 +27,9 @@ done
 echo 2
 APPINSTALL_ALL="ohmyposh starship zoxide fzf eza fastfetch fresh ripgrep"
 for name in $APPINSTALL_ALL ;do
-  echo 1 ./${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
-  [ ! -f "${name}_i.sh" ] && continue
-  echo ./${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
+  echo 1 $SCRIPT_DIR/${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
+  [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
+  echo $SCRIPT_DIR/${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
 # # {{ include "dotconfig/dot_rc/${name}_i.sh.sh" | sha256sum }}
 done
 echo 3
