@@ -3,7 +3,7 @@ set -euo pipefail
 
 # https://starship.rs/config/#prompt
 RUNCOMMAND="starship"
-THEMES_DIR="$HOME/.local/shares/starship/themes"
+THEMES_DIR="$HOME/.local/share/starship/themes"
 
 UPDATE=false && UNINSTALL=false && SUDO=""
 INSTALL_DIR="$HOME/.local/bin"

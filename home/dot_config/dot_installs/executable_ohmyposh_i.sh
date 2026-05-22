@@ -2,7 +2,7 @@
 set -euo pipefail
 RUNCOMMAND="oh-my-posh"
 INSTALL_DIR="$HOME/.local/bin/oh-my-posh"
-THEMES_DIR="$HOME/.local/shares/oh-my-posh/themes"
+THEMES_DIR="$HOME/.local/share/oh-my-posh/themes"
 
 UPDATE=false && UNINSTALL=false
 while getopts ":urs" opt; do
@@ -15,7 +15,7 @@ if [ "$UNINSTALL" = true ]; then # /usr/bin
   echo "$RUNCOMMAND uninstallation completed"
   exit 0
 fi
-if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
+if command -v "$RUNCOMMAND" >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 
 curl -s https://ohmyposh.dev/install.sh | bash -s
   # oh-my-posh font install

@@ -5,27 +5,8 @@ set -euo pipefail
 URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-
 DIR="$HOME/.local/share/fonts"
 mkdir -p "$DIR"
-CHANGED=0
-
-# ./fonts.sh uninstall JetBrainsMono CascadiaCode  # default install firacode
-ACTION="${1:-install}"
-shift || true
-[[ $# -eq 0 ]] && set -- FiraCode
-
-# ./fonts.sh -u JetBrainsMono CascadiaCode  # default install firacode
-# ACTION=install
-# while getopts "iug" o; do   # -i -u -g
-#   case "$o" in
-#     i) ACTION=install ;;
-#     u) ACTION=uninstall ;;
-#     g) ACTION=upgrade ;;
-#   esac
-# done
-# shift $((OPTIND - 1))
-# [[ $# -eq 0 ]] && set -- FiraCode
 
 app_name() {
   case "$1" in
@@ -53,6 +34,12 @@ app_uninstall() {
     2>/dev/null -delete
   CHANGED=1
 }
+
+# ./fonts.sh uninstall JetBrainsMono CascadiaCode  # default install firacode
+ACTION="${1:-install}"
+shift || true
+[[ $# -eq 0 ]] && set -- FiraCode
+CHANGED=0
 
 for f in "$@"; do
   echo "$ACTION $f..."

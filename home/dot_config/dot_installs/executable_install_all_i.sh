@@ -9,6 +9,7 @@ while getopts ":urs" opt; do
   [[ $opt == r ]] && UNINSTALL_ALL=' -r'
   [[ $opt == s ]] && SYSTEM_ALL=' -s'
 done
+
 APPDEP_ALL="curl unzip git wget tar"
 for name in $APPDEP_ALL ;do
   if command -v $name >/dev/null 2>&1; then continue; fi
@@ -30,3 +31,20 @@ done
 # ./nerdfonts_i.sh install CascadiaCode FiraCode Meslo JetBrainsMono
 # ./pipx_i.sh
 # ./ansible_i.sh
+
+
+# ./fonts.sh uninstall JetBrainsMono CascadiaCode  # default install firacode
+ACTION="${1:-install}"
+shift || true
+
+# ./fonts.sh -u JetBrainsMono CascadiaCode  # default install firacode
+# ACTION=install
+# while getopts "iug" o; do   # -i -u -g
+#   case "$o" in
+#     i) ACTION=install ;;
+#     u) ACTION=uninstall ;;
+#     g) ACTION=upgrade ;;
+#   esac
+# done
+# shift $((OPTIND - 1))
+[[ $# -eq 0 ]] && set -- FiraCode
