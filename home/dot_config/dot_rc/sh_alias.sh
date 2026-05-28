@@ -352,6 +352,7 @@ alias cz="chezmoi"
 alias czar="chezmoi apply && reload"
 alias czpush="chezmoi git add . && chezmoi git -- commit -m 'test' && chezmoi git push"
 
+
 ############################## OH-MY-POSH
 ompex() {  # omp toml,json,yaml <file>
   oh-my-posh config export --config $2 --output $2.$1 --format yaml    # .json .yaml
@@ -424,6 +425,7 @@ glazy() {
 	git push
 }
 
+alias bcompare='"/mnt/d/PortableApps/BeyondCompare_portable/Beyond Compare.exe"'
 ############################## Ansible
 # alias anp='ansible-playbook local.yml'
 alias anp='ANSIBLE_CONFIG=ansible.cfg ans_play'
@@ -432,13 +434,14 @@ alias anpug='anp -t update,upgrade,cleanup'
 alias anpcheck='anp -C' #  don't make any changes; instead, try to predict
 alias anconfig='ANSIBLE_CALLBACKS_ENABLED=timer,profile_tasks,profile_roles ANSIBLE_CONFIG=ansible.cfg ansible-config dump --only-changed'  # show changed configs
 ans_play() {
-    apps=(); apts=(); pipx=(); pve=(); args=()
+    apps=(); apts=(); pipx=(); pve=(); args=(); dc1=()
     while [[ $# -gt 0 ]]; do
         case $1 in
             -app) shift; while [[ $# -gt 0 && $1 != -* ]]; do apps+=("$1"); shift; done ;;
             -apt) shift; while [[ $# -gt 0 && $1 != -* ]]; do apts+=("$1"); shift; done ;;
             -pipx) shift; while [[ $# -gt 0 && $1 != -* ]]; do pipx+=("$1"); shift; done ;;
             -pve) shift; while [[ $# -gt 0 && $1 != -* ]]; do pve+=("$1"); shift; done ;;
+            -dc1) shift; while [[ $# -gt 0 && $1 != -* ]]; do dc1+=("$1"); shift; done ;;
             *) args+=("$1"); shift ;;
         esac
     done
@@ -459,12 +462,17 @@ ans_play() {
     fi
     if [ ${#pve[@]} -gt 0 ]; then
         pve_json=$(printf '"%s",' "${pve[@]}"); pve_json="[${pve_json%,}]"
-        cmd+=(-t apps_pipx -e "{\"__e_pve\": $pve_json}")
+        cmd+=(-t apps_pve -e "{\"__e_pve\": $pve_json}")
+    fi
+    if [ ${#dc1[@]} -gt 0 ]; then
+        dc1_json=$(printf '"%s",' "${dc1[@]}"); dc1_json="[${dc1_json%,}]"
+        cmd+=(-e "{\"__e_dc_1\": $dc1_json}")
     fi
 
     cmd+=("${args[@]}")
     "${cmd[@]}"
 }
+
 
 ############################## Unicod
 ucget() {
