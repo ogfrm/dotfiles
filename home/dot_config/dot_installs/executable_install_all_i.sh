@@ -17,6 +17,7 @@ for name in $APPDEP_ALL ;do
   elif command -v yum >/dev/null 2>&1; then sudo yum install -y $APPDEP_ALL;
   elif command -v pacman >/dev/null 2>&1; then sudo pacman -Sy --noconfirm $APPDEP_ALL;
   elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y $APPDEP_ALL;
+  elif command -v apk >/dev/null 2>&1; then sudo apk add $APPDEP_ALL;
   fi
   # break
 done
