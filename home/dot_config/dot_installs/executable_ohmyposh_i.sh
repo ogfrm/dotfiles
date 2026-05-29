@@ -19,11 +19,11 @@ if command -v "$RUNCOMMAND" >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 
 
 curl -s https://ohmyposh.dev/install.sh | bash -s || true
   # oh-my-posh font install
-# "$INSTALL_DIR" font install FiraCode  # meslo
-mkdir -p "$THEMES_DIR"
-curl -s https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/contents/themes \
-| jq -r '.[].name' \
-| while IFS= read -r theme; do
-    # echo "Downloading $theme..."
-    curl -s -o "$THEMES_DIR/$theme" "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$theme"
-done
+"$INSTALL_DIR" font install FiraCode  # meslo
+# mkdir -p "$THEMES_DIR"
+# curl -s https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/contents/themes \
+# | jq -r '.[].name' \
+# | while IFS= read -r theme; do
+#     # echo "Downloading $theme..."
+#     curl -s -o "$THEMES_DIR/$theme" "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/$theme"
+# done
