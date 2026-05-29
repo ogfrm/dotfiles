@@ -8,7 +8,7 @@ og_setprompt=posh
 if [ "${og_setprompt}" = 'starship' ]; then   # https://starship.rs/config/#prompt
 	export STARSHIP_CONFIG=~/._my/prompt.my.star.toml
 	eval "$(starship init ${MYSHELL})"
-elif [ "${og_setprompt}" = 'posh' ]; then
+elif [ "${og_setprompt}" = 'posh' ] && command -v oh-my-posh &> /dev/null; then
 	eval "$(oh-my-posh init ${MYSHELL} --config ~/._my/prompt.my.omp.yaml)" # slimfat
 	# eval "$(oh-my-posh init $(oh-my-posh get shell) --config ~/._my/prompt.my.omp.yaml)" # slimfat
 fi
