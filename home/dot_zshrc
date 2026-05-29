@@ -230,3 +230,6 @@ zinit snippet OMZP::command-not-found
 
 for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
 for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
+
+# alpine del prints ~ to fiz that
+bindkey '^[[3~' delete-char
