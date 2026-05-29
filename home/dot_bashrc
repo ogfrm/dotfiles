@@ -1,6 +1,7 @@
 # echo $(date +%T) .bashrc
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc) # for examples
+# https://tiswww.case.edu/php/chet/bash/bashref.html#Special-Parameters
 
 # If not running interactively, don't do anything
 case $- in
@@ -10,15 +11,31 @@ esac
 # echo $-  #shell options set => himBHs = (see man set), interactive (-i), reading from standard input (-s).
 # if [[ $- =~ "i" ]]; then  # check if it includes i
 
+#######################################################
+# HISTORY
+#######################################################
+
 # don't put duplicate lines or lines starting with space in the history. # See bash(1) for more options
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth  # HISTCONTROL=erasedups:ignoredups:ignorespace
 HISTSIZE=10000
 HISTFILESIZE=10000
 HISTTIMEFORMAT="%F %T " # add timestamp to history "%Y-%m-%d %T "
-# Don't put duplicate lines in the history and do not add lines that start with a space
-HISTCONTROL=erasedups:ignoredups:ignorespace
+
+# keep your Bash history synchronized in real-time across all open terminals, -a Write current history
+PROMPT_COMMAND='history -a; history -n;'
 
 shopt -s histappend # append to the history file, don't overwrite it
+
+#######################################################
+# OPTIONS
+#######################################################
+
+### SHOPT ## DT
+shopt -s autocd # change to named directory
+shopt -s cdspell # autocorrects cd misspellings
+shopt -s cmdhist # save multi-line commands in history as single line
+shopt -s dotglob
+shopt -s expand_aliases # expand aliases
 
 # check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
@@ -35,6 +52,27 @@ case "$TERM" in
     *) PS1='\u@\h:\w\$ ' ;;
 esac
 
+#######################################################
+# COMPLETIONS
+#######################################################
+# enable programmable completion features
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# Note: bind used instead of sticking these in .inputrc
+bind "set bell-style visible"; # Disable the bell
+bind "set completion-ignore-case on"; # Ignore case on auto-completion
+bind "set show-all-if-ambiguous On";
+
+#######################################################
+# ALIASES
+#######################################################
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -47,73 +85,22 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-
-# some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
+# Add an "alert" alias for long running commands.  Use like : sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
-################
-
-# https://tiswww.case.edu/php/chet/bash/bashref.html#Special-Parameters
-
-# Note: bind used instead of sticking these in .inputrc
-bind "set bell-style visible"; # Disable the bell
-bind "set completion-ignore-case on"; # Ignore case on auto-completion
-bind "set show-all-if-ambiguous On";
-
-# more synchronized command history when working with multiple Bash terminals simultaneously.
-# to manage the command history across multiple terminal sessions. Without this, history is only saved at session exits
-# PROMPT_COMMAND:  specifies a commands to be executed just before Bash displays a new prompt.
-# history -a Write current history to file;
-# history -r: read from other sessions history appends its contents to the in-memory history
-PROMPT_COMMAND='history -a; history -r;'
-
-### SHOPT ## DT
-shopt -s autocd # change to named directory
-shopt -s cdspell # autocorrects cd misspellings
-shopt -s cmdhist # save multi-line commands in history as single line
-shopt -s dotglob
-shopt -s expand_aliases # expand aliases
+if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 
 alias h='history'
-# alias reload="source ~/.bashrc"
-alias reload="exec bash"
+alias reload="exec bash" # "source ~/.bashrc"
 alias ep="$EDITOR $HOME/.bashrc"
 
 # directory pushd  history with d see and jump back with 1-9 or 1-100
 alias d='dirs -v'
 for index in {1..9}; do alias "$index"="pushd +${index}";unset index; done
-
-for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
-# [ -f ~/.config/.rc/shlast_*.sh ] && for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done || echo
-for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
 
 #######################################################
 # Prompt
@@ -130,7 +117,7 @@ for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
 # 4 smu   24 rmul reset  Underlined
 # 5 blink 25 reset
 # 7 rev   27 reset  Reverse
-# 7 smso	Start “standout” mode   27 rmso	End “standout” mode
+# 7 smso	Start "standout" mode   27 rmso	End "standout" mode
 # 8 invis  28 reset   Hidden
 # echo "$(tput bold); $(tput setaf 2)" | \cat -v # cat -v: Displays non-printing characters
 # tput: Portable, readable, but slower (it runs a binary).Escape : Fast, direct, but hard-coded and less portable.
@@ -153,7 +140,6 @@ for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
 
 # og_setprompt=1
 # og_setprompt=$1
-
 case "$og_setprompt" in
    1)
         reset='\[\e[0m\]' # no color  # "\001$(tput sgr0)\002"
@@ -190,3 +176,10 @@ case "$og_setprompt" in
       export PS1="\[\e[2m\][\t] \[\e[0;32m\]\u@\h$\[\e[0;33m\]\w\\[\e[0m\]" # dim [hh:mm:ss] user@host workingdir$ green brown reset
    ;;
 esac
+
+#######################################################
+# LAST
+#######################################################
+
+for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
+for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done

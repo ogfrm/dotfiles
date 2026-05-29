@@ -18,7 +18,7 @@ for name in $APPDEP_ALL ;do
   elif command -v pacman >/dev/null 2>&1; then sudo pacman -Sy --noconfirm $APPDEP_ALL;
   elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y $APPDEP_ALL;
   fi
-  break
+  # break
 done
 APPINSTALL_ALL="ohmyposh starship zoxide fzf eza fastfetch fresh ripgrep"
 for name in $APPINSTALL_ALL ;do

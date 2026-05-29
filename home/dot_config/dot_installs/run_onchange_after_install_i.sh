@@ -7,4 +7,4 @@ set -euo pipefail
 # }
 
 # alias czremove_all="chezmoi cat ~/.config/.installs/install_i.sh | bash -s -- -r"  # to re-run this
-[ ! -f "./install_all_i.sh" ] && "./install_all_i.sh"
+[ -f "./install_all_i.sh" ] && "./install_all_i.sh"

@@ -66,6 +66,13 @@ if [ ! -f "/etc/alpine-release" ]; then
   alias chmod="chmod --preserve-root"
   alias chgrp="chgrp --preserve-root"
 fi
+alias mkdir='mkdir -p'
+mkdirg() { # Create and go to the directory
+	mkdir -p "$1"
+	cd "$1"
+}
+
+
 ########################### CHMOD commands
 function chmodrec() {   # chmodrec . 755 644
     find $1 -type d -exec chmod $2 {} \;
@@ -93,11 +100,6 @@ function cd() {
     new_directory=${HOME};
   fi;
   builtin cd "${new_directory}" && /bin/ls -lhF --time-style=long-iso --color=auto --ignore=lost+found
-}
-alias mkdir='mkdir -p'
-mkdirg() { # Create and go to the directory
-	mkdir -p "$1"
-	cd "$1"
 }
 
 if command -v colordiff &>/dev/null; then
@@ -174,11 +176,7 @@ alias lmore='ls -al | more'          # pipe through 'more'
 
 # "path" shows current path, one element per line. If an argument is supplied, grep for it.
 function path() {
-    test -n "$1" && {
-        echo $PATH | perl -p -e "s/:/\n/g;" | grep -i "$1"
-    } || {
-        echo $PATH | perl -p -e "s/:/\n/g;"
-    }
+  echo $PATH | perl -p -e "s/:/\n/g;"
 }
 alias countfiles="for t in files links directories; do echo \`find . -type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
 
@@ -220,7 +218,7 @@ elif command -v bat &>/dev/null; then
     alias cat='bat'
     alias catt='bat --paging=never --decorations=never'
 fi
-alias fzfp='fzf --preview "batcat --color=always --paging=never --number {}"'
+alias fzfp='fzf --preview "bat --color=always --paging=never --number {}"'
 alias fzfch='find ~/.config/cheat/cheatsheets/personal | sort | fzf --preview "cat --language bash {}"'
 
 ########################### APPS  # Manage packages easier
@@ -244,7 +242,7 @@ appssize() {
   }
 
 appfind() {
-    apt-cache --no-all-versions show $1 | awk '$1 == "Package:" { p = $2 } $1 == "Size:" { printf("%10d %s\n", $2, p) }'
+  apt-cache --no-all-versions show $1 | awk '$1 == "Package:" { p = $2 } $1 == "Size:" { printf("%10d %s\n", $2, p) }'
 }
 appsize() {
     sudo apt-get --assume-no autoremove $@ | grep freed | cut -d' ' -f4-5 ; # purge --auto-remove
@@ -271,14 +269,13 @@ alias ip4="/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1"
 # local_wanip6='dig @resolver1.ipv6-sandbox.opendns.com AAAA myip.opendns.com +short -6'
 # local_wanip4=$(curl ifconfig.io >/dev/null)
 
-function myip () {
+function myip() {
+    echo -n "Internal IP: "
     if command -v ip &>/dev/null; then
-        echo -n "Internal IP: "
         ip addr show wlan0 | grep "inet " | awk '{print $2}' | cut -d/ -f1
         echo -n "Internal eth0 IP: "
         ip addr show eth0 | grep "inet " | awk '{print $2}' | cut -d/ -f1
     else
-        echo -n "Internal IP: "
         ifconfig wlan0 | grep "inet " | awk '{print $2}'
         echo -n "Internal eth0 IP: "
         ifconfig eth0 | grep "inet " | awk '{print $2}'

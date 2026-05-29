@@ -4,7 +4,7 @@ MYSHELL=`basename $(readlink /proc/$$/exe)` # MYSHELL=`ps -cp "$$" -o command=""
 #######################################################
 # Prompt
 #######################################################
-og_setprompt=starship
+og_setprompt=posh
 if [ "${og_setprompt}" = 'starship' ]; then   # https://starship.rs/config/#prompt
 	export STARSHIP_CONFIG=~/._my/prompt.my.star.toml
 	eval "$(starship init ${MYSHELL})"
@@ -21,7 +21,7 @@ if command -v zoxide &> /dev/null; then
 fi
 
 #######################################################
-# FZF integrations  CTRL+R:  history search.  CTRL+T: find a file or directory ALT + C search for a directory and cd
+# FZF integrations  CTRL+R: history  CTRL+T: find file or dir  ALT+C search for a directory and cd
 #######################################################
 
 fzfdir=$HOME/.local/share/fzf  # /usr/local/share/fzf $HOME/.local/share/fzf
