@@ -64,6 +64,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
+
 # Note: bind used instead of sticking these in .inputrc
 bind "set bell-style none"; # Disable the bell visible
 bind "set completion-ignore-case on"; # Ignore case on auto-completion

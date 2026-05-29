@@ -1,0 +1,17 @@
+man hier | \grep -E 'bin$|sbin$|^.{7}(/bin)|^.{7}(/sbin)' -A2
+https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+
+/bin : For binaries usable before the /usr partition is mounted very early boot stage.  like cat, ls, etc.
+/sbin : Same, but for binaries with superuser (root) required. ifconfig, fdisk, init, shutdown, systemd
+
+/usr/bin   read-only files, programs executed by normal users. apt install uses this diff,du,scp
+           Contains the general, system-wide binaries installed by your OS package manager (like apt, yum, or brew). It is accessible to all users and is overwritten during system updates.
+
+/usr/sbin: su required,  sshd, chown
+
+/usr/local/bin   package manager don't manage them. local binaries won't update.  wget, python3, and git
+                 Contains locally compiled or manually installed software
+
+/usr/local/sbin   Utilities like Wireshark and Nmap
+
+~/.local/bin: A user-specific directory for executables (scripts, custom tools, or local python packages). Only the current user can access and modify the programs in this directory, and it requires no root/administrator privileges.

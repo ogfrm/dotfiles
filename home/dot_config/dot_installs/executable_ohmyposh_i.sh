@@ -10,8 +10,8 @@ while getopts ":urs" opt; do
   [[ $opt == r ]] && UNINSTALL=true
 done
 if [ "$UNINSTALL" = true ]; then # /usr/bin
-  [ -f "$INSTALL_DIR" ] && rm $INSTALL_DIR
-  [ -d "$THEMES_DIR" ] && rm -rf $THEMES_DIR
+  rm-f $INSTALL_DIR
+  rm -rf $THEMES_DIR
   echo "$RUNCOMMAND uninstallation completed"
   exit 0
 fi
@@ -19,7 +19,7 @@ if command -v "$RUNCOMMAND" >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 
 
 curl -s https://ohmyposh.dev/install.sh | bash -s
   # oh-my-posh font install
-oh-my-posh font install FiraCode  # meslo
+"$INSTALL_DIR/oh-my-posh" font install FiraCode  # meslo
 mkdir -p "$THEMES_DIR"
 curl -s https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/contents/themes \
 | jq -r '.[].name' \
