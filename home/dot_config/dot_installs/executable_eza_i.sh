@@ -46,18 +46,19 @@ if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
     sudo apt update
     sudo apt install -y eza
 else
+  echo $(pwd)
   wget -qO- "$URL" | tar xz
   chmod +x eza
 	[[ -n "$SUDO" ]] && sudo chown root:root eza
-	$SUDO mkdir -p "$INSTALL_DIR/bin"
-	$SUDO mv eza "$INSTALL_DIR/bin/eza"
+	# $SUDO mkdir -p "$INSTALL_DIR/bin"
+	# $SUDO mv eza "$INSTALL_DIR/bin/eza"
 fi
 
 BC="$INSTALL_DIR/share"
 if [[ -n "$SUDO" ]]; then BC=/usr/share; fi
 
-$SUDO mkdir -p "$BC/bash-completion/completions" "$BC/zsh/site-functions"
-$SUDO wget -qO "$BC/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
-$SUDO wget -qO "$BC/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza
+# $SUDO mkdir -p "$BC/bash-completion/completions" "$BC/zsh/site-functions"
+# $SUDO wget -qO "$BC/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
+# $SUDO wget -qO "$BC/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza
 
 echo "eza installed to $INSTALL_DIR"

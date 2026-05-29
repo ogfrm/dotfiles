@@ -17,9 +17,9 @@ if [ "$UNINSTALL" = true ]; then # /usr/bin
 fi
 if command -v "$RUNCOMMAND" >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 
-curl -s https://ohmyposh.dev/install.sh | bash -s
+curl -s https://ohmyposh.dev/install.sh | bash -s || true
   # oh-my-posh font install
-# "$INSTALL_DIR" font install FiraCode  # meslo
+"$INSTALL_DIR" font install FiraCode  # meslo
 mkdir -p "$THEMES_DIR"
 curl -s https://api.github.com/repos/JanDeDobbeleer/oh-my-posh/contents/themes \
 | jq -r '.[].name' \
