@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # https://github.com/eza-community/eza
 set -euo pipefail
-echo 11111111111111111111111111111111
 
 RUNCOMMAND="eza"
 UPDATE=false UNINSTALL=false SUDO="" INSTALL_DIR="$HOME/.local"
-
+while
 while getopts ":urs" opt; do
 	case "$opt" in
 	u) UPDATE=true ;;
@@ -13,6 +12,7 @@ while getopts ":urs" opt; do
 	s) INSTALL_DIR="/usr/local"; SUDO="sudo" ;;
 	esac
 done
+
 if $UNINSTALL; then
   rm -f "$HOME/.local/bin/eza" "$HOME/.local/share/bash-completion/completions/eza" "$HOME/.local/share/zsh/site-functions/_eza"
   sudo rm -f /usr/share/bash-completion/completions/eza /usr/share/zsh/site-functions/_eza /usr/local/bin/eza
@@ -46,19 +46,18 @@ if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
     sudo apt update
     sudo apt install -y eza
 else
-  echo $(pwd)
   wget -qO- "$URL" | tar xz
   chmod +x eza
 	[[ -n "$SUDO" ]] && sudo chown root:root eza
-	# $SUDO mkdir -p "$INSTALL_DIR/bin"
-	# $SUDO mv eza "$INSTALL_DIR/bin/eza"
+	$SUDO mkdir -p "$INSTALL_DIR/bin"
+	$SUDO mv eza "$INSTALL_DIR/bin/eza"
 fi
 
 BC="$INSTALL_DIR/share"
 if [[ -n "$SUDO" ]]; then BC=/usr/share; fi
 
-# $SUDO mkdir -p "$BC/bash-completion/completions" "$BC/zsh/site-functions"
-# $SUDO wget -qO "$BC/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
-# $SUDO wget -qO "$BC/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza
+$SUDO mkdir -p "$BC/bash-completion/completions" "$BC/zsh/site-functions"
+$SUDO wget -qO "$BC/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
+$SUDO wget -qO "$BC/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza
 
 echo "eza installed to $INSTALL_DIR"
