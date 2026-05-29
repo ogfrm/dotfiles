@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # https://github.com/eza-community/eza
 set -euo pipefail
-echo 1111111111111111111111111
 
 RUNCOMMAND="eza"
 UPDATE=false UNINSTALL=false SUDO="" INSTALL_DIR="$HOME/.local"
@@ -23,6 +22,7 @@ if $UNINSTALL; then
   exit 0
 fi
 command -v "$RUNCOMMAND" >/dev/null 2>&1 && ! $UPDATE && exit 0
+
 
 ARCH="$(uname -m)"
 case "$ARCH" in
@@ -47,6 +47,7 @@ if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
     sudo apt update
     sudo apt install -y eza
 else
+  echo 1111111111111111111111111
   wget -qO- "$URL" | tar xz
   chmod +x eza
 	[[ -n "$SUDO" ]] && sudo chown root:root eza
