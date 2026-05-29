@@ -4,7 +4,6 @@ set -euo pipefail
 
 RUNCOMMAND="eza"
 UPDATE=false UNINSTALL=false SUDO="" INSTALL_DIR="$HOME/.local"
-while
 while getopts ":urs" opt; do
 	case "$opt" in
 	u) UPDATE=true ;;
@@ -47,7 +46,6 @@ if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
     sudo apt update
     sudo apt install -y eza
 else
-  echo 1111111111111111111111111
   wget -qO- "$URL" | tar xz
   chmod +x eza
 	[[ -n "$SUDO" ]] && sudo chown root:root eza
