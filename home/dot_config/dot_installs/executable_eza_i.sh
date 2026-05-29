@@ -12,7 +12,7 @@ while getopts ":urs" opt; do
 	s) INSTALL_DIR="/usr/local"; SUDO="sudo" ;;
 	esac
 done
-
+echo 11111111111111111111111111111111
 if $UNINSTALL; then
   rm -f "$HOME/.local/bin/eza" "$HOME/.local/share/bash-completion/completions/eza" "$HOME/.local/share/zsh/site-functions/_eza"
   sudo rm -f /usr/share/bash-completion/completions/eza /usr/share/zsh/site-functions/_eza /usr/local/bin/eza
