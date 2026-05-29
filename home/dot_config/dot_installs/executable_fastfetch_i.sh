@@ -25,4 +25,5 @@ if command -v apt >/dev/null 2>&1; then
 elif command -v yum >/dev/null 2>&1; then sudo yum install -y fastfetch;
 elif command -v pacman >/dev/null 2>&1; then sudo pacman -Sy --noconfirm fastfetch;
 elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y fastfetch;
-elif command -v apk >/dev/null 2>&1; then sudo apk add fastfetch;
+elif command -v apk >/dev/null 2>&1; then sudo apk add -U -q fastfetch;
+fi
