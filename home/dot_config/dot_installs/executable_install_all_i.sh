@@ -21,7 +21,7 @@ for name in $APPDEP_ALL ;do
   fi
   # break
 done
-APPINSTALL_ALL="starship zoxide fzf fastfetch fresh ripgrep"
+APPINSTALL_ALL="starship zoxide fzf fastfetch"
 for name in $APPINSTALL_ALL ;do
    echo "$name installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
   [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
