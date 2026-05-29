@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # https://github.com/eza-community/eza
 set -euo pipefail
+echo 1111111111111111111111111
 
 RUNCOMMAND="eza"
 UPDATE=false UNINSTALL=false SUDO="" INSTALL_DIR="$HOME/.local"
