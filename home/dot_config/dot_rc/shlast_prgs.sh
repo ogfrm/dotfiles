@@ -45,7 +45,7 @@ if type rg &>/dev/null; then
 fi
 
 # Git fzf ^G ( ? this list ^F Files ^B Branches ^T Tags ^R Remotes ^H commit Hashes ^S Stashes ^L reflogs ^W Worktrees ^E Each ref (git for-each-ref)   # https://github.com/junegunn/fzf-git.sh
-[ -d "${fzfdir}-git" ] || (sudo git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfdir}-git)
+[ -d "${fzfdir}-git" ] || (git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfdir}-git)
 [ -f "${fzfdir}-git/fzf-git.sh" ] && source "$fzfdir-git/fzf-git.sh"
 
 ################## Show system information at login
