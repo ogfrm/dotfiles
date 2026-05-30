@@ -17,4 +17,4 @@ fi
 if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 
 curl -s https://raw.githubusercontent.com/sinelaw/fresh/refs/heads/master/scripts/install.sh | sh
-echo "$RUNCOMMAND installation completed at $INSTALL_DIR."
+echo "$RUNCOMMAND installation completed "

@@ -8,8 +8,8 @@ while getopts ":ur" opt; do
   [[ $opt == u ]] && UPDATE=true
   [[ $opt == r ]] && UNINSTALL=true
 done
-if [ "$UNINSTALL" = true ]; then
-  [ -f "$HOME/.local/bin/$RUNCOMMAND" ] && rm "$HOME/.local/bin/$RUNCOMMAND"
+if $UNINSTALL; then
+  rm -f "$HOME/.local/bin/$RUNCOMMAND"
   echo "$RUNCOMMAND uninstallation completed"
   exit 0
 fi
