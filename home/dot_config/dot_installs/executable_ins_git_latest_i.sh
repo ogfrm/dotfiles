@@ -12,11 +12,12 @@ usage() {
 # [[ -w folder ]] checks if a specific folder is writable.
 
 PATTERN=""; INSTALL_DIR=""; REPO=""; APP_NAME=""; UNINSTALL=false; APP_FORCE=false; APP_DEB_FORCE=false
-
+UPDATE=false
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -u|--remove) UNINSTALL=true; shift 1 ;;
         -a|--app) APP_NAME="$2"; shift 2 ;;
+        -g|--app) UPDATE=true; shift 1 ;;
         --app-force) APP_FORCE=true; shift 1 ;;
         --deb-force) APP_DEB_FORCE=true; shift 1 ;;
         -p|--pattern) PATTERN="$2"; shift 2 ;;
@@ -120,12 +121,13 @@ git_install() {
 }
 
 $UNINSTALL && { app_uninstall_all "$APP_NAME"; exit 0; }
+
+if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 if [[ -z "$INSTALL_DIR" ]]; then
     [[ $EUID -eq 0 ]] && INSTALL_DIR="/usr/local/bin" || INSTALL_DIR="$HOME/.local/bin"
 fi
   # INSTALL_DIR="/usr/local/bin"
   # [[ -w "$INSTALL_DIR" ]] || { INSTALL_DIR="$HOME/.local/bin"; mkdir -p "$INSTALL_DIR"; }
 
-if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 ! $APP_FORCE && [[ -n "$REPO" ]] && git_install "$RUNCOMMAND" "$REPO" "$INSTALL_DIR" "$PATTERN"
 ($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$APP_NAME" ]] && app_install_all $APP_NAME
