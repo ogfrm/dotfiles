@@ -121,8 +121,8 @@ alias e="$EDITOR "
 ########################### FILE FIND
 
 alias f="find . | grep " # Search files in the current folder
-alias fd='find . -type d -name'
-alias ff='find . -type f -name'
+alias fdir='find . -type d -name'
+alias ffile='find . -type f -name'
 ftext() { # Searches for text in all files in the current folder
 	# -i case-insensitive -I ignore binary files -H filename printed -r recursive -n line number
 	# optional: -F treat search term as a literal, not a regular expression

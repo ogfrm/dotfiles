@@ -27,7 +27,6 @@ else
   RUNCOMMAND="rg"
   REPO="BurntSushi/ripgrep"
   ARCH="$(uname -m)"
-
   PATTERN=""
   case "$ARCH" in
       x86_64) PATTERN="x86_64-unknown-linux-musl.tar.gz" ;;
@@ -57,8 +56,6 @@ else
   chmod 755 "$INSTALL_BIN"
 	[[ -n "$SUDO" ]] && sudo chown root:root "$INSTALL_BIN"
   mv "$INSTALL_BIN" "$INSTALL_DIR/$RUNCOMMAND"
-
-  echo "Installed $RUNCOMMAND to $INSTALL_DIR/$RUNCOMMAND"
-  "$INSTALL_DIR/$RUNCOMMAND" --version
-
+  # echo "Installed $RUNCOMMAND to $INSTALL_DIR/$RUNCOMMAND"
+  # "$INSTALL_DIR/$RUNCOMMAND" --version
 fi
