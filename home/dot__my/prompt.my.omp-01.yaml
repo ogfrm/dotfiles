@@ -97,30 +97,11 @@ blocks:
           background: '#2f2f2f'
           type: dotnet
           style: diamond
-        - template: ' <#2EEFBF>{{ .HostName }}</><#7a7a7a> </>'
+        - template: ' {{ if ne .Env.POSH_SESSION_DEFAULT_USER .UserName }}<#77f5d6>{{ .UserName }}</><#7a7a7a></>{{ end }}<#2EEFBF>{{ .HostName }}</><#7a7a7a> </>'
           foreground: '#fafafa'
           background: '#2f2f2f'
           type: session
           style: diamond
-
-        - options:
-        # https://ohmyposh.dev/docs/segments/system/executiontime
-            style: round # roundrock
-            threshold: 1000 # 5000
-          template: ' {{ .FormattedMs }}</>'
-          foreground: '#FFCE5C'
-          type: executiontime
-          style: plain
-        - options:
-            always_enabled: true
-          template: '  {{ if gt .Code 0 }}{{ .Code }}{{ end }} '
-          foreground: '#9FD356'
-          type: status
-          style: plain
-          foreground_templates:
-            - '{{ if gt .Code 0 }}#E84855{{ end }}'
-
-
     - type: prompt
       alignment: left
       segments:
@@ -142,5 +123,27 @@ blocks:
           type: text
           style: plain
       newline: true
+    - type: rprompt
+      alignment: right
+      segments:
+        - template: ' ❮ '
+          foreground: '#7a7a7a'
+          type: text
+          style: plain
+        - options:
+            style: roundrock
+            threshold: 500 # 5000
+          template: ' {{ .FormattedMs }}<#fafafa>  </>'
+          foreground: '#FFCE5C'
+          type: executiontime
+          style: plain
+        - options:
+            always_enabled: true
+          template: '  {{ if gt .Code 0 }}{{ .Code }}{{ end }} '
+          foreground: '#9FD356'
+          type: status
+          style: plain
+          foreground_templates:
+            - '{{ if gt .Code 0 }}#E84855{{ end }}'
 version: 4
 final_space: true

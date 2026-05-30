@@ -21,3 +21,5 @@ curl -s https://ohmyposh.dev/install.sh | bash -s || true
 # /.cache/oh-my-posh/themes
   # oh-my-posh font install
 "$INSTALL_DIR" font install FiraCode || true # meslo
+
+# oh-my-posh init zsh --config /home/ozgur/.cache/oh-my-posh/themes/slimfat.omp.json

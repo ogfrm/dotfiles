@@ -1,16 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 
 transient_prompt:
-    template: ' {{ .Shell }} ❯ '
-    background: '#2f2f2f'
-    # background = 'transparent'
-    # foreground: '#7a7a7a'
-    foreground_templates:
-      - '{{if gt .Code 0}}red{{end}}'
-      - '{{if eq .Code 0}}#7a7a7a{{end}}'
-secondary_prompt:
-  foreground: '#7a7a7a'
-  template: " ❯❯ "
+    template: ' ~#@❯ '
+    foreground: '#7a7a7a'
+    background: transparent
 upgrade:
     source: cdn
     interval: 168h
@@ -38,11 +31,15 @@ blocks:
             ubuntu: 
             windows: 
           leading_diamond: ▓
-          template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> </>'
-          # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> </>'
+          template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> </>'
           foreground: '#26C6DA'
           background: '#2f2f2f'
           type: os
+          style: diamond
+        - template: ' {{ if ne .Env.POSH_SESSION_DEFAULT_USER .UserName }}<#77f5d6>{{ .UserName }}</><#7a7a7a></>{{ end }}<#2EEFBF>{{ .HostName }}</><#7a7a7a> </>'
+          foreground: '#fafafa'
+          background: '#2f2f2f'
+          type: session
           style: diamond
         - template: ' <#7a7a7a> </>'
           foreground: '#ffff66'
@@ -50,9 +47,9 @@ blocks:
           type: root
           style: diamond
         - options:
-            # folder_icon: <#B5B2C2> </>
+            folder_icon: <#B5B2C2> </>
             style: full
-          # template: '<#f2f200>  </>{{ .Path }} '
+          template: '<#f2f200>  </>{{ .Path }} '
           foreground: '#fafafa'
           background: '#2f2f2f'
           type: path
@@ -97,17 +94,33 @@ blocks:
           background: '#2f2f2f'
           type: dotnet
           style: diamond
-        - template: ' <#2EEFBF>{{ .HostName }}</><#7a7a7a> </>'
+        - options:
+            time_format: "15:04:05"
+          trailing_diamond: ▓
+          template: ' {{ .CurrentDate | date .Format }}<#007ACC>  </>'
           foreground: '#fafafa'
           background: '#2f2f2f'
-          type: session
+          type: time
           style: diamond
-
+    - type: prompt
+      alignment: left
+      segments:
+        - template: ' ~#@❯ '
+          foreground: '#7a7a7a'
+          type: text
+          style: plain
+      newline: true
+    - type: rprompt
+      alignment: right
+      segments:
+        - template: ' ❮ '
+          foreground: '#7a7a7a'
+          type: text
+          style: plain
         - options:
-        # https://ohmyposh.dev/docs/segments/system/executiontime
-            style: round # roundrock
-            threshold: 1000 # 5000
-          template: ' {{ .FormattedMs }}</>'
+            style: roundrock
+            threshold: 500
+          template: ' {{ .FormattedMs }}<#fafafa>  </>'
           foreground: '#FFCE5C'
           type: executiontime
           style: plain
@@ -119,28 +132,5 @@ blocks:
           style: plain
           foreground_templates:
             - '{{ if gt .Code 0 }}#E84855{{ end }}'
-
-
-    - type: prompt
-      alignment: left
-      segments:
-        - options:
-            mapped_shell_names:
-                bash: '#_'
-                pwsh: 
-                zsh: '%_'
-          leading_diamond: ▓
-          foreground: '#26C6DA'
-          background: '#2f2f2f'
-          type: shell
-          style: diamond
-        - template: ' ❯ '
-          # foreground: '#7a7a7a'
-          foreground_templates:
-            - '{{if gt .Code 0}}red{{end}}'
-            - '{{if eq .Code 0}}#7a7a7a{{end}}'
-          type: text
-          style: plain
-      newline: true
 version: 4
 final_space: true
