@@ -2,9 +2,8 @@
 # https://github.com/eza-community/eza
 set -euo pipefail
 
-RUNCOMMAND="eza"
 UPDATE=false UNINSTALL=false
-while getopts ":urs" opt; do
+while getopts ":u" opt; do
 	case "$opt" in
 	u) UNINSTALL=true ;;
 	esac

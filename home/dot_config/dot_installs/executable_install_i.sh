@@ -121,6 +121,7 @@ git_install() {
     # echo ---$URL---
     [[ -n "$URL" ]] && break
   done
+  [[ -n "$URL" ]] || URL=$(find_url "-linux-${ARCH}.tar.gz")
   [[ -n "$URL" ]] || URL=$(find_url "-linux-${ARCH//x86_64/amd64}.tar.gz")
   [[ -n "$URL" ]] || { echo "No release asset matching '$PATTERN'"; return 1; }
     echo ---$URL---
