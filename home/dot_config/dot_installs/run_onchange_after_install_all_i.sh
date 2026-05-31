@@ -13,7 +13,6 @@ echo $0
 echo $SCRIPT_DIR ~
 # rm $0  # Delete me
 
-
 UPDATE_ALL='' && UNINSTALL_ALL='' && SYSTEM_ALL=''
 while getopts ":urs" opt; do
   [[ $opt == u ]] && UPDATE_ALL=' -u'
@@ -32,7 +31,7 @@ for name in $APPDEP_ALL ;do
   fi
   # break
 done
-APPINSTALL_ALL="starship zoxide fzf fastfetch fresh eza fd ohmyposh ripgrep"
+APPINSTALL_ALL=" ohmyposh starship zoxide fzf fastfetch fresh eza fd ripgrep"
 for name in $APPINSTALL_ALL ;do
    echo "$name installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
   [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
