@@ -14,7 +14,6 @@ done
 
 SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 "$SCRIPT_DIR/ins_git_latest_i.sh" "$@" --repo "eza-community/eza" --app eza eza
-
 # if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
 #     sudo apt update
 #     sudo apt install -y gpg
@@ -26,8 +25,8 @@ SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null &&
 #     sudo apt install -y eza
 # else
   # wget -qO- "https://github.com/eza-community/eza/releases/latest/download/eza_${TARGET}.tar.gz" | tar xz
-
 if $UNINSTALL; then
+  echo $UNINSTALL
   # rm -f "$HOME/.local/bin/eza"
   rm -f "$HOME/.local/share/bash-completion/completions/eza" "$HOME/.local/share/zsh/site-functions/_eza"
   if [[ $EUID -eq 0 ]]; then
@@ -38,8 +37,10 @@ if $UNINSTALL; then
     sudo rm -f /usr/share/bash-completion/completions/eza /usr/share/zsh/site-functions/_eza /usr/local/bin/eza
   fi
 else
+
   # [[ $EUID -eq 0 ]] && BC="/usr/local/share" || BC="$HOME/.local/share"
   [[ $EUID -eq 0 ]] && BC="/usr/share" || BC="$HOME/.local/share"
+  echo $BC
   mkdir -p "$BC/bash-completion/completions" "$BC/zsh/site-functions"
   wget -qO "$BC/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
   wget -qO "$BC/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza

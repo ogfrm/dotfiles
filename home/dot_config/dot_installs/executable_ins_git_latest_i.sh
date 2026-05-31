@@ -87,14 +87,13 @@ git_install() {
   case "$(uname -m)" in
       x86_64) ARCH="x86_64" ;;
       aarch64|arm64) ARCH="aarch64" ;;
-      *) echo "Unsupported architecture: $(uname -m)"; exit 1 ;;
+      *) echo "Unsupported architecture: $(uname -m)"; return 1 ;;
   esac
   # PATTERN=""; PATTERN_ADD="-unknown-linux-musl.tar.gz"
   # if [[ -z "$PATTERN" ]]; then
   #     case "$(uname -m)" in
   #         x86_64) PATTERN="x86_64$PATTERN_ADD" ;;
   #         aarch64|arm64) PATTERN="aarch64$PATTERN_ADD" ;;
-  #         *) echo "Unsupported architecture: $(uname -m)"; exit 1 ;;
   #     esac
   # fi
   TMPDIR=$(mktemp -d); trap 'rm -rf "$TMPDIR"' EXIT
@@ -121,7 +120,7 @@ git_install() {
   echo $LIBC_PREF
   echo $URL
 
-  [[ -n "$URL" ]] || { echo "No release asset matching '$PATTERN'"; exit 1; }
+  [[ -n "$URL" ]] || { echo "No release asset matching '$PATTERN'"; return 1; }
 
   ARCHIVE="$TMPDIR/archive.tar.gz"
   curl -fsSL "$URL" -o "$ARCHIVE"
@@ -129,7 +128,7 @@ git_install() {
 
   BIN=$(find "$TMPDIR" -type f -name "$RUNCOMMAND" | head -n1)
   [[ -f "$BIN" ]] || BIN=$(find "$TMPDIR" -type f -perm -111 ! -name '*.so*' ! -name '*.dll' ! -name '*.dylib' | head -n1)
-  [[ -f "$BIN" ]] || { echo "No executable found in archive"; exit 1; }
+  [[ -f "$BIN" ]] || { echo "No executable found in archive"; return 1; }
 
   mkdir -p "$INSTALL_DIR"
   install -m 755 "$BIN" "$INSTALL_DIR/$RUNCOMMAND"
@@ -144,17 +143,16 @@ git_install() {
 
 $UNINSTALL && { app_uninstall_all "$APP_NAME"; exit 0; }
 
-if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
+# if command -v $RUNCOMMAND >/dev/null 2>&1 && [ "$UPDATE" = false ]; then exit 0; fi
 if [[ -z "$INSTALL_DIR" ]]; then
     [[ $EUID -eq 0 ]] && INSTALL_DIR="/usr/local/bin" || INSTALL_DIR="$HOME/.local/bin"
 fi
   # INSTALL_DIR="/usr/local/bin"
   # [[ -w "$INSTALL_DIR" ]] || { INSTALL_DIR="$HOME/.local/bin"; mkdir -p "$INSTALL_DIR"; }
 
-! $APP_FORCE && [[ -n "$REPO" ]] && git_install
+! $APP_FORCE && [[ -n "$REPO" ]] && git_install || true
 ##  $APP_FORCE && [[ -n "$REPO" ]] && git_install "$RUNCOMMAND" "$REPO" "$INSTALL_DIR" "$PATTERN"
-($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$APP_NAME" ]] && app_install_all $APP_NAME
-
+($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$APP_NAME" ]] && app_install_all $APP_NAME || true
 
 # Check if an actual file executable exists on disk
 # if type -p my_command >/dev/null 2>&1; then
