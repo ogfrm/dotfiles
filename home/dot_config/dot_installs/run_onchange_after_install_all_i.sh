@@ -7,7 +7,7 @@ set -euo pipefail
 
 # alias czremove_all="chezmoi cat ~/.config/.installs/install_all_i.sh | bash -s -- -r"  # to re-run this
 
-SCRIPT_DIR="~/.config/.installs";
+SCRIPT_DIR="$HOME/.config/.installs";
 # SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 echo $0
 echo $SCRIPT_DIR ~
@@ -33,7 +33,7 @@ for name in $APPDEP_ALL ;do
 done
 APPINSTALL_ALL=" ohmyposh starship zoxide fzf fastfetch fresh eza fd ripgrep"
 for name in $APPINSTALL_ALL ;do
-   echo "$name installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
+   echo "$SCRIPT_DIR/${name}_i.sh installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
   [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
   $SCRIPT_DIR/${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
 # # {{ include "dotconfig/dot_rc/${name}_i.sh.sh" | sha256sum }}
