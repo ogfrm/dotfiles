@@ -20,5 +20,3 @@ chezmoi execute-template < dot_zshrc.tmpl
 # To clear the state of run_onchange_ scripts, run:
 chezmoi state delete-bucket --bucket=entryState
 ```
-
-

@@ -134,18 +134,17 @@ ftext() { # Searches for text in all files in the current folder
 if command -v eza &>/dev/null; then
 # https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
   export EZA_COLORS="da=33:*.zip=38;5;125:*.log=38;5;248:*.md=38;5;121"
-  # alias eza="eza --icons --group-directories-first --time-style=long-iso --classify"
-  alias eza="eza --icons --group-directories-first --time-style=long-iso --classify"
-  alias ls="eza -lg" # --group --long
-  alias lw="eza -x"  # wide display
-  alias lf="eza -lagf"  # File listing
-  alias ldir="eza -lagD"  # Dir listing
-  alias lx="eza -lag -s extension"  # sort by extension
-  alias lk="eza -lag -s size"  # sort by size
-  alias lm="eza -agl -s modified"  # sort by size
+  alias eza_a="eza --icons --group-directories-first --time-style=long-iso --classify"
+  alias ls="eza_a -lg" # --group --long
+  alias lw="eza_a -x"  # wide display
+  alias lf="eza_a -lagf"  # File listing
+  alias ldir="eza_a -lagD"  # Dir listing
+  alias lx="eza_a -lag -s extension"  # sort by extension
+  alias lk="eza_a -lag -s size"  # sort by size
+  alias lm="eza_a -agl -s modified"  # sort by size
         # name, size, extension, modified, changed, accessed, created, inode, type, none
-  alias lt="eza -aT"  # --tree listing
-  alias tree="eza --tree --long --total-size --no-time --no-permissions --no-user"  # --byte
+  alias lt="eza_a -aT"  # --tree listing
+  alias tree="eza_a --tree --long --total-size --no-time --no-permissions --no-user"  # --byte
   alias treed="tree -D"  # dir only
   alias tree2="tree --level=2"
 
@@ -174,6 +173,7 @@ alias l..="ls -la -a ../"
 alias lr='ls -lR'                # recursive ls
 alias lmore='ls -al | more'          # pipe through 'more'
 
+alias showpath='echo $PATH | tr ":" "\n"'
 alias path='echo $PATH | perl -p -e "s/:/\n/g;"' # path, one element per line
 alias fpath='echo $FPATH | perl -p -e "s/:/\n/g;"'
 alias countfiles="for t in files links directories; do echo \`find . -type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
@@ -205,18 +205,11 @@ unset GREP_OPTIONS
 alias less='less -R'     # Repaint the screen after each page
 
 ########################### CAT
-# If batcat exists
-if command -v batcat &>/dev/null; then
-    alias bat='batcat --color=always'
-    alias cat='bat'
-    alias catt='bat --paging=never --decorations=never'
-# Else if bat exists
-elif command -v bat &>/dev/null; then
-    alias bat='bat --color=always'
-    alias cat='bat'
-    alias catt='bat --paging=never --decorations=never'
+if command -v bat &>/dev/null; then
+  alias cat='bat --color=always'
+  alias catt='bat --color=always --paging=never --decorations=never'
+  alias fzfp='fzf --preview "bat --color=always --paging=never --number {}"'
 fi
-alias fzfp='fzf --preview "bat --color=always --paging=never --number {}"'
 alias fzfch='find ~/.config/cheat/cheatsheets/personal | sort | fzf --preview "cat --language bash {}"'
 
 ########################### APPS  # Manage packages easier
@@ -224,7 +217,7 @@ if [ -f /usr/bin/apt ]; then
 	alias update='sudo apt update'
 	alias upgrade='sudo apt update && sudo apt dist-upgrade && sudo apt autoremove && sudo apt clean'
 	alias install='sudo apt install'
-  alias apt-get='sudo apt-get'
+  # alias apt-get='sudo apt-get'
 elif [ -f /usr/bin/pacman ]; then
 	alias update='sudo pacman -Syyy'
 	alias upgrade='sudo pacman -Syu'

@@ -6,14 +6,12 @@ RUNCOMMAND="eza"
 UPDATE=false UNINSTALL=false
 while getopts ":urs" opt; do
 	case "$opt" in
-	g) UPDATE=true ;;
 	u) UNINSTALL=true ;;
 	esac
 done
-# [[ $EUID -eq 0 ]] && INSTALL_DIR="/usr/local/bin" || INSTALL_DIR="$HOME/.local/bin"
 
 SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
-"$SCRIPT_DIR/ins_git_latest_i.sh" "$@" --repo "eza-community/eza" --app eza eza
+"$SCRIPT_DIR/install_i.sh" "$@" --repo "eza-community/eza" --app eza eza
 # if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
 #     sudo apt update
 #     sudo apt install -y gpg

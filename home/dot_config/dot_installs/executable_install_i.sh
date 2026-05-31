@@ -155,12 +155,12 @@ fi
 ($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$APP_NAME" ]] && app_install_all $APP_NAME || true
 
 # Check if an actual file executable exists on disk
-# if type -p my_command >/dev/null 2>&1; then
+# if command -v my_command >/dev/null 2>&1; then
 #     echo "Command exists as an executable file on disk."
 # else
 #     echo "Command does not exist (or it is only an alias/function/builtin)."
 # fi
-# If you need your script to run outside of Bash (e.g., in /bin/sh), type -p is not available# # Get the resolution description
+# If you need your script to run outside of Bash (e.g., in /bin/sh), command -v is not available# # Get the resolution description
 # cmd_path=$(command -v my_command)
 
 # # Ensure it exists AND starts with "/" (ignoring keywords/builtins/aliases)
