@@ -173,9 +173,8 @@ alias l..="ls -la -a ../"
 alias lr='ls -lR'                # recursive ls
 alias lmore='ls -al | more'          # pipe through 'more'
 
-alias showpath='echo $PATH | tr ":" "\n"'
-alias path='echo $PATH | perl -p -e "s/:/\n/g;"' # path, one element per line
-alias fpath='echo $FPATH | perl -p -e "s/:/\n/g;"'
+alias path='echo $PATH | tr ":" "\n"' # path, one element per line
+alias fpath='echo $FPATH | tr ":" "\n"'
 alias countfiles="for t in files links directories; do echo \`find . -type \${t:0:1} | wc -l\` \$t; done 2> /dev/null"
 
 ########################### DISK   Alias's to show disk space and space used in a folder

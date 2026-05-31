@@ -23,6 +23,9 @@ SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null &&
 #     sudo apt install -y eza
 # else
   # wget -qO- "https://github.com/eza-community/eza/releases/latest/download/eza_${TARGET}.tar.gz" | tar xz
+
+####### Completions
+
 if $UNINSTALL; then
   echo $UNINSTALL
   # rm -f "$HOME/.local/bin/eza"
@@ -35,7 +38,6 @@ if $UNINSTALL; then
     sudo rm -f /usr/share/bash-completion/completions/eza /usr/share/zsh/site-functions/_eza /usr/local/bin/eza
   fi
 else
-
   # [[ $EUID -eq 0 ]] && BC="/usr/local/share" || BC="$HOME/.local/share"
   [[ $EUID -eq 0 ]] && BC="/usr/share" || BC="$HOME/.local/share"
   echo $BC
