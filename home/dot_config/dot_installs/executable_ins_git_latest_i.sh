@@ -110,6 +110,7 @@ git_install() {
   # Try each libc in order
   for LIBC in $LIBC_PREF; do
     PATTERN="${ARCH}-unknown-linux-${LIBC}.tar.gz"
+    echo $PATTERN
     URL=$(
       curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" |
       (command -v jq >/dev/null && jq -r ".assets[].browser_download_url|select(test(\"$PATTERN\"))" ||
@@ -117,6 +118,8 @@ git_install() {
       )
     [[ -n "$URL" ]] && break
   done
+  echo $LIBC_PREF
+  echo $URL
 
   [[ -n "$URL" ]] || { echo "No release asset matching '$PATTERN'"; exit 1; }
 
