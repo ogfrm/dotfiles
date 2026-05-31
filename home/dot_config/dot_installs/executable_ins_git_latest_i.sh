@@ -84,23 +84,40 @@ app_upgrade_all() {
 }
 
 git_install() {
-  # RUNCOMMAND="$1"
-  # REPO="$2"
-  # INSTALL_DIR="$3"
-  # PATTERN="$4"
-  if [[ -z "$PATTERN" ]]; then
-      case "$(uname -m)" in
-          x86_64) PATTERN="x86_64$PATTERN_ADD" ;;
-          aarch64|arm64) PATTERN="aarch64$PATTERN_ADD" ;;
-          *) echo "Unsupported architecture: $(uname -m)"; exit 1 ;;
-      esac
-  fi
+  case "$(uname -m)" in
+      x86_64) ARCH="x86_64" ;;
+      aarch64|arm64) ARCH="aarch64" ;;
+      *) echo "Unsupported architecture: $(uname -m)"; exit 1 ;;
+  esac
+  # PATTERN=""; PATTERN_ADD="-unknown-linux-musl.tar.gz"
+  # if [[ -z "$PATTERN" ]]; then
+  #     case "$(uname -m)" in
+  #         x86_64) PATTERN="x86_64$PATTERN_ADD" ;;
+  #         aarch64|arm64) PATTERN="aarch64$PATTERN_ADD" ;;
+  #         *) echo "Unsupported architecture: $(uname -m)"; exit 1 ;;
+  #     esac
+  # fi
   TMPDIR=$(mktemp -d); trap 'rm -rf "$TMPDIR"' EXIT
-  URL=$(
-    curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" |
-    (command -v jq >/dev/null && jq -r ".assets[].browser_download_url|select(test(\"$PATTERN\"))" ||
-    grep '"browser_download_url"' | grep "$PATTERN" | cut -d'"' -f4) | head -n1
-    )
+
+  # Determine libc / Alpine
+  # Determine libc preference
+  if grep -qi alpine /etc/os-release 2>/dev/null || (command -v ldd >/dev/null && ldd --version 2>&1 | grep -qi musl); then
+      LIBC_PREF="musl gnu"
+  else
+      LIBC_PREF="gnu musl"
+  fi
+
+  # Try each libc in order
+  for LIBC in $LIBC_PREF; do
+    PATTERN="${ARCH}-unknown-linux-${LIBC}.tar.gz"
+    URL=$(
+      curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" |
+      (command -v jq >/dev/null && jq -r ".assets[].browser_download_url|select(test(\"$PATTERN\"))" ||
+      grep '"browser_download_url"' | grep "$PATTERN" | cut -d'"' -f4) | head -n1
+      )
+    [[ -n "$URL" ]] && break
+  done
+
   [[ -n "$URL" ]] || { echo "No release asset matching '$PATTERN'"; exit 1; }
 
   ARCHIVE="$TMPDIR/archive.tar.gz"

@@ -32,19 +32,9 @@ if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
     sudo apt update
     sudo apt install -y eza
 else
-  INSTALL_DIR="$HOME/.local"
-  ARCH="$(uname -m)"
-  case "$ARCH" in
-    x86_64) TARGET="x86_64-unknown-linux-gnu" ;;
-    aarch64|arm64) TARGET="aarch64-unknown-linux-gnu" ;;
-    *) echo "Unsupported architecture: $ARCH"; exit 0 ;;
-  esac
-
-  wget -qO- "https://github.com/eza-community/eza/releases/latest/download/eza_${TARGET}.tar.gz" | tar xz
-  chmod +x eza
-	[[ -n "$SUDO" ]] && sudo chown root:root eza
-	$SUDO mkdir -p "$INSTALL_DIR/bin"
-	$SUDO mv eza "$INSTALL_DIR/bin/eza"
+  SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+  "$SCRIPT_DIR/ins_git_latest_i.sh" "$@" --repo "eza-community/eza" --app eza eza
+  # wget -qO- "https://github.com/eza-community/eza/releases/latest/download/eza_${TARGET}.tar.gz" | tar xz
 fi
 
 BC="$INSTALL_DIR/share"
