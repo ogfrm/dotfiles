@@ -9,4 +9,4 @@ set -euo pipefail
 # alias czremove_all="chezmoi cat ~/.config/.installs/install_i.sh | bash -s -- -r"  # to re-run this
 SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 echo $SCRIPT_DIR
-[ -f "$SCRIPT_DIR/install_all_i.sh" ] && "$SCRIPT_DIR/install_all_i.sh"
+[ -f "$HOME/.config/.installs/install_all_i.sh" ] && "$HOME/.config/.installs/install_all_i.sh"
