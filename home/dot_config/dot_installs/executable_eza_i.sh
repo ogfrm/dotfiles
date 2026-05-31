@@ -32,15 +32,13 @@ if [[ -n "$SUDO" ]] && command -v apt >/dev/null 2>&1; then
     sudo apt update
     sudo apt install -y eza
 else
+  INSTALL_DIR="$HOME/.local"
   ARCH="$(uname -m)"
   case "$ARCH" in
     x86_64) TARGET="x86_64-unknown-linux-gnu" ;;
     aarch64|arm64) TARGET="aarch64-unknown-linux-gnu" ;;
     *) echo "Unsupported architecture: $ARCH"; exit 0 ;;
   esac
-  # for cmd in wget tar; do
-  #   command -v "$cmd" >/dev/null 2>&1 || exit 0
-  # done
 
   wget -qO- "https://github.com/eza-community/eza/releases/latest/download/eza_${TARGET}.tar.gz" | tar xz
   chmod +x eza

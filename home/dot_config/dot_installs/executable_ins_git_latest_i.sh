@@ -11,8 +11,9 @@ usage() {
 }
 # [[ -w folder ]] checks if a specific folder is writable.
 
-PATTERN=""; INSTALL_DIR=""; REPO=""; APP_NAME=""; UNINSTALL=false; APP_FORCE=false; APP_DEB_FORCE=false
-UPDATE=false
+INSTALL_DIR=""; REPO=""; APP_NAME=""; UNINSTALL=false; APP_FORCE=false; APP_DEB_FORCE=false; UPDATE=false;
+PATTERN=""; PATTERN_ADD="-unknown-linux-musl.tar.gz"
+
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -u|--remove) UNINSTALL=true; shift 1 ;;
@@ -21,6 +22,7 @@ while [[ $# -gt 0 ]]; do
         --app-force) APP_FORCE=true; shift 1 ;;
         --deb-force) APP_DEB_FORCE=true; shift 1 ;;
         -p|--pattern) PATTERN="$2"; shift 2 ;;
+        --pattern-add) PATTERN_ADD="$2"; shift 2 ;;
         -d|--dir) INSTALL_DIR="$2"; shift 2 ;;
         -r|--repo) REPO="$2"; shift 2 ;;
         -h|--help) usage ;;
@@ -82,14 +84,14 @@ app_upgrade_all() {
 }
 
 git_install() {
-  RUNCOMMAND="$1"
-  REPO="$2"
-  INSTALL_DIR="$3"
-  PATTERN="$4"
+  # RUNCOMMAND="$1"
+  # REPO="$2"
+  # INSTALL_DIR="$3"
+  # PATTERN="$4"
   if [[ -z "$PATTERN" ]]; then
       case "$(uname -m)" in
-          x86_64) PATTERN="x86_64-unknown-linux-musl.tar.gz" ;;
-          aarch64|arm64) PATTERN="aarch64-unknown-linux-musl.tar.gz" ;;
+          x86_64) PATTERN="x86_64$PATTERN_ADD" ;;
+          aarch64|arm64) PATTERN="aarch64$PATTERN_ADD" ;;
           *) echo "Unsupported architecture: $(uname -m)"; exit 1 ;;
       esac
   fi
@@ -129,5 +131,21 @@ fi
   # INSTALL_DIR="/usr/local/bin"
   # [[ -w "$INSTALL_DIR" ]] || { INSTALL_DIR="$HOME/.local/bin"; mkdir -p "$INSTALL_DIR"; }
 
-! $APP_FORCE && [[ -n "$REPO" ]] && git_install "$RUNCOMMAND" "$REPO" "$INSTALL_DIR" "$PATTERN"
+! $APP_FORCE && [[ -n "$REPO" ]] && git_install
+##  $APP_FORCE && [[ -n "$REPO" ]] && git_install "$RUNCOMMAND" "$REPO" "$INSTALL_DIR" "$PATTERN"
 ($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$APP_NAME" ]] && app_install_all $APP_NAME
+
+
+# Check if an actual file executable exists on disk
+# if type -p my_command >/dev/null 2>&1; then
+#     echo "Command exists as an executable file on disk."
+# else
+#     echo "Command does not exist (or it is only an alias/function/builtin)."
+# fi
+# If you need your script to run outside of Bash (e.g., in /bin/sh), type -p is not available# # Get the resolution description
+# cmd_path=$(command -v my_command)
+
+# # Ensure it exists AND starts with "/" (ignoring keywords/builtins/aliases)
+# if [ -n "$cmd_path" ] && [ "${cmd_path#"${cmd_path%%[!/]*}"}" = "/" ]; then
+#     echo "Actual executable file exists."
+# fi
