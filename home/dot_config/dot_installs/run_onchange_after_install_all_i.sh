@@ -7,10 +7,12 @@ set -euo pipefail
 
 # alias czremove_all="chezmoi cat ~/.config/.installs/install_all_i.sh | bash -s -- -r"  # to re-run this
 
-SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+SCRIPT_DIR="~/.config/.installs";
+# SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 echo $0
-echo $SCRIPT_DIR
+echo $SCRIPT_DIR ~
 # rm $0  # Delete me
+
 
 UPDATE_ALL='' && UNINSTALL_ALL='' && SYSTEM_ALL=''
 while getopts ":urs" opt; do
