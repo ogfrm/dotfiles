@@ -10,13 +10,13 @@ set -euo pipefail
 SCRIPT_DIR="$HOME/.config/.installs";
 # SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 echo $0
-echo $SCRIPT_DIR ~
+echo $SCRIPT_DIR
 # rm $0  # Delete me
 
 UPDATE_ALL='' && UNINSTALL_ALL='' && SYSTEM_ALL=''
 while getopts ":urs" opt; do
-  [[ $opt == u ]] && UPDATE_ALL=' -u'
-  [[ $opt == r ]] && UNINSTALL_ALL=' -r'
+  [[ $opt == u ]] && UPDATE_ALL=' -g'
+  [[ $opt == r ]] && UNINSTALL_ALL=' -u'
   [[ $opt == s ]] && SYSTEM_ALL=' -s'
 done
 
@@ -31,7 +31,8 @@ for name in $APPDEP_ALL ;do
   fi
   # break
 done
-APPINSTALL_ALL="ohmyposh starship zoxide fzf fastfetch fresh eza fd ripgrep bat tmux"
+APPINSTALL_ALL="starship fzf"
+# APPINSTALL_ALL="ohmyposh starship zoxide fzf fastfetch fresh eza fd ripgrep bat tmux"
 for name in $APPINSTALL_ALL ;do
    echo "$SCRIPT_DIR/${name}_i.sh installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
   [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
@@ -43,10 +44,9 @@ done
 # ./pipx_i.sh
 # ./ansible_i.sh
 
-
 # ./fonts.sh uninstall JetBrainsMono CascadiaCode  # default install firacode
-ACTION="${1:-install}"
-shift || true
+# ACTION="${1:-install}"
+# shift || true
 
 # ./fonts.sh -u JetBrainsMono CascadiaCode  # default install firacode
 # ACTION=install
@@ -58,4 +58,4 @@ shift || true
 #   esac
 # done
 # shift $((OPTIND - 1))
-[[ $# -eq 0 ]] && set -- FiraCode
+# [[ $# -eq 0 ]] && set -- FiraCode
