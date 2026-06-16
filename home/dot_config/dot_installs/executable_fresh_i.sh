@@ -2,7 +2,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$( \cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
-"$SCRIPT_DIR/install_i.sh" "$@" --repo "sinelaw/fresh" --install_url "refs/heads/master/scripts/install.sh" --app fresh-editor fresh
+"$SCRIPT_DIR/install_i.sh" "$@" --repo "sinelaw/fresh" --app fresh-editor fresh
+# "$SCRIPT_DIR/install_i.sh" "$@" --repo "sinelaw/fresh" --install_url "refs/heads/master/scripts/install.sh" --app fresh-editor fresh
 
 # RUNCOMMAND="fresh" # /usr/bin
 # UPDATE=false && UNINSTALL=false

@@ -112,6 +112,7 @@ git_install() {
     done
     [[ -n "$URL" ]] || URL=$(git_latest_url "-linux-${ARCH}.tar.gz")
     [[ -n "$URL" ]] || URL=$(git_latest_url "-linux-${ARCH//x86_64/amd64}.tar.gz")
+    [[ -n "$URL" ]] || URL=$(git_latest_url "_Linux_${ARCH}.tar.gz")  # lazydocker
     [[ -n "$URL" ]] || { echo "No release asset matching '$ARCH'"; return 1; }
       echo ---$URL---
 
