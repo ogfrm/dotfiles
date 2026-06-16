@@ -31,8 +31,8 @@ for name in $APPDEP_ALL ;do
   fi
   # break
 done
-APPINSTALL_ALL="starship fzf"
-# APPINSTALL_ALL="ohmyposh starship zoxide fzf fastfetch fresh eza fd ripgrep bat tmux"
+# APPINSTALL_ALL="starship fzf"
+APPINSTALL_ALL="ohmyposh starship zoxide fzf fastfetch fresh eza fd ripgrep bat tmux"
 for name in $APPINSTALL_ALL ;do
    echo "$SCRIPT_DIR/${name}_i.sh installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
   [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
