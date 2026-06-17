@@ -111,15 +111,20 @@ git_install() {
       [[ -n "$URL" ]] && break
     done
     [[ -n "$URL" ]] || URL=$(git_latest_url "-linux-${ARCH}.tar.gz")
-    [[ -n "$URL" ]] || URL=$(git_latest_url "-linux-${ARCH//x86_64/amd64}.tar.gz")
+    [[ -n "$URL" ]] || URL=$(git_latest_url "-linux-amd64.tar.gz")
     [[ -n "$URL" ]] || URL=$(git_latest_url "_Linux_${ARCH}.tar.gz")  # lazydocker
+    [[ -n "$URL" ]] || URL=$(git_latest_url "-linux-${ARCH}")
+    [[ -n "$URL" ]] || URL=$(git_latest_url "-linux-amd64")
     [[ -n "$URL" ]] || { echo "No release asset matching '$ARCH'"; return 1; }
       echo ---$URL---
 
-    ARCHIVE="$TMPDIR/archive.tar.gz"
-    curl -fsSL "$URL" -o "$ARCHIVE"
-    tar -xzf "$ARCHIVE" -C "$TMPDIR"
-
+    if [[ "$URL" == *.tar.gz ]]; then
+      ARCHIVE="$TMPDIR/archive.tar.gz"
+      curl -fsSL "$URL" -o "$ARCHIVE"
+      tar -xzf "$ARCHIVE" -C "$TMPDIR"
+    else
+      curl -fsSL "$URL" -o "$TMPDIR/$RUNCOMMAND"
+    fi
     BIN=$(find "$TMPDIR" -type f -name "$RUNCOMMAND" | head -n1)
     [[ -f "$BIN" ]] || BIN=$(find "$TMPDIR" -type f -perm -111 ! -name '*.so*' ! -name '*.dll' ! -name '*.dylib' | head -n1)
     [[ -f "$BIN" ]] || { echo "No executable found in archive"; return 1; }

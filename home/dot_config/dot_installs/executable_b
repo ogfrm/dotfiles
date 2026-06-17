@@ -1,0 +1,287 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+##############################################################################
+# options
+##############################################################################
+
+REMOVE=false
+UPGRADE=false
+APP_FORCE=false
+
+usage() {
+  echo "usage: $0 [-u] [-g] [--app-force] app..."
+  exit 0
+}
+
+while (($#)); do
+  case "$1" in
+    -u|--remove) REMOVE=true ;;
+    -g|--upgrade) UPGRADE=true ;;
+    --app-force) APP_FORCE=true ;;
+    -h|--help) usage ;;
+    -*) echo "unknown option: $1"; exit 1 ;;
+    *) break ;;
+  esac
+  shift
+done
+
+##############################################################################
+# package manager
+##############################################################################
+detect_pm() {
+  local pm
+  for pm in apt dnf yum pacman apk; do
+    command -v "$pm" >/dev/null && { echo "$pm"; return; }
+  done
+}
+
+PM=$(detect_pm)
+
+pm_install() {
+  echo "  $PM install $@  "
+  case $PM in
+    apt) sudo apt update && sudo apt install -y "$@" ;;
+    dnf) sudo dnf install -y "$@" ;;
+    yum) sudo yum install -y "$@" ;;
+    pacman) sudo pacman -Sy --noconfirm "$@" ;;
+    apk) sudo apk add "$@" ;;
+  esac
+}
+pm_remove() {
+  echo "  $PM remove $@  "
+  case $PM in
+    apt) sudo apt remove -fy -qq "$@" ;;
+    dnf) sudo dnf remove -y -q "$@" ;;
+    yum) sudo yum remove -y "$@" ;;
+    pacman) sudo pacman -Rns --noconfirm "$@" ;;
+    apk) sudo apk del "$@" ;;
+  esac
+}
+
+pm_upgrade_all() {
+  echo "  $PM upgrade all $@  "
+  case $PM in
+    apt) sudo apt-get update -qq && apt-get upgrade -y -qq >/dev/null ;;
+    dnf) sudo upgrade -y -q ;;
+    yum) sudo yum upgrade -y -q ;;
+    pacman) sudo pacman -Syu --noconfirm ;;
+    apk) sudo sudo apk upgrade ;;
+  esac
+}
+
+##############################################################################
+# platform
+##############################################################################
+
+case "$(uname -m)" in
+  x86_64) ARCH=x86_64 ;;
+  aarch64|arm64) ARCH=aarch64 ;;
+  armv7l|armv7|armhf) ARCH=armv7 ;;
+  arm) ARCH=arm ;;
+  *) ARCH="" ;;
+esac
+
+ISALPINE=false
+
+[[ $EUID -eq 0 ]] && INSTALL_DIR="/usr/local/bin" || INSTALL_DIR="$HOME/.local/bin"
+
+if grep -qi alpine /etc/os-release 2>/dev/null ||
+  (command -v ldd >/dev/null && ldd --version 2>&1 | grep -qi musl); then
+  ISALPINE=true
+fi
+
+PATTERN_LIST=()
+if command -v apt >/dev/null && command -v dpkg >/dev/null; then
+  PATTERN_LIST+=( "_${ARCH}.deb" )
+fi
+if $ISALPINE; then PATTERN_LIST+=("${ARCH}-unknown-linux-musl.tar.gz"); fi
+PATTERN_LIST+=("${ARCH}-unknown-linux-gnu.tar.gz")
+if ! $ISALPINE; then PATTERN_LIST+=("${ARCH}-unknown-linux-musl.tar.gz"); fi
+# if $ISALPINE; then PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz"); fi
+# PATTERN_LIST+=( "_${ARCH}" "gnu-linux-${ARCH}.tar.gz" )
+# if ! $ISALPINE; then PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz"); fi
+# echo "${PATTERN_LIST[@]}"
+# echo "${#PATTERN_LIST[@]}" # length
+
+##############################################################################
+# helpers
+##############################################################################
+
+real_user() { echo "${SUDO_USER:-$(id -un)}" ; }
+real_home() { getent passwd "$(real_user)" | cut -d: -f6 2>/dev/null || echo "$HOME" ; }
+cleanup_binary() {
+  rm -f "/usr/local/bin/$CMD" "$(real_home)/.local/bin/$CMD" \
+    "/usr/local/share/man/man1/$CMD"* "$(real_home)/.local/share/man/man1/$CMD"*
+}
+
+##############################################################################
+# github
+##############################################################################
+
+latest_release() { curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" ;}
+latest_version() { jq -r '.tag_name' ; }
+# git_latest_version() { printf '%s\n' "$RELEASE_JSON" | jq -r '.tag_name' ; }
+
+installed_version() {
+  command -v "$CMD" >/dev/null 2>&1 || return 0
+  "$CMD" $VERSION_ARG 2>/dev/null | grep -Eo '[0-9]+(\.[0-9]+[a-z]?)+' | head -1
+}
+
+git_latest_url() {
+    local pattern="$1"
+    printf '%s\n' "$RELEASE_JSON" |
+      { if command -v jq >/dev/null 2>&1; then
+          jq -r --arg p "$pattern" '.assets[].browser_download_url | select(contains($p))'
+          # jq -r ".assets[].browser_download_url | select(test(\"$pattern\"))"
+        else
+          grep '"browser_download_url"' | grep "$pattern" | cut -d'"' -f4
+        fi
+      }
+}
+find_asset() {
+  local pattern url
+  for pattern in "${PATTERN_LIST[@]}"; do
+
+    if [[ "$pattern" == *.deb ]]; then
+      url=$(git_latest_url "$pattern" | grep -v -- '-musl' | head -1 )
+      [[ -n "$url" ]] && { echo "$url"; return; }
+      url=$(git_latest_url "${pattern//x86_64/amd64}" | grep -v -- '-musl' | head -1 )
+      [[ -n "$url" ]] && { echo "$url"; return; }
+    else
+      url=$(git_latest_url "$pattern" | head -n1)
+      [[ -n "$url" ]] && { echo "$url"; return; }
+      url=$( git_latest_url "${pattern//x86_64/amd64}" | head -n1 )
+    fi
+    [[ -n "$url" ]] && { echo "$url"; return; }
+  done
+}
+
+github_install() {
+  local tmp url bin
+  [[ -n "$REPO" ]] || return 1
+  RELEASE_JSON=$(latest_release)
+  LATEST_VERSION=$(latest_version <<< "$RELEASE_JSON")
+  INSTALLED_VERSION=$(installed_version)
+
+  echo "Installing $REPO..."
+
+  echo "  Installed: ${INSTALLED_VERSION:-none}"
+  echo "  Latest:    $LATEST_VERSION"
+  url=$(find_asset)
+  echo "-------------  $url "
+
+  # if [[ "$UPGRADE" = false ]] && [[ -n "$INSTALLED_VERSION" ]] &&
+  if [[ -n "$INSTALLED_VERSION" ]] && [[ "${LATEST_VERSION#v}" == "${INSTALLED_VERSION#v}" ]]; then
+    echo "  $REPO is already up to date."
+    return
+  fi
+  if [[ -n "$INSTALL_URL" ]]; then
+    curl -fsSL "https://raw.githubusercontent.com/$REPO/$INSTALL_URL" | sh -s -- $INSTALL_URL_ARG
+    return
+  fi
+  # url=$(find_asset)
+  [[ -n "$url" ]] || return 1
+  tmp=$(mktemp -d) && trap 'rm -rf "$tmp"' RETURN
+  # echo "-------------  $url "
+  case "$url" in
+    *.deb)
+      curl -fsSL "$url" -o "$tmp/pkg.deb"
+      sudo dpkg -i "$tmp/pkg.deb" >/dev/null 2>&1
+      sudo apt-get install -fy >/dev/null 2>&1
+      return
+      ;;
+    *.tar.gz)
+      curl -fsSL "$url" -o "$tmp/pkg.tar.gz"
+      tar -xzf "$tmp/pkg.tar.gz" -C "$tmp"
+      ;;
+    *)
+      curl -fsSL "$url" -o "$tmp/$CMD"
+      chmod +x "$tmp/$CMD"
+      ;;
+  esac
+
+  bin=$(find "$tmp" -type f -name "$CMD" | head -n1)
+  [[ -f "$bin" ]] || bin=$(find "$tmp" -type f -perm -111 ! -name '*.so*' | head -n1)
+  [[ -n "$bin" ]] || { echo "  No executable found in archive"; return 1; }
+  mkdir -p "$INSTALL_DIR"
+  install -m755 "$bin" "$INSTALL_DIR/$CMD"
+  # chmod 755 "$INSTALL_BIN" &&  sudo chown root:root "$INSTALL_DIR" && mv "$INSTALL_DIR" "$INSTALL_DIR/$CMD"
+  echo "  Installed $CMD version $(installed_version) -> $INSTALL_DIR/$CMD"
+}
+##############################################################################
+# registry   repo:pkg:cmd:version_arg:install_url:install_url_arg
+##############################################################################
+
+declare -A APPS=(
+  [bat]="sharkdp/bat:bat:bat"
+  [bottom]="ClementTsang/bottom::bottom"
+  [fd]="sharkdp/fd:fd-find:fd"
+  [eza]="eza-community/eza:eza:eza"
+  [zoxide]="ajeetdsouza/zoxide:zoxide:zoxide"
+)
+load_app() {
+  [[ -v "APPS[$1]" ]] || return 1
+  IFS=: read -r \
+    REPO PKG CMD VERSION_ARG INSTALL_URL INSTALL_URL_ARG PATTERN_START \
+    <<< "${APPS[$1]}"
+  VERSION_ARG="${VERSION_ARG:---version}"
+}
+##############################################################################
+# hooks
+##############################################################################
+
+eza_install() {
+  local base
+  # /usr/local/share
+  [[ $EUID -eq 0 ]] && base=/usr/share || base="$HOME/.local/share"
+  mkdir -p "$base/bash-completion/completions" "$base/zsh/site-functions"
+  wget -qO "$base/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
+
+  wget -qO "$base/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza
+}
+eza_uninstall() {
+  local d
+  for d in "$HOME/.local/share" /usr/share /usr/local/share; do
+    rm -f "$d/bash-completion/completions/eza" "$d/zsh/site-functions/_eza"
+  done
+  # rm -f /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+  # rm -f /usr/share/bash-completion/completions/eza /usr/share/zsh/site-functions/_eza /usr/local/bin/eza
+}
+
+##############################################################################
+# main
+##############################################################################
+
+for app in "$@"; do
+  load_app "$app" || {
+    echo "Unknown app: $app"
+    continue
+  }
+  echo "$app......"
+  [[ -n "$CMD" ]] || continue
+  if $REMOVE; then
+    [[ -n "$PKG" ]] && pm_remove "$PKG" || true
+    cleanup_binary
+    declare -F "${app}_uninstall" >/dev/null || continue
+    ${app}_uninstall ;
+    continue
+  fi
+  if command -v $CMD >/dev/null 2>&1 && [ "$UPGRADE" = false ]; then continue; fi
+
+  if ! $APP_FORCE; then
+    github_install || true
+  fi
+
+  if ($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$PKG" ]] >/dev/null 2>&1; then
+    pm_install "$PKG"
+  fi
+  declare -F "${app}_install" >/dev/null || continue
+  ${app}_install ;
+done
+
+  # cmd_path=$(command -v my_command)
+  # # Ensure it exists AND starts with "/" (ignoring keywords/builtins/aliases)
+  # if [ -n "$cmd_path" ] && [ "${cmd_path#"${cmd_path%%[!/]*}"}" = "/" ]; then
+  #     echo "Actual executable file exists."
+  # fi
