@@ -91,7 +91,7 @@ starship_i_uninstall() {
   rm -rf "/usr/local/share/starship/themes"
 }
 starship_i_install() {
-  curl -fsSL "https://raw.githubusercontent.com/$REPO/refs/heads/main/install/install.sh" | sh -s -- --bin-dir "$INSTALL_DIR" --yes
+  curl -fsSL "https://raw.githubusercontent.com/starship/starship/refs/heads/main/install/install.sh" | sh -s -- --bin-dir "$INSTALL_DIR" --yes || true
 # # THEMES_DIR="$(real_home)/.local/share/starship/themes"
 # # mkdir -p "$THEMES_DIR"
 # # for preset in $(starship preset --list); do
