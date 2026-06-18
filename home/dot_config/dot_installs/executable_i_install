@@ -335,7 +335,7 @@ PATTERN_LIST+=( "-linux-${ARCH}.tar.gz" "-linux_${ARCH}.tar.gz" "_Linux_${ARCH}.
 # PATTERN_LIST+=("-linux-amd64.tar.gz")
 # PATTERN_LIST+=("-linux-amd64")
 echo "${PATTERN_LIST[@]}"
-# echo "${#PATTERN_LIST[@]}" # length
+echo "${#PATTERN_LIST[@]}" # length
 
 ##############################################################################
 # options
