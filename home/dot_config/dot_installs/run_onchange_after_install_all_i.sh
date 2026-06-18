@@ -15,12 +15,12 @@ echo $SCRIPT_DIR
 
 UPDATE_ALL='' && UNINSTALL_ALL='' && SYSTEM_ALL=''
 while getopts ":urs" opt; do
-  [[ $opt == u ]] && UPDATE_ALL=' -g'
-  [[ $opt == r ]] && UNINSTALL_ALL=' -u'
+  [[ $opt == g ]] && UPDATE_ALL=' -g'
+  [[ $opt == u ]] && UNINSTALL_ALL=' -u'
   [[ $opt == s ]] && SYSTEM_ALL=' -s'
 done
 
-APPDEP_ALL="curl unzip git wget tar"
+APPDEP_ALL="curl unzip git wget tar jq"
 for name in $APPDEP_ALL ;do
   if command -v $name >/dev/null 2>&1; then continue; fi
   if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y $APPDEP_ALL;
@@ -29,17 +29,19 @@ for name in $APPDEP_ALL ;do
   elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y $APPDEP_ALL;
   elif command -v apk >/dev/null 2>&1; then sudo apk add $APPDEP_ALL;
   fi
+
   # break
 done
 # APPINSTALL_ALL="starship fzf"
-APPINSTALL_ALL="ohmyposh starship zoxide fzf fastfetch fresh eza fd ripgrep bat tmux"
-for name in $APPINSTALL_ALL ;do
-   echo "$SCRIPT_DIR/${name}_i.sh installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
-  [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
-  $SCRIPT_DIR/${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
-# # {{ include "dotconfig/dot_rc/${name}_i.sh.sh" | sha256sum }}
-done
-
+APPINSTALL_ALL="oh-my-posh starship zoxide fzf fastfetch fresh eza fd ripgrep tmux bat"
+# for name in $APPINSTALL_ALL ;do
+#    echo "$SCRIPT_DIR/${name}_i.sh installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
+#   [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
+#   $SCRIPT_DIR/${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
+# # # {{ include "dotconfig/dot_rc/${name}_i.sh.sh" | sha256sum }}
+# done
+sudo $SCRIPT_DIR/i_install -u $APPINSTALL_ALL
+sudo $SCRIPT_DIR/i_install -g $APPINSTALL_ALL
 # ./nerdfonts_i.sh install CascadiaCode FiraCode Meslo JetBrainsMono
 # ./pipx_i.sh
 # ./ansible_i.sh
