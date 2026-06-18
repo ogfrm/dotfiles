@@ -42,6 +42,7 @@ APPINSTALL_ALL="oh-my-posh starship zoxide fzf fastfetch fresh eza fd ripgrep tm
 # # # {{ include "dotconfig/dot_rc/${name}_i.sh.sh" | sha256sum }}
 # done
 sudo $SCRIPT_DIR/i_install -u $APPINSTALL_ALL
+
 sudo $SCRIPT_DIR/i_install -i -g $APPINSTALL_ALL
 # ./nerdfonts_i.sh install CascadiaCode FiraCode Meslo JetBrainsMono
 # ./pipx_i.sh
