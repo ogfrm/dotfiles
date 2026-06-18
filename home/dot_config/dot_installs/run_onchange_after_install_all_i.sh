@@ -33,15 +33,15 @@ for name in $APPDEP_ALL ;do
   # break
 done
 # APPINSTALL_ALL="starship fzf"
-# APPINSTALL_ALL="oh-my-posh starship zoxide fzf fastfetch fresh eza fd ripgrep tmux bat"
-APPINSTALL_ALL="oh-my-posh zoxide fzf fresh eza fd ripgrep tmux bat"
+APPINSTALL_ALL="oh-my-posh starship zoxide fzf fastfetch fresh eza fd ripgrep tmux bat"
+# APPINSTALL_ALL="oh-my-posh zoxide fzf fresh eza fd ripgrep tmux bat"
 # for name in $APPINSTALL_ALL ;do
 #    echo "$SCRIPT_DIR/${name}_i.sh installation with $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL"
 #   [ ! -f "$SCRIPT_DIR/${name}_i.sh" ] && continue
 #   $SCRIPT_DIR/${name}_i.sh $UPDATE_ALL $UNINSTALL_ALL $SYSTEM_ALL
 # # # {{ include "dotconfig/dot_rc/${name}_i.sh.sh" | sha256sum }}
 # done
-# sudo $SCRIPT_DIR/i_install -u $APPINSTALL_ALL
+sudo $SCRIPT_DIR/i_install -u $APPINSTALL_ALL
 sudo $SCRIPT_DIR/i_install -i -g $APPINSTALL_ALL
 # ./nerdfonts_i.sh install CascadiaCode FiraCode Meslo JetBrainsMono
 # ./pipx_i.sh
