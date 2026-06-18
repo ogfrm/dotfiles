@@ -17,7 +17,7 @@ declare -A APPS=(
   [tmux]="tmux/tmux-builds:tmux:tmux:-V"
   [lazydocker]="jesseduffield/lazydocker::lazydocker"
   [zellij]="zellij-org/zellij::zellij"
-  [starship]="starship/starship::starship::custom"
+  [starship]="starship/starship::starship::"
   [oh-my-posh]="JanDeDobbeleer/oh-my-posh::oh-my-posh"
   [fresh]="sinelaw/fresh:fresh-editor:fresh::"
   [fzf]="junegunn/fzf::fzf"
@@ -163,6 +163,25 @@ pm_upgrade_all() {
 # log_success() { printf "${GREEN}[SUCCESS]${NC} %s\n" "$1"; }
 # log_warn()    { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
 # log_error()   { printf "${RED}[ERROR]${NC} %s\n" "$1"; exit 1; }
+# detect_arch() {
+# 	arch="$(uname -m | tr '[:upper:]' '[:lower:]')"
+
+# 	case "${arch}" in
+# 	amd64) arch="x86_64" ;;
+# 	armv*) arch="arm" ;;
+# 	arm64) arch="aarch64" ;;
+# 	riscv64) arch="riscv64gc" ;;
+# 	esac
+
+# 	# `uname -m` in some cases mis-reports 32-bit OS as 64-bit, so double check
+# 	if [ "${arch}" = "x86_64" ] && [ "$(getconf LONG_BIT)" -eq 32 ]; then
+# 		arch=i686
+# 	elif [ "${arch}" = "aarch64" ] && [ "$(getconf LONG_BIT)" -eq 32 ]; then
+# 		arch=arm
+# 	fi
+
+# 	printf '%s' "${arch}"
+# }
 
 real_user() { echo "${SUDO_USER:-$(id -un)}" ; }
 real_home() { getent passwd "$(real_user)" | cut -d: -f6 2>/dev/null || echo "$HOME" ; }
@@ -318,7 +337,6 @@ if grep -qi alpine /etc/os-release 2>/dev/null ||
   (command -v ldd >/dev/null && ldd --version 2>&1 | grep -qi musl); then
   ISALPINE=true
 fi
-echo -------------------------$ISALPINE
 
 PATTERN_LIST=()
 if command -v apt >/dev/null && command -v dpkg >/dev/null; then
