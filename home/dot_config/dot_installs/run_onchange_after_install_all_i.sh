@@ -46,6 +46,7 @@ sudo $SCRIPT_DIR/i_install -i -g $APPINSTALL_ALL
 # ./pipx_i.sh
 # ./ansible_i.sh
 
+
 # ./fonts.sh uninstall JetBrainsMono CascadiaCode  # default install firacode
 # ACTION="${1:-install}"
 # shift || true
