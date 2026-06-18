@@ -236,7 +236,7 @@ github_info() {
 
 git_latest_url() {
     local pattern="$1"
-    # echo "DEBUG: processing pattern $pattern" >&2
+    $VERBOSE && echo "DEBUG: processing pattern $pattern" >&2
     printf '%s\n' "$GIT_RELEASE_JSON" |
       { if command -v jq >/dev/null 2>&1; then
           jq -r --arg p "$pattern" '.assets[].browser_download_url | select(contains($p))'
@@ -340,9 +340,10 @@ PATTERN_LIST+=( "-linux-${ARCH}.tar.gz" "-linux_${ARCH}.tar.gz" "_Linux_${ARCH}.
 # options
 ##############################################################################
 
-REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false
+REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false VERBOSE=false
 while (($#)); do
   case "$1" in
+    -v|--verbose) VERBOSE=true ;;
     -u|--remove) REMOVE=true ;;
     -g|--upgrade) UPGRADE=true ;;
     -i|--install) INSTALL=true ;;
