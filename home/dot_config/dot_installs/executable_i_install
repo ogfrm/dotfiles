@@ -20,7 +20,7 @@ declare -A APPS=(
   [starship]="starship/starship::starship::custom"
   [oh-my-posh]="JanDeDobbeleer/oh-my-posh::oh-my-posh"
   [fresh]="sinelaw/fresh:fresh-editor:fresh::custom"
-  [fzf]="junegunn/fzf::fzf::custom"
+  [fzf]="junegunn/fzf::fzf"
 )
 
 load_app() {
@@ -35,32 +35,27 @@ load_app() {
 ##############################################################################
 # curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 
-fzf_i_cmd() {
-  [[ -x /usr/local/share/fzf/bin/fzf ]] &&
-    { echo /usr/local/share/fzf/bin/fzf; return; }
-  [[ -x "$(real_home)/.local/share/fzf/bin/fzf" ]] &&
-    { echo "$(real_home)/.local/share/fzf/bin/fzf"; return; }
-  return 1
-}
+# fzf_i_cmd() {
+#   [[ -x /usr/local/share/fzf/bin/fzf ]] &&
+#     { echo /usr/local/share/fzf/bin/fzf; return; }
+#   [[ -x "$(real_home)/.local/share/fzf/bin/fzf" ]] &&
+#     { echo "$(real_home)/.local/share/fzf/bin/fzf"; return; }
+#   return 1
+# }
 fzf_i_uninstall() {
-  rm -rf "$(real_home)/.local/share/fzf"
-  rm -rf "/usr/local/share/fzf"
+  rm -rf "$(real_home)/.local/share/fzf-git"
+  rm -rf "/usr/local/share/fzf-git"
 }
 fzf_i_install() {
-  # [[ $EUID -eq 0 ]] && fzf_dir="/usr/local/share/fzf" || fzf_dir="$(real_home)/.local/share/fzf"
-  fzf_dir="$(real_home)/.local/share/fzf"
-  if [ ! -d "$fzf_dir" ]; then
-    git clone --depth 1 https://github.com/junegunn/fzf.git "$fzf_dir"
-  elif [ "$UPGRADE" = true ]; then
-    git -C "$fzf_dir" pull
-  fi
-  "$fzf_dir/install" --bin --no-update-rc
+  [[ $EUID -eq 0 ]] && local fzfgit="/usr/local/share/fzf-git" || local fzfgit="$HOME/.local/share/fzf-git"
+  git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfgit}
 }
 oh-my-posh_i_uninstall() {
   rm -rf "$(real_home)/.cache/oh-my-posh"
 }
 oh-my-posh_i_install() {
-  "$(cmd_path)" font install FiraCode || true # meslo
+  # # oh-my-posh init zsh --config /home/ozgur/.cache/oh-my-posh/themes/slimfat.omp.json
+  # "$(cmd_path)" font install FiraCode || true # meslo
   themes_dir="$(real_home)/.cache/oh-my-posh/themes"
   mkdir -p "$themes_dir" > /dev/null 2>&1
   zip_file="${themes_dir}/themes.zip"
@@ -71,7 +66,7 @@ oh-my-posh_i_install() {
     chmod a+rwX ${themes_dir}/*.omp.*
     rm "$zip_file"
   fi
-  # # oh-my-posh init zsh --config /home/ozgur/.cache/oh-my-posh/themes/slimfat.omp.json
+  chown $(real_user):$(real_user) -R "$(real_home)/.cache/oh-my-posh"
 }
 
 eza_i_install() {
@@ -230,6 +225,7 @@ github_info() {
 
 git_latest_url() {
     local pattern="$1"
+    # echo "DEBUG: processing pattern $pattern" >&2
     printf '%s\n' "$GIT_RELEASE_JSON" |
       { if command -v jq >/dev/null 2>&1; then
           jq -r --arg p "$pattern" '.assets[].browser_download_url | select(contains($p))'
@@ -322,7 +318,7 @@ if ! $ISALPINE; then PATTERN_LIST+=("${ARCH}-unknown-linux-musl.tar.gz"); fi
 if $ISALPINE; then PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz"); fi
 PATTERN_LIST+=( "gnu-linux-${ARCH}.tar.gz" )
 if ! $ISALPINE; then PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz"); fi
-PATTERN_LIST+=( "-linux-${ARCH}.tar.gz" "_Linux_${ARCH}.tar.gz" "-linux-${ARCH}" )
+PATTERN_LIST+=( "-linux-${ARCH}.tar.gz" "-linux_${ARCH}.tar.gz" "_Linux_${ARCH}.tar.gz" "-linux-${ARCH}" )
 
 # PATTERN_LIST+=("-linux-amd64.tar.gz")
 # PATTERN_LIST+=("-linux-amd64")
@@ -341,7 +337,7 @@ while (($#)); do
     -i|--install) INSTALL=true ;;
     --app-force) APP_FORCE=true ;;
     -h|--help) usage ;;
-    -*) echo "unknown option: $1"; exit 1 ;;
+    -*) echo "unknown option: $1"; exit 0 ;;
     *) break ;;
   esac
   shift
@@ -395,4 +391,6 @@ for app in "${apps[@]}"; do
 
 
 done
-[[ $APP_ALL == true ]] && [[ $EUID -eq 0 ]] && [[ $UPGRADE == true ]] && pm_upgrade_all
+if [[ $APP_ALL == true ]] && [[ $EUID -eq 0 ]] && [[ $UPGRADE == true ]]; then
+  pm_upgrade_all
+fi

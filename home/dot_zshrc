@@ -233,3 +233,6 @@ for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
 
 # alpine del prints ~ to fiz that
 bindkey '^[[3~' delete-char
+if command -v fzf &> /dev/null; then
+  source <(fzf --zsh)
+fi

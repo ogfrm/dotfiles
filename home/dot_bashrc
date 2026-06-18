@@ -187,3 +187,6 @@ for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
 
 # alpine del prints ~ to fiz that
 bind '"\e[3~": delete-char'
+if command -v fzf &> /dev/null; then
+  eval "$(fzf --bash)"
+fi
