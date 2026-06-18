@@ -318,6 +318,7 @@ if grep -qi alpine /etc/os-release 2>/dev/null ||
   (command -v ldd >/dev/null && ldd --version 2>&1 | grep -qi musl); then
   ISALPINE=true
 fi
+echo -------------------------$ISALPINE
 
 PATTERN_LIST=()
 if command -v apt >/dev/null && command -v dpkg >/dev/null; then
