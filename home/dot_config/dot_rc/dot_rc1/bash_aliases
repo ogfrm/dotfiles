@@ -1,0 +1,34 @@
+alias dexec='sudo docker exec -ti' # usage: dexec container_name (to access container terminal)
+alias dps='sudo docker ps -a' # running docker processes
+alias dpss='sudo docker ps -a --format "table {{.Names}}\t{{.State}}\t{{.Status}}\t{{.Image}}" | (sed -u 1q; sort)' # running docker processes as nicer table
+alias ddf='sudo docker system df' # docker data usage (/var/lib/docker)
+alias dlogs='sudo docker logs -tf --tail="50" ' # usage: dlogs container_name
+alias dlogsize='sudo du -ch $(sudo docker inspect --format='{{.LogPath}}' $(sudo docker ps -qa)) | sort -h' # see the size of docker containers
+alias dips="sudo docker ps -q | xargs -n 1 sudo docker inspect -f '{{.Name}}%tab%{{range .NetworkSettings.Networks}}{{.IPAddress}}%tab%{{end}}' | sed 's#%tab%#\t#g' | sed 's#/##g' | sort | column -t -N NAME,IP\(s\) -o $'\t'"
+
+alias dclogs='dcrun logs -tf --tail="50" ' # usage: dclogs container_name
+alias dcup='dcrun up -d --build --remove-orphans' # up the stack
+alias dcdown='dcrun down --remove-orphans' # down the stack
+alias dcrec='dcrun up -d --force-recreate --remove-orphans' # usage: dcrec container_name
+alias dcstop='dcrun stop' # usage: dcstop container_name
+alias dcrestart='dcrun restart ' # usage: dcrestart container_name
+alias dcstart='dcrun start ' # usage: dcstart container_name
+alias dcpull='dcrun pull' # usage: dcpull to pull all new images or dcpull container_name
+
+# SEARCH AND FIND
+alias gh='history|grep' # search bash history
+alias findr='sudo find / -name'
+
+# FILE SIZE AND STORAGE
+alias fdisk='sudo fdisk -l'
+alias uuid='sudo vol_id -u'
+alias ls='ls -F --color=auto --group-directories-first'
+alias ll='ls -alh --color=auto --group-directories-first'
+alias lt='ls --human-readable --color=auto --size -1 -S --classify' # file size sorted
+alias lsr='ls --color=auto -t -1' # recently modified
+alias mnt='mount | grep -E ^/dev | column -t' # show mounted drives
+alias dirsize='sudo du -hx --max-depth=1'
+alias dirusage='du -ch | grep total' # Grabs the disk usage in the current directory
+alias diskusage='df -hl --total | grep total' # Gets the total disk usage on your machine
+alias partusage='df -hlT --exclude-type=tmpfs --exclude-type=devtmpfs' # Shows the individual partition usages without the temporary memory values
+alias usage10='du -hsx * | sort -rh | head -10' # Gives you what is using the most space. Both directories and files. Varies on current directory

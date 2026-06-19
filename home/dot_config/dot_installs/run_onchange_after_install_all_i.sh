@@ -20,7 +20,7 @@ while getopts ":urs" opt; do
   [[ $opt == s ]] && SYSTEM_ALL=' -s'
 done
 
-APPDEP_ALL="curl unzip git wget tar jq"
+APPDEP_ALL="curl unzip git wget tar jq less"
 for name in $APPDEP_ALL ;do
   if command -v $name >/dev/null 2>&1; then continue; fi
   if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y $APPDEP_ALL;

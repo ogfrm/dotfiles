@@ -34,9 +34,14 @@ export LESS_TERMCAP_ue=$'\E[0m'  # ue,rmul stop underline  $(tput rmul; tput sgr
 export LESS_TERMCAP_so=$'\E[01;44;33m' # so,smso start standout (search result /Like) $(tput bold; tput setab 4; tput setaf 3)
 export LESS_TERMCAP_se=$'\E[0m'         # se,rmso End standout  $(printf "\\e[0m")  $(tput rmso; tput sgr0)
 # export LESS_TERMCAP_mb=$'\E[01;31m'  # mb      blink     start blink
-export MANPAGER='less +Gg'
-export GROFF_NO_SGR=1
+if command -v bat >/dev/null 2>&1; then
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+else
+  export MANPAGER='less +Gg'
 
+fi
+
+export GROFF_NO_SGR=1
 
 # To temporarily bypass an alias, we precede the command with a \  like \ls
 ###########################   TERMINAL
@@ -55,6 +60,11 @@ alias hgrep="fc -l 1 | grep"		#history search -E zfs shows time
 ########################### FILE Commands
 alias cp='cp -i'  #prompt before overwrite
 alias mv='mv -i'  #prompt before overwrite
+# # SYNC AND COPY
+# alias rsyncne='sudo rsync -avzh --progress --force --delete'
+# alias cp='sudo rsync -avzh --info=progress2' # copy files with rsync
+# alias mv='sudo rsync -avzh --info=progress2 --remove-source-files' # move files with rsync
+
 alias ln='ln -i'  # -iv
 # alias rm="rm -I"  # -i
 alias rmd="rm -rf"
@@ -213,16 +223,22 @@ alias fzfch='find ~/.config/cheat/cheatsheets/personal | sort | fzf --preview "c
 
 ########################### APPS  # Manage packages easier
 if [ -f /usr/bin/apt ]; then
-	alias update='sudo apt update'
+	alias update='sudo apt-get update'
 	alias upgrade='sudo apt update && sudo apt dist-upgrade && sudo apt autoremove && sudo apt clean'
 	alias install='sudo apt install'
   # alias apt-get='sudo apt-get'
+# CLEANING
+  alias clean='sudo apt-get clean && sudo apt-get autoclean'
+  alias remove='sudo apt-get remove && sudo apt-get autoremove'
+  alias uninstall='sudo apt-get remove'
+  alias purge='sudo apt-get purge'
 elif [ -f /usr/bin/pacman ]; then
 	alias update='sudo pacman -Syyy'
 	alias upgrade='sudo pacman -Syu'
 	alias install='sudo pacman -S'
   alias pacman-update='sudo pacman-mirrors --geoip'
 fi
+alias sctl='sudo systemctl'
 
 apps() {
   dpkg-query -Wf '${Installed-Size}\t${Package}\t${Version}\n'
@@ -250,6 +266,12 @@ alias speedtest='curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/m
 alias ping='ping -c 5'   # only ping 5 times
 alias ip4="/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1"
 # alias ip6="/sbin/ip -o -6 addr list eth0 | awk '{print $4}' | cut -d/ -f1"
+
+# # NETWORKING
+# alias portsused='sudo netstat -tulpn | grep LISTEN'
+# alias showlistening='lsof -i -n | egrep "COMMAND|LISTEN"'
+# alias ipi='ipconfig getifaddr en0' # internal ip
+# alias header='curl -I' # get web server headers
 
 # local_interface=$(ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//")
 # local_interface=$(ip -o link show | sed -rn '/^[0-9]+: en/{s/.: ([^:]*):.*/\1/p}')
@@ -333,6 +355,12 @@ alias pscpu='ps auxf | (sed -u 1q; sort -nr -k 3) | cat'
 alias pscpu5='ps auxf | (sed -u 1q; sort -nr -k 3) | head -5 | cat'
 alias pscpu10="/bin/ps -eo pcpu,pmem,pid,user,args | sort -k 1 -r | head -10 | cat"
 alias psmem10="/bin/ps -eo pmem,pcpu,pid,user,args | sort -k 1 -r | head -10 | cat"
+
+# SYSTEM MONITORING
+alias meminfo='free -m -l -t' # memory usage
+alias cpuinfo='lscpu' # Get server cpu info
+alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log' # get GPU ram on desktop / laptop
+alias free='free -h'
 
 ########################### CHEZMOI
 alias cz="chezmoi"
