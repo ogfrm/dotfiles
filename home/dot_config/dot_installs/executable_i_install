@@ -25,11 +25,8 @@ declare -A APPS=(
 
 load_app() {
   [[ -v "APPS[$1]" ]] || return 1
-  IFS=: read -r \
-    REPO PKG CMD VERSION_ARG METHOD \
-    <<< "${APPS[$1]}"
+  IFS=: read -r REPO PKG CMD VERSION_ARG METHOD <<< "${APPS[$1]}"
   VERSION_ARG="${VERSION_ARG:---version}"
-  # VERSION_ARG="${VERSION_ARG:--V}"
 }
 ##############################################################################
 # hooks
@@ -49,7 +46,7 @@ fzf_i_uninstall() {
 }
 fzf_i_install() {
   [[ $EUID -eq 0 ]] && local fzfgit="/usr/local/share/fzf-git" || local fzfgit="$HOME/.local/share/fzf-git"
-  git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git ${fzfgit}
+  git clone --depth 1 https://github.com/junegunn/fzf-git.sh.git "${fzfgit}"
 }
 oh-my-posh_i_uninstall() {
   rm -rf "$(real_home)/.cache/oh-my-posh"
@@ -106,83 +103,29 @@ starship_i_uninstall() {
 # }
 
 ##############################################################################
-# package manager
+# colors / logging
 ##############################################################################
-detect_pm() {
-  local pm
-  for pm in apt dnf yum pacman apk; do
-    command -v "$pm" >/dev/null && { echo "$pm"; return; }
-  done
-}
 
-PM=$(detect_pm)
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+MAGENTA='\033[0;35m'
+NC='\033[0m'
 
-pm_install() {
-  echo "  $PM install $@  "
-  # apt install --only-upgrade
-  case $PM in
-    apt) sudo apt update && sudo apt install -y "$@" ;;
-    dnf) sudo dnf install -y "$@" ;;
-    yum) sudo yum install -y "$@" ;;
-    pacman) sudo pacman -Sy --noconfirm "$@" ;;
-    apk) sudo apk add "$@" ;;
-  esac
+log_info()    { printf "${BLUE}[INFO]${NC} %s\n" "$*"; }
+log_success() { printf "${GREEN}[ OK ]${NC} %s\n" "$*"; }
+log_warn()    { printf "${YELLOW}[WARN]${NC} %s\n" "$*"; }
+log_error()   { printf "${RED}[FAIL]${NC} %s\n" "$*" >&2; }
+verbose() {
+  [[ $VERBOSE -gt 0 ]] && printf "${MAGENTA}[DEBUG]${NC} %s\n" "$*" >&2 || true
 }
-pm_remove() {
-  echo "  $PM remove $@  "
-  case $PM in
-    apt) sudo apt remove -fy -qq "$@" >/dev/null 2>&1 ;;
-    dnf) sudo dnf remove -y -q "$@" >/dev/null 2>&1 ;;
-    yum) sudo yum remove -y "$@" >/dev/null 2>&1 ;;
-    pacman) sudo pacman -Rns --noconfirm "$@" >/dev/null 2>&1 ;;
-    apk) sudo apk del "$@" >/dev/null 2>&1 ;;
-  esac
+verbose2() {
+  [[ $VERBOSE -gt 1 ]] && printf "${MAGENTA}[DEBUG]${NC} %s\n" "$*" >&2 || true
 }
-
-pm_upgrade_all() {
-  echo "$PM upgrade all $@  "
-  case $PM in
-    apt) sudo apt-get update -qq && apt-get upgrade -y -qq >/dev/null ;;
-    dnf) sudo dnf upgrade -y -q ;;
-    yum) sudo yum upgrade -y -q ;;
-    pacman) sudo pacman -Syu --noconfirm ;;
-    apk) sudo apk upgrade ;;
-  esac
-}
-
 ##############################################################################
 # helpers
 ##############################################################################
-# RED='\033[0;31m'
-# GREEN='\033[0;32m'
-# BLUE='\033[0;34m'
-# YELLOW='\033[1;33m'
-# NC='\033[0m' # No Color
-
-# log_info()    { printf "${BLUE}[INFO]${NC} %s\n" "$1"; }
-# log_success() { printf "${GREEN}[SUCCESS]${NC} %s\n" "$1"; }
-# log_warn()    { printf "${YELLOW}[WARN]${NC} %s\n" "$1"; }
-# log_error()   { printf "${RED}[ERROR]${NC} %s\n" "$1"; exit 1; }
-# detect_arch() {
-# 	arch="$(uname -m | tr '[:upper:]' '[:lower:]')"
-
-# 	case "${arch}" in
-# 	amd64) arch="x86_64" ;;
-# 	armv*) arch="arm" ;;
-# 	arm64) arch="aarch64" ;;
-# 	riscv64) arch="riscv64gc" ;;
-# 	esac
-
-# 	# `uname -m` in some cases mis-reports 32-bit OS as 64-bit, so double check
-# 	if [ "${arch}" = "x86_64" ] && [ "$(getconf LONG_BIT)" -eq 32 ]; then
-# 		arch=i686
-# 	elif [ "${arch}" = "aarch64" ] && [ "$(getconf LONG_BIT)" -eq 32 ]; then
-# 		arch=arm
-# 	fi
-
-# 	printf '%s' "${arch}"
-# }
-
 real_user() { echo "${SUDO_USER:-$(id -un)}" ; }
 real_home() { getent passwd "$(real_user)" | cut -d: -f6 2>/dev/null || echo "$HOME" ; }
 cleanup_binary() {
@@ -197,7 +140,7 @@ cmd_version() {
   local cmd_path=$(cmd_path)
   # [[ -z "$cmd_path" ]] && cmd_path=$(command -v "$CMD" 2>/dev/null)
   if [[ -n "$cmd_path" && -x "$cmd_path" ]]; then
-    "$cmd_path" $VERSION_ARG 2>/dev/null | grep -Eo '[0-9]+(\.[0-9]+[a-z]?)+' | head -1 || echo ""
+    "$cmd_path" $VERSION_ARG 2>/dev/null | grep -Eo '[0-9]+(\.[0-9]+[a-z]?)+' | head -1 || true
   fi
 }
 cmd_path() {
@@ -205,33 +148,73 @@ cmd_path() {
   declare -F "${CMD}_i_cmd" >/dev/null && cmd_path=$(${CMD}_i_cmd)
   [[ -z "$cmd_path" ]] && cmd_path=$(type -P "$CMD" 2>/dev/null)
   # $(command -v $CMD) >/dev/null 2>&1
+  # verbose "cmd_path($CMD)=$cmd_path"
   if [[ -n "$cmd_path" && -x "$cmd_path" ]]; then
     echo "$cmd_path"
   fi
 }
-usage() {
-  cat <<EOF
-usage: $0 [options] app...
 
-Options:
-  -u, --remove
-  -g, --upgrade
-  --app-force
-  -h, --help
+##############################################################################
+# package manager
+##############################################################################
+pm_detect() {
+  local pm
+  for pm in apt dnf yum pacman apk; do
+    command -v "$pm" >/dev/null && { echo "$pm"; return; }
+  done
+}
 
-Apps:
-$(printf '  %s\n' "${!APPS[@]}" | sort)
+pm_install() {
+  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null || true
+  log_info "$PM install $*"
+  # apt install --only-upgrade
+  case $PM in
+    apt) sudo apt-get update && sudo apt-get install -y "$@" >/dev/null ;;
+    dnf) sudo dnf install -y "$@" ;;
+    yum) sudo yum install -y "$@" ;;
+    pacman) sudo pacman -Sy --noconfirm "$@" >/dev/null ;;
+    apk) sudo apk add "$@" >/dev/null ;;
+  esac
+  [[ $VERBOSE -eq 0 ]] && exec 1>&5 2>&6 || true
+}
+pm_remove() {
+  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null || true
+  log_info "$PM remove $*"
+  case $PM in
+    apt) sudo apt remove -fy -qq "$@" ;;
+    dnf) sudo dnf remove -y -q "$@" ;;
+    yum) sudo yum remove -y "$@" ;;
+    pacman) sudo pacman -Rns --noconfirm "$@" ;;
+    apk) sudo apk del "$@" ;;
+  esac
+  [[ $VERBOSE -eq 0 ]] && exec 1>&5 2>&6 || true
+}
 
-Special:
-  all      install all apps
-EOF
-  exit 0
+pm_upgrade_all() {
+  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null
+  log_info "$PM upgrade all"
+  case $PM in
+    apt) sudo apt-get update -qq && sudo apt-get upgrade -y -qq && sudo apt autoremove -y -qq ;;
+    dnf) sudo dnf upgrade -y -q ;;
+    yum) sudo yum upgrade -y -q ;;
+    pacman) sudo pacman -Syu --noconfirm ;;
+    apk) sudo apk upgrade ;;
+  esac
+  [[ $VERBOSE -eq 0 ]] && exec 1>&5 2>&6
+}
+pm_has_pkg() {
+  case $PM in
+    apt) apt-cache show "$1" >/dev/null 2>&1 ;;
+    dnf|yum) "$PM" info "$1" >/dev/null 2>&1 ;;
+    pacman) pacman -Si "$1" >/dev/null 2>&1 ;;
+    apk) apk info "$1" >/dev/null 2>&1 ;;
+  esac
 }
 ##############################################################################
 # github
 ##############################################################################
 
-git_latest_release() { curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" ;}
+git_latest_release() { curl --connect-timeout 10 --max-time 30 -fsSL "https://api.github.com/repos/$REPO/releases/latest" ;}
 git_latest_version() {
   if command -v jq >/dev/null; then
     jq -r '.tag_name'
@@ -242,20 +225,21 @@ git_latest_version() {
 # git_latest_version() { printf '%s\n' "$GIT_RELEASE_JSON" | jq -r '.tag_name' ; }
 github_info() {
   [[ -n "$REPO" ]] || return 1
+  # verbose "querying github release for $REPO"
   GIT_RELEASE_JSON=$(git_latest_release)
   GIT_LATEST_VERSION=$(git_latest_version <<< "$GIT_RELEASE_JSON")
-  echo "  Latest:    $GIT_LATEST_VERSION"
+  log_info "GIT latest version: $GIT_LATEST_VERSION"
 
   # if [[ "$UPGRADE" = false ]] && [[ -n "$INSTALLED_VERSION" ]] &&
   if [[ -n "$INSTALLED_VERSION" ]] && [[ "${GIT_LATEST_VERSION#v}" == "${INSTALLED_VERSION#v}" ]]; then
-    echo "  $REPO is already up to date."
+    log_success "$REPO is already up to date"
     INSTALLED_VERSION=uptodate
   fi
 }
 
 git_latest_url() {
     local pattern="$1"
-    $VERBOSE && echo "DEBUG: processing pattern $pattern" >&2
+    verbose2 "DEBUG: processing pattern $pattern"
     printf '%s\n' "$GIT_RELEASE_JSON" |
       { if command -v jq >/dev/null 2>&1; then
           jq -r --arg p "$pattern" '.assets[].browser_download_url | select(contains($p))'
@@ -266,6 +250,7 @@ git_latest_url() {
       }
 }
 find_asset() {
+  # verbose "searching release assets"
   local pattern url
   for pattern in "${PATTERN_LIST[@]}"; do
     if [[ "$pattern" == *.deb ]] && [[ "$METHOD" != "git_tar" ]] ; then
@@ -290,15 +275,16 @@ find_asset() {
 github_install() {
   local tmp url bin
   url=$(find_asset)
+  verbose "selected asset: $url"
   [[ -n "$url" ]] || return 1
   tmp=$(mktemp -d) && trap 'rm -rf "$tmp"' RETURN
-  echo "  Installing from $REPO ... $(basename $url)"
+  log_info "installing from $REPO -> $(basename "$url")"
   case "$url" in
     *.deb)
       curl -fsSL "$url" -o "$tmp/pkg.deb"
       sudo dpkg -i "$tmp/pkg.deb" >/dev/null 2>&1
       sudo apt-get install -fy >/dev/null 2>&1
-      echo "  Installed DEB $CMD version $(cmd_version) -> $INSTALL_DIR/$CMD"
+      log_success "$CMD $(cmd_version) installed from deb"
       return
       ;;
     *.tar.gz)
@@ -317,12 +303,61 @@ github_install() {
   mkdir -p "$INSTALL_DIR"
   install -m755 "$bin" "$INSTALL_DIR/$CMD"
   # chmod 755 "$INSTALL_BIN" &&  sudo chown root:root "$INSTALL_DIR" && mv "$INSTALL_DIR" "$INSTALL_DIR/$CMD"
-  echo "  Installed $CMD version $(cmd_version) -> $INSTALL_DIR/$CMD"
+  log_success "$CMD $(cmd_version) -> $INSTALL_DIR/$CMD"
 }
 
 ##############################################################################
+# options
+##############################################################################
+usage() {
+  cat <<EOF
+usage: $0 [options] app...
+
+Options:
+  -u, --remove
+  -g, --upgrade
+  -i, --install
+  --app-force
+  -h, --help
+
+Apps:
+$(printf '  %s\n' "${!APPS[@]}" | sort)
+
+Special:
+  all      install all apps
+EOF
+  exit 0
+}
+
+REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false VERBOSE=0
+while (($#)); do
+  case "$1" in
+    -v|--verbose) VERBOSE=1 ;;
+    -u|--remove) REMOVE=true ;;
+    -g|--upgrade) UPGRADE=true ;;
+    -i|--install) INSTALL=true ;;
+    --v2|--verbose2) VERBOSE=2 ;;
+    --app-force) APP_FORCE=true ;;
+    -h|--help) usage ;;
+    -*) echo "unknown option: $1"; exit 0 ;;
+    *) break ;;
+  esac
+  shift
+done
+APP_ALL=false
+apps=("$@")
+if ((${#apps[@]} == 1)) && [[ ${apps[0]} == all ]]; then
+  APP_ALL=true
+  apps=("${!APPS[@]}")
+fi
+if ! $INSTALL && ! $UPGRADE && ! $REMOVE; then
+    INSTALL=true
+fi
+##############################################################################
 # platform
 ##############################################################################
+
+PM=$(pm_detect)
 
 case "$(uname -m)" in
   x86_64) ARCH=x86_64 ;;
@@ -351,60 +386,50 @@ if ! $ISALPINE; then PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz"); fi
 if $ISALPINE; then PATTERN_LIST+=("musl-${ARCH}.tar.gz"); fi
 PATTERN_LIST+=( "-linux-${ARCH}.tar.gz" "-linux_${ARCH}.tar.gz" "_Linux_${ARCH}.tar.gz" "-linux-${ARCH}" )
 
-# PATTERN_LIST+=("-linux-amd64.tar.gz")
-# PATTERN_LIST+=("-linux-amd64")
-# echo "${PATTERN_LIST[@]}"
+verbose "Package Manager: $PM"
+verbose "ARCH           : $ARCH"
+verbose "Apps           : ${apps[@]}"
+verbose "Pattern List   : ${PATTERN_LIST[@]}"
 # echo "${#PATTERN_LIST[@]}" # length
 
-##############################################################################
-# options
-##############################################################################
-
-REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false VERBOSE=false
-while (($#)); do
-  case "$1" in
-    -v|--verbose) VERBOSE=true ;;
-    -u|--remove) REMOVE=true ;;
-    -g|--upgrade) UPGRADE=true ;;
-    -i|--install) INSTALL=true ;;
-    --app-force) APP_FORCE=true ;;
-    -h|--help) usage ;;
-    -*) echo "unknown option: $1"; exit 0 ;;
-    *) break ;;
-  esac
-  shift
-done
-APP_ALL=false
-apps=("$@")
-if ((${#apps[@]} == 1)) && [[ ${apps[0]} == all ]]; then
-  APP_ALL=true
-  apps=("${!APPS[@]}")
-fi
-if ! $INSTALL && ! $UPGRADE && ! $REMOVE; then
-    INSTALL=true
-fi
 ##############################################################################
 # main
 ##############################################################################
 # for app in "$@"; do
+PKG_APPS=()
 for app in "${apps[@]}"; do
-  load_app "$app" || {
-    echo "Unknown app: $app"
-    continue
-  }
+  printf "\n${BLUE}==>${NC} %s\n" "$app"
 
-  echo "$app......"
+  if ! load_app "$app"; then
+    if pm_has_pkg "$app"; then
+      PKG_APPS+=($app)
+      # echo "$app (package)"
+      # if $REMOVE; then
+      #   pm_remove "$app"
+      # else
+      #   pm_install "$app"
+      # fi
+      verbose "Added to package manager: $app"
+      continue
+    fi
+    log_warn "Unknown app: $app"
+    continue
+  fi
+  verbose "app=$1 repo=$REPO pkg=$PKG cmd=$CMD method=$METHOD"
   [[ -n "$CMD" ]] || continue
   if $REMOVE; then
-    [[ -n "$PKG" ]] && pm_remove "$PKG" || true
+    log_info "Unistalling $app"
+    [[ -n "$PKG" ]] && PKG_APPS+=($PKG)
+    # [[ -n "$PKG" ]] && pm_remove "$PKG" || true
     cleanup_binary
     declare -F "${app}_i_uninstall" >/dev/null || continue
+    log_info "Calling funtion ${app}_i_uninstall "
     ${app}_i_uninstall ;
     continue
   fi
-  if [[ -n $(cmd_path) ]] && [ "$UPGRADE" = false ]; then continue; fi
+  # if [[ -n $(cmd_path) ]] && [ "$UPGRADE" = false ]; then continue; fi
   INSTALLED_VERSION=$(cmd_version)
-  echo "  Installed: ${INSTALLED_VERSION:-none}"
+  log_info "installed: ${INSTALLED_VERSION:-none}  path: $(cmd_path)"
   if ! $APP_FORCE; then
     github_info
     [[ $INSTALLED_VERSION == "uptodate" ]] && continue ;
@@ -414,8 +439,9 @@ for app in "${apps[@]}"; do
     fi
   fi
 # apt install --only-upgrade
-  if ($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$PKG" ]] >/dev/null 2>&1; then
-    [[ "$METHOD" != "custom" ]] && [[ $INSTALL == true ]] && [[ -z "$INSTALLED_VERSION" ]] && pm_install "$PKG"
+  if ($APP_FORCE || [[ -z "$REPO" ]]) && [[ $EUID -eq 0 ]] && [[ -n "$PKG" ]];  then
+    [[ "$METHOD" != "custom" ]] && [[ $INSTALL == true ]] && [[ -z "$INSTALLED_VERSION" ]]
+    PKG_APPS+=($PKG)
   fi
   declare -F "${app}_i_install" >/dev/null || continue
   [[ $INSTALL == true ]] && [[ -z "$INSTALLED_VERSION" ]] && ${app}_i_install
@@ -423,6 +449,13 @@ for app in "${apps[@]}"; do
 
 
 done
-if [[ $APP_ALL == true ]] && [[ $EUID -eq 0 ]] && [[ $UPGRADE == true ]]; then
+printf "\n${BLUE}==>${NC} %s\n" "PACKAGE MANAGER"
+[[ $EUID -eq 0 ]] || exit
+if [[ $REMOVE == true ]]; then
+  pm_remove ${PKG_APPS[@]}
+  exit
+fi
+[[ $INSTALL == true ]] && [[ ${#PKG_APPS[@]} -gt 0 ]] && pm_install ${PKG_APPS[@]}
+if [[ $APP_ALL == true ]] && [[ $UPGRADE == true ]]; then
   pm_upgrade_all
 fi
