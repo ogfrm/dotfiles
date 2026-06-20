@@ -111,13 +111,13 @@ The most common Nmap scripting engine categories:
 
 #################################################
 nmap -v #version
-nmap 192.168.11.19
-nmap -V 192.168.11.19 #verbose
-nmap 192.168.11.19  192.168.11.11
-nmap 192.168.11.11-19 --exclude 192.168.11.15
-nmap -sV 192.168.11.11-19 #version information
-nmap -A 192.168.11.11-19  # All information
-nmap 192.168.11.11.0/24 
-nmap -sP 192.168.11.11.0/24 
-nmap -T5 192.168.11.11.0/24 #quicker T3 default 
+nmap 192.168.1.19
+nmap -V 192.168.1.19 #verbose
+nmap 192.168.1.19  192.168.1.11
+nmap 192.168.1.11-19 --exclude 192.168.1.15
+nmap -sV 192.168.1.11-19 #version information
+nmap -A 192.168.1.11-19  # All information
+nmap 192.168.1.11.0/24
+nmap -sP 192.168.1.11.0/24
+nmap -T5 192.168.1.11.0/24 #quicker T3 default
 nmap -f IP  #scan open ports

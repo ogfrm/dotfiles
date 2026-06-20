@@ -19,11 +19,13 @@ declare -A APPS=(
   [zellij]="zellij-org/zellij::zellij"
   [starship]="starship/starship::starship::"
   [oh-my-posh]="JanDeDobbeleer/oh-my-posh::oh-my-posh"
-  [chezmoi]="twpayne/chezmoi::chezmoi"
+  [chezmoi]="twpayne/chezmoi:chezmoi:chezmoi"
   [fresh]="sinelaw/fresh:fresh-editor:fresh::"
   [fzf]="junegunn/fzf::fzf"
   [ansible]="ansible/ansible::ansible::custom"
   [pipx]="pypa/pipx::pipx::custom"
+  [cheat_sh]="::cht.sh::custom"
+  [cheat]="cheat/cheat::cheat"
 )
 
 load_app() {
@@ -69,6 +71,20 @@ oh-my-posh_i_install() {
   fi
   chown $(real_user):$(real_user) -R "$(real_home)/.cache/oh-my-posh"
 }
+pm_apt_keyring() {
+  local asc_url="$1"
+  local gpg_name="$2"
+  local apt_name=$3
+#     sudo apt update && sudo apt install -y gpg
+  if command -v apt >/dev/null 2>&1; then
+    sudo mkdir -p /etc/apt/keyrings
+    wget -qO- "$asc_url" | sudo gpg --dearmor -o /etc/apt/keyrings/$gpg_name.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/$gpg_name.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/$gpg_name.list
+    sudo chmod 644 /etc/apt/keyrings/$gpg_name.gpg /etc/apt/sources.list.d/$gpg_name.list
+    sudo apt update
+    sudo apt install -y $apt_name
+  fi
+}
 eza_i_install() {
   local base
   # /usr/local/share
@@ -76,6 +92,14 @@ eza_i_install() {
   mkdir -p "$base/bash-completion/completions" "$base/zsh/site-functions"
   wget -qO "$base/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
   wget -qO "$base/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza
+  # if command -v apt >/dev/null 2>&1; then
+#     sudo apt update && sudo apt install -y gpg
+#     sudo mkdir -p /etc/apt/keyrings
+#     wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+#     echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+#     sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+#     sudo apt update
+#     sudo apt install -y eza
 }
 eza_i_uninstall() {
   local d
@@ -179,7 +203,25 @@ pipx_i_uninstall() {
   [ "$1" = "all" ] && sudo rm -rf /opt/pipx || true
   [ "$1" = "all" ] && rm -rf ~/.local/share/pipx || true
 }
-
+cheat_sh_i_install() {
+  curl -sSfL https://cht.sh/:cht.sh > "$INSTALL_DIR/cht.sh"
+  chmod +x "$INSTALL_DIR/cht.sh"
+}
+cheat_i_install() {
+  local cheat_config="$(real_home)/.config/cheat/cheatsheets/community"
+  [ ! -d "$cheat_config" ] && (
+      mkdir -p $cheat_config
+      git clone "https://github.com/cheat/cheatsheets.git" "$cheat_config"
+      chown $(real_user):$(real_user) -R "$cheat_config"
+    )
+}
+cheat_i_uninstall() {
+  rm -rf "$(real_home)/.config/cheat/cheatsheets/community"
+}
+cheat_i_upgrade() {
+  local cheat_config="$(real_home)/.config/cheat/cheatsheets/community"
+  [ -d "$cheat_config" ] && git -C "$cheat_config" pull
+}
 ##############################################################################
 # colors / logging
 ##############################################################################
@@ -295,7 +337,7 @@ pm_has_pkg() {
 ##############################################################################
 
 git_latest_release() {
-  local repo="$REPO" api="https://api.github.com/repos/$REPO"
+  local api="https://api.github.com/repos/$REPO"
 
   curlj() {
     curl -fsSL --connect-timeout 10 --max-time 30 \
@@ -303,7 +345,7 @@ git_latest_release() {
   }
 
   pick() {
-    jq --arg repo "$repo" '{
+    jq --arg repo "$REPO" '{
       repo: $repo,
       tag_name,
       name,
@@ -318,21 +360,18 @@ git_latest_release() {
       }]
     }'
   }
-
   # 1) latest release
   out=$(curlj "$api/releases/latest")
   if echo "$out" | jq -e '.tag_name' >/dev/null 2>&1; then
     echo "$out" | pick
     return 0
   fi
-
   # 2) releases list
   out=$(curlj "$api/releases")
   if echo "$out" | jq -e 'type=="array"' >/dev/null 2>&1; then
     echo "$out" | jq 'map(select(.draft==false)) | .[0]' | pick
     return 0
   fi
-
   # 3) tags fallback
   tag=$(curlj "$api/tags" | jq -r '.[0].name // empty')
   if [[ -n "$tag" ]]; then
@@ -342,9 +381,8 @@ git_latest_release() {
       return 0
     fi
   fi
-
   # 4) empty result
-  jq -n --arg repo "$repo" '{repo:$repo, tag_name:null, assets:[]}'
+  jq -n --arg repo "$REPO" '{repo:$repo, tag_name:null, assets:[]}'
 }
 
 git_latest_version() {
@@ -432,6 +470,11 @@ github_install() {
       curl -fsSL "$url" -o "$tmp/pkg.tar.gz"
       tar -xzf "$tmp/pkg.tar.gz" -C "$tmp"
       ;;
+    *.gz)
+      curl -fsSL "$url" -o "$tmp/pkg.gz"
+      gunzip -c "$tmp/pkg.gz" -c > "$tmp/$CMD"
+      chmod +x "$tmp/$CMD"
+    ;;
     *)
       curl -fsSL "$url" -o "$tmp/$CMD"
       chmod +x "$tmp/$CMD"
@@ -570,7 +613,7 @@ for app in "${apps[@]}"; do
   # if [[ -n $(cmd_path) ]] && [ "$UPGRADE" = false ]; then continue; fi
   INSTALLED_VERSION=$(cmd_version)
   log_info "installed: ${INSTALLED_VERSION:-none}  path: $(cmd_path)"
-  if ! $APP_FORCE; then
+  if ! $APP_FORCE && [[ -n $REPO ]]; then
     github_info
     [[ $INSTALLED_VERSION == "uptodate" ]] && continue ;
     if [[ "$METHOD" != "custom" ]]; then
@@ -600,11 +643,10 @@ for app in "${apps[@]}"; do
 done
 printf "\n${BLUE}==>${NC} %s\n" "PACKAGE MANAGER"
 # [[ $EUID -eq 0 ]] || exit
+[[ $APP_ALL == true ]] && [[ $UPGRADE == true ]] && pm_upgrade_all
+[[ ${#PKG_APPS[@]} -gt 0 ]] || exit
 if [[ $REMOVE == true ]]; then
   pm_remove ${PKG_APPS[@]}
   exit
 fi
-[[ $INSTALL == true ]] && [[ ${#PKG_APPS[@]} -gt 0 ]] && pm_install ${PKG_APPS[@]}
-if [[ $APP_ALL == true ]] && [[ $UPGRADE == true ]]; then
-  pm_upgrade_all
-fi
+[[ $INSTALL == true ]] && pm_install ${PKG_APPS[@]}
