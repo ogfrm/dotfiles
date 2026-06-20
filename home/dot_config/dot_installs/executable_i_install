@@ -71,20 +71,6 @@ oh-my-posh_i_install() {
   fi
   chown $(real_user):$(real_user) -R "$(real_home)/.cache/oh-my-posh"
 }
-pm_apt_keyring() {
-  local asc_url="$1"
-  local gpg_name="$2"
-  local apt_name=$3
-#     sudo apt update && sudo apt install -y gpg
-  if command -v apt >/dev/null 2>&1; then
-    sudo mkdir -p /etc/apt/keyrings
-    wget -qO- "$asc_url" | sudo gpg --dearmor -o /etc/apt/keyrings/$gpg_name.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/$gpg_name.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/$gpg_name.list
-    sudo chmod 644 /etc/apt/keyrings/$gpg_name.gpg /etc/apt/sources.list.d/$gpg_name.list
-    sudo apt update
-    sudo apt install -y $apt_name
-  fi
-}
 eza_i_install() {
   local base
   # /usr/local/share
