@@ -24,7 +24,7 @@ app_install() {
 app_upgrade() {
     eval "$PIPX upgrade pipx --include-injected" 2>/dev/null || app_uninstall
     app_install
-    eval "$PIPX upgrade-all --include-injected" || true
+    eval "$PIPX upgrade-all --include-injected" --pip-args="--upgrade-strategy=eager" || true
 }
 app_remove_apps() {
     APPS=$($PIPX list --short 2>/dev/null | awk '{print $1}')

@@ -19,8 +19,11 @@ declare -A APPS=(
   [zellij]="zellij-org/zellij::zellij"
   [starship]="starship/starship::starship::"
   [oh-my-posh]="JanDeDobbeleer/oh-my-posh::oh-my-posh"
+  [chezmoi]="twpayne/chezmoi::chezmoi"
   [fresh]="sinelaw/fresh:fresh-editor:fresh::"
   [fzf]="junegunn/fzf::fzf"
+  [ansible]="ansible/ansible::ansible::custom"
+  [pipx]="pypa/pipx::pipx::custom"
 )
 
 load_app() {
@@ -66,14 +69,12 @@ oh-my-posh_i_install() {
   fi
   chown $(real_user):$(real_user) -R "$(real_home)/.cache/oh-my-posh"
 }
-
 eza_i_install() {
   local base
   # /usr/local/share
   [[ $EUID -eq 0 ]] && base=/usr/share || base="$(real_home)/.local/share"
   mkdir -p "$base/bash-completion/completions" "$base/zsh/site-functions"
   wget -qO "$base/bash-completion/completions/eza" https://github.com/eza-community/eza/raw/main/completions/bash/eza
-
   wget -qO "$base/zsh/site-functions/_eza" https://github.com/eza-community/eza/raw/main/completions/zsh/_eza
 }
 eza_i_uninstall() {
@@ -101,6 +102,83 @@ starship_i_uninstall() {
 # fresh_i_install() {
 #   curl -fsSL "https://raw.githubusercontent.com/$REPO/refs/heads/master/scripts/install.sh" | sh -s
 # }
+ansible_i_install() {
+  command -v ansible >/dev/null 2>&1 && return
+  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null
+  command -v pipx >/dev/null 2>&1 || { sudo apt update && sudo apt install pipx -y; }
+  pipx install --include-deps ansible
+  pipx inject ansible passlib # needed for ansible.builtin.password_hash
+  pipx inject ansible jmespath # needed for community.general.json_query
+  pipx inject ansible paramiko # needed for community.general.ssh_config
+  pipx install ansible-lint
+  ansible-galaxy collection install community.general community.docker ansible.posix community.proxmox --force
+  sudo apt install python3-paramiko # needed for community.general.ssh_config install as apt
+
+# ansible-galaxy collection install -U $(ansible-galaxy collection list --format json | jq -r '.[] | keys []')
+  # sudo apt install ansible python3-passlib # needed for ansible.builtin.password_hash
+  [[ $VERBOSE -eq 0 ]] && exec 1>&5 2>&6 || true
+}
+ansible_i_upgrade() {
+  # pipx upgrade ansible-core --include-injected --pip-args="--upgrade-strategy=eager"
+  pipx upgrade ansible --include-injected --pip-args="--upgrade-strategy=eager"
+  pipx upgrade ansible-lint --include-injected --pip-args="--upgrade-strategy=eager"
+  ansible-galaxy collection install community.general community.docker ansible.posix community.proxmox --upgrade
+}
+ansible_i_uninstall() {
+  command -v ansible >/dev/null 2>&1 || {
+    echo "ansible not installed"
+    return
+  }
+  pipx uninstall ansible-core
+  pipx uninstall ansible
+  pipx uninstall ansible-lint
+# echo "Done"
+  # sudo apt-get remove ansible
+  # sudo apt-get purge ansible
+  # sudo apt-get autoremove
+}
+
+pipx_i_install() {
+  [[ $EUID -eq 0 ]] && PIPX="sudo env PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx" || PIPX="pipx"
+  # [ command -v "pipx" >/dev/null 2>&1 ] && return
+  sudo apt update && sudo apt install -y pipx python3-venv
+  eval "$PIPX install --force pipx"
+  eval "$PIPX ensurepath"
+  sudo apt remove -y pipx || true
+  # env PIPX_BIN_DIR=$INSTALL_DIR
+  # [[ $EUID -eq 0 ]] && env PIPX_HOME=/opt/pipx
+  # eval "${INSTALL_DIR}/pipx ensurepath"
+  # python3 -m venv ~/.local/pipx-boot
+  # ~/.local/pipx-boot/bin/pip install -U pip pipx
+  # ~/.local/pipx-boot/bin/pipx ensurepath
+  # export PATH="$HOME/.local/bin:$PATH"
+}
+pipx_i_upgrade() {
+  [[ $EUID -eq 0 ]] && PIPX="sudo env PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx" || PIPX="pipx"
+  eval "$PIPX upgrade pipx --include-injected" 2>/dev/null
+  # eval "$PIPX upgrade-all --include-injected" || true
+}
+pipx_i_uninstall() {
+  if [[ "${1:-}" == "all" ]]; then
+    local apps=$($PIPX list --short 2>/dev/null | awk '{print $1}')
+    [ -z "$apps" ] && return
+    for app in $apps; do
+      [ "$app" = "pipx" ] && continue
+      eval "$PIPX uninstall $app" || true
+    done
+  fi
+  PIPX="pipx"
+  eval "$PIPX uninstall pipx"
+  PIPX="sudo env PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin pipx"
+  eval "$PIPX uninstall pipx"
+  sudo apt remove -y pipx || true
+  sudo rm -rf "/opt/pipx/venvs/pipx" || true
+  # sudo rm /usr/local/bin/pipx
+  rm -rf ~/.local/share/pipx/venvs/pipx || true
+  # rm ~/.local/bin/pipx
+  [ "$1" = "all" ] && sudo rm -rf /opt/pipx || true
+  [ "$1" = "all" ] && rm -rf ~/.local/share/pipx || true
+}
 
 ##############################################################################
 # colors / logging
@@ -132,10 +210,6 @@ cleanup_binary() {
   rm -f "/usr/local/bin/$CMD" "$(real_home)/.local/bin/$CMD" \
     "/usr/local/share/man/man1/$CMD"* "$(real_home)/.local/share/man/man1/$CMD"*
 }
-# installed_version() {
-#   command -v "$CMD" >/dev/null 2>&1 || return 0
-#   "$CMD" $VERSION_ARG 2>/dev/null | grep -Eo '[0-9]+(\.[0-9]+[a-z]?)+' | head -1
-# }
 cmd_version() {
   local cmd_path=$(cmd_path)
   # [[ -z "$cmd_path" ]] && cmd_path=$(command -v "$CMD" 2>/dev/null)
@@ -165,8 +239,9 @@ pm_detect() {
 }
 
 pm_install() {
-  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null || true
   log_info "$PM install $*"
+  [[ $DRY == true ]] && return || true
+  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null || true
   # apt install --only-upgrade
   case $PM in
     apt) sudo apt-get update && sudo apt-get install -y "$@" >/dev/null ;;
@@ -178,8 +253,9 @@ pm_install() {
   [[ $VERBOSE -eq 0 ]] && exec 1>&5 2>&6 || true
 }
 pm_remove() {
-  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null || true
   log_info "$PM remove $*"
+  [[ $DRY == true ]] && return || true
+  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null || true
   case $PM in
     apt) sudo apt remove -fy -qq "$@" ;;
     dnf) sudo dnf remove -y -q "$@" ;;
@@ -191,8 +267,9 @@ pm_remove() {
 }
 
 pm_upgrade_all() {
-  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null
   log_info "$PM upgrade all"
+  [[ $DRY == true ]] && return || true
+  [[ $VERBOSE -eq 0 ]] && exec 5>&1 6>&2 && exec &>/dev/null
   case $PM in
     apt) sudo apt-get update -qq && sudo apt-get upgrade -y -qq && sudo apt autoremove -y -qq ;;
     dnf) sudo dnf upgrade -y -q ;;
@@ -200,6 +277,9 @@ pm_upgrade_all() {
     pacman) sudo pacman -Syu --noconfirm ;;
     apk) sudo apk upgrade ;;
   esac
+  if command -v pipx >/dev/null; then
+    pipx upgrade-all --include-injected --pip-args="--upgrade-strategy=eager"
+  fi
   [[ $VERBOSE -eq 0 ]] && exec 1>&5 2>&6
 }
 pm_has_pkg() {
@@ -214,12 +294,71 @@ pm_has_pkg() {
 # github
 ##############################################################################
 
-git_latest_release() { curl --connect-timeout 10 --max-time 30 -fsSL "https://api.github.com/repos/$REPO/releases/latest" ;}
+git_latest_release() {
+  local repo="$REPO" api="https://api.github.com/repos/$REPO"
+
+  curlj() {
+    curl -fsSL --connect-timeout 10 --max-time 30 \
+      -H "Accept: application/vnd.github+json" "$1" 2>/dev/null
+  }
+
+  pick() {
+    jq --arg repo "$repo" '{
+      repo: $repo,
+      tag_name,
+      name,
+      published_at,
+      prerelease: (.prerelease // false),
+      assets: [.assets[]? | {
+        name,
+        size,
+        download_url,
+        browser_download_url,
+        content_type
+      }]
+    }'
+  }
+
+  # 1) latest release
+  out=$(curlj "$api/releases/latest")
+  if echo "$out" | jq -e '.tag_name' >/dev/null 2>&1; then
+    echo "$out" | pick
+    return 0
+  fi
+
+  # 2) releases list
+  out=$(curlj "$api/releases")
+  if echo "$out" | jq -e 'type=="array"' >/dev/null 2>&1; then
+    echo "$out" | jq 'map(select(.draft==false)) | .[0]' | pick
+    return 0
+  fi
+
+  # 3) tags fallback
+  tag=$(curlj "$api/tags" | jq -r '.[0].name // empty')
+  if [[ -n "$tag" ]]; then
+    out=$(curlj "$api/releases/tags/$tag")
+    if echo "$out" | jq -e '.tag_name' >/dev/null 2>&1; then
+      echo "$out" | pick
+      return 0
+    fi
+  fi
+
+  # 4) empty result
+  jq -n --arg repo "$repo" '{repo:$repo, tag_name:null, assets:[]}'
+}
+
 git_latest_version() {
   if command -v jq >/dev/null; then
     jq -r '.tag_name'
   else
     grep '"tag_name"' | head -1 | cut -d'"' -f4
+  fi
+}
+git_latest_files() {
+  if command -v jq >/dev/null 2>&1; then
+    jq -r '.assets[].browser_download_url'
+  else
+    grep '"browser_download_url"' | cut -d'"' -f4
   fi
 }
 # git_latest_version() { printf '%s\n' "$GIT_RELEASE_JSON" | jq -r '.tag_name' ; }
@@ -228,8 +367,9 @@ github_info() {
   # verbose "querying github release for $REPO"
   GIT_RELEASE_JSON=$(git_latest_release)
   GIT_LATEST_VERSION=$(git_latest_version <<< "$GIT_RELEASE_JSON")
+  GIT_LATEST_FILES=$(git_latest_files <<< "$GIT_RELEASE_JSON")
   log_info "GIT latest version: $GIT_LATEST_VERSION"
-
+  verbose2 "Git Latest files: \n$GIT_LATEST_FILES"
   # if [[ "$UPGRADE" = false ]] && [[ -n "$INSTALLED_VERSION" ]] &&
   if [[ -n "$INSTALLED_VERSION" ]] && [[ "${GIT_LATEST_VERSION#v}" == "${INSTALLED_VERSION#v}" ]]; then
     log_success "$REPO is already up to date"
@@ -249,7 +389,7 @@ git_latest_url() {
         fi
       }
 }
-find_asset() {
+git_find_asset() {
   # verbose "searching release assets"
   local pattern url
   for pattern in "${PATTERN_LIST[@]}"; do
@@ -271,14 +411,15 @@ find_asset() {
     fi
   done
 }
-
+# curl -i https://api.github.com/rate_limit
 github_install() {
   local tmp url bin
-  url=$(find_asset)
+  url=$(git_find_asset)
   verbose "selected asset: $url"
   [[ -n "$url" ]] || return 1
   tmp=$(mktemp -d) && trap 'rm -rf "$tmp"' RETURN
   log_info "installing from $REPO -> $(basename "$url")"
+  [[ $DRY == true ]] && return || true
   case "$url" in
     *.deb)
       curl -fsSL "$url" -o "$tmp/pkg.deb"
@@ -329,7 +470,7 @@ EOF
   exit 0
 }
 
-REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false VERBOSE=0
+REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false VERBOSE=0 DRY=false
 while (($#)); do
   case "$1" in
     -v|--verbose) VERBOSE=1 ;;
@@ -337,6 +478,7 @@ while (($#)); do
     -g|--upgrade) UPGRADE=true ;;
     -i|--install) INSTALL=true ;;
     --v2|--verbose2) VERBOSE=2 ;;
+    --dry) DRY=true ;;
     --app-force) APP_FORCE=true ;;
     -h|--help) usage ;;
     -*) echo "unknown option: $1"; exit 0 ;;
@@ -358,6 +500,7 @@ fi
 ##############################################################################
 
 PM=$(pm_detect)
+[[ $EUID -eq 0 ]] && PATH=$(real_home)/.local/bin:$PATH
 
 case "$(uname -m)" in
   x86_64) ARCH=x86_64 ;;
@@ -402,15 +545,10 @@ for app in "${apps[@]}"; do
 
   if ! load_app "$app"; then
     if pm_has_pkg "$app"; then
-      PKG_APPS+=($app)
-      # echo "$app (package)"
-      # if $REMOVE; then
-      #   pm_remove "$app"
-      # else
-      #   pm_install "$app"
-      # fi
+      CMD=$app
+      [[ $INSTALL == true ]] && [[ -n "$(cmd_path)" ]] && continue
       verbose "Added to package manager: $app"
-      continue
+      PKG_APPS+=($app) || true
     fi
     log_warn "Unknown app: $app"
     continue
@@ -421,10 +559,12 @@ for app in "${apps[@]}"; do
     log_info "Unistalling $app"
     [[ -n "$PKG" ]] && PKG_APPS+=($PKG)
     # [[ -n "$PKG" ]] && pm_remove "$PKG" || true
-    cleanup_binary
-    declare -F "${app}_i_uninstall" >/dev/null || continue
-    log_info "Calling funtion ${app}_i_uninstall "
-    ${app}_i_uninstall ;
+    if declare -F "${app}_i_uninstall" >/dev/null; then
+      log_info "Calling funtion ${app}_i_uninstall "
+      [[ $DRY == false ]] && ${app}_i_uninstall || true
+    fi
+    verbose "Calling cleanup_binary"
+    [[ $DRY == false ]] && cleanup_binary || true
     continue
   fi
   # if [[ -n $(cmd_path) ]] && [ "$UPGRADE" = false ]; then continue; fi
@@ -443,14 +583,23 @@ for app in "${apps[@]}"; do
     [[ "$METHOD" != "custom" ]] && [[ $INSTALL == true ]] && [[ -z "$INSTALLED_VERSION" ]]
     PKG_APPS+=($PKG)
   fi
-  declare -F "${app}_i_install" >/dev/null || continue
-  [[ $INSTALL == true ]] && [[ -z "$INSTALLED_VERSION" ]] && ${app}_i_install
-  [[ $UPGRADE == true ]] && [[ -n "$INSTALLED_VERSION" ]] && ${app}_i_install
-
-
+  if [[ $INSTALL == true ]] && [[ -z "$INSTALLED_VERSION" ]]; then
+    if declare -F "${app}_i_install" > /dev/null; then
+      log_info "Calling funtion ${app}_i_install "
+      [[ $DRY == false ]] && ${app}_i_install
+    fi
+  elif [[ $UPGRADE == true ]] && [[ -n "$INSTALLED_VERSION" ]]; then
+    if declare -F "${app}_i_upgrade" >/dev/null; then
+      log_info "Calling funtion ${app}_i_upgrade "
+      [[ $DRY == false ]] && ${app}_i_upgrade
+    elif declare -F "${app}_i_install" >/dev/null; then
+      log_info "Calling funtion ${app}_i_install"
+      [[ $DRY == false ]] && ${app}_i_install
+    fi
+  fi
 done
 printf "\n${BLUE}==>${NC} %s\n" "PACKAGE MANAGER"
-[[ $EUID -eq 0 ]] || exit
+# [[ $EUID -eq 0 ]] || exit
 if [[ $REMOVE == true ]]; then
   pm_remove ${PKG_APPS[@]}
   exit

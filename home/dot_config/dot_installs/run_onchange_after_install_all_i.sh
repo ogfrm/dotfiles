@@ -19,19 +19,8 @@ while getopts ":urs" opt; do
   [[ $opt == u ]] && UNINSTALL_ALL=' -u'
   [[ $opt == s ]] && SYSTEM_ALL=' -s'
 done
+sudo $SCRIPT_DIR/i_install -i curl unzip git wget tar jq less
 
-APPDEP_ALL="curl unzip git wget tar jq less"
-for name in $APPDEP_ALL ;do
-  if command -v $name >/dev/null 2>&1; then continue; fi
-  if command -v apt >/dev/null 2>&1; then sudo apt update && sudo apt install -y $APPDEP_ALL;
-  elif command -v yum >/dev/null 2>&1; then sudo yum install -y $APPDEP_ALL;
-  elif command -v pacman >/dev/null 2>&1; then sudo pacman -Sy --noconfirm $APPDEP_ALL;
-  elif command -v dnf >/dev/null 2>&1; then sudo dnf install -y $APPDEP_ALL;
-  elif command -v apk >/dev/null 2>&1; then sudo apk add $APPDEP_ALL;
-  fi
-
-  # break
-done
 # APPINSTALL_ALL="starship fzf"
 APPINSTALL_ALL="oh-my-posh starship zoxide fzf fastfetch fresh eza fd ripgrep tmux bat"
 # APPINSTALL_ALL="oh-my-posh zoxide fzf fresh eza fd ripgrep tmux bat"
