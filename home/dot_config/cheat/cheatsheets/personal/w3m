@@ -1,0 +1,13 @@
+# terminal browser    pager
+apt install w3m w3m-img
+
+# w3m wiki.archlinux.org
+# S+h help
+# S+b back
+# S+t  tabs
+# S+[  ] switch tab
+# ^+q  quict tab
+# S+u switch url
+# S+g end of page
+# g top of the page
+# q quit

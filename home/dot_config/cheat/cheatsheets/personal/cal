@@ -1,10 +1,10 @@
-#### **Summary  `cal` command in Linux, which is used to display calendars in the terminal
-command -v cal
-sudo apt update
-sudo apt install ncal
-# For other distributions, install the `util-linux` package using your package manager.
+### CAL ###
+# sudo apt install ncal
 cal
-cal -y  # Display Calendar for Entire Current Year**:
-cal 1982
-cal 8 1982   #   cal [month] [year]
-cal -3 # **Show a Three-Month Calendar (Current, Previous, and Next Months)**
+cal -y                  # Display Calendar for Entire Current Year**:
+cal -Y                  # Next 12 months
+cal -m                  # start of day Monday
+cal 1982                # Year 1982
+cal 8 1982              # cal [month] [year]
+cal -3                  # **Show a Three-Month Calendar (Current, Previous, and Next Months)**
+cal -w                  # week numbers

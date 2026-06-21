@@ -26,6 +26,7 @@ declare -A APPS=(
   [pipx]="pypa/pipx::pipx::custom"
   [cheat_sh]="::cht.sh::custom"
   [cheat]="cheat/cheat::cheat"
+  [nerdfonts]="::::custom"
 )
 
 load_app() {
@@ -55,6 +56,26 @@ fzf_i_install() {
 }
 oh-my-posh_i_uninstall() {
   rm -rf "$(real_home)/.cache/oh-my-posh"
+}
+nerdfonts_i_install() {
+  local tmpn=$(mktemp -d) && trap 'rm -rf "$tmp"' RETURN
+  local fntdir="$HOME/.local/share/fonts"
+  local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download"
+  mkdir -p "$fntdir" > /dev/null 2>&1
+  for fnt in ${NERDFONTS//,/ }; do
+    [[ -d ${fntdir}/$fnt ]] && { log_warn "$fnt already installed"; continue; }
+    # fc-list | \grep -iq "$fnt" && { log_warn "$fnt already installed"; return; }
+    curl -fsSL "$url/$fnt.zip" -o "$tmpn/$fnt.zip"
+    unzip -oq "$tmpn/$fnt.zip" -d "${fntdir}/$fnt"
+  done
+  chown $(real_user):$(real_user) -R "$fntdir"
+  fc-cache -fv &> /dev/null
+}
+nerdfonts_i_uninstall() {
+  for fnt in ${NERDFONTS//,/ }; do
+    rm -rf "$HOME/.local/share/fonts/$fnt"
+  done
+  fc-cache -fv &> /dev/null
 }
 oh-my-posh_i_install() {
   # # oh-my-posh init zsh --config /home/ozgur/.cache/oh-my-posh/themes/slimfat.omp.json
@@ -136,7 +157,7 @@ ansible_i_upgrade() {
 }
 ansible_i_uninstall() {
   command -v ansible >/dev/null 2>&1 || {
-    echo "ansible not installed"
+    log_warn "ansible not installed"
     return
   }
   pipx uninstall ansible-core
@@ -235,6 +256,7 @@ verbose2() {
 real_user() { echo "${SUDO_USER:-$(id -un)}" ; }
 real_home() { getent passwd "$(real_user)" | cut -d: -f6 2>/dev/null || echo "$HOME" ; }
 cleanup_binary() {
+  [[ -z "$CMD" ]] && return
   rm -f "/usr/local/bin/$CMD" "$(real_home)/.local/bin/$CMD" \
     "/usr/local/share/man/man1/$CMD"* "$(real_home)/.local/share/man/man1/$CMD"*
 }
@@ -469,7 +491,7 @@ github_install() {
 
   bin=$(find "$tmp" -type f -name "$CMD" | head -n1)
   [[ -f "$bin" ]] || bin=$(find "$tmp" -type f -perm -111 ! -name '*.so*' | head -n1)
-  [[ -n "$bin" ]] || { echo "  No executable found in archive"; return 1; }
+  [[ -n "$bin" ]] || { log_warn "  No executable found in archive"; return 1; }
   mkdir -p "$INSTALL_DIR"
   install -m755 "$bin" "$INSTALL_DIR/$CMD"
   # chmod 755 "$INSTALL_BIN" &&  sudo chown root:root "$INSTALL_DIR" && mv "$INSTALL_DIR" "$INSTALL_DIR/$CMD"
@@ -499,16 +521,17 @@ EOF
   exit 0
 }
 
-REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false VERBOSE=0 DRY=false
+REMOVE=false UPGRADE=false INSTALL=false APP_FORCE=false VERBOSE=0 DRY=false NERDFONTS=""
 while (($#)); do
   case "$1" in
-    -v|--verbose) VERBOSE=1 ;;
     -u|--remove) REMOVE=true ;;
     -g|--upgrade) UPGRADE=true ;;
     -i|--install) INSTALL=true ;;
-    --v2|--verbose2) VERBOSE=2 ;;
+    -v|--verbose) VERBOSE=1 ;;
+    -vv) VERBOSE=2 ;;
     --dry) DRY=true ;;
     --app-force) APP_FORCE=true ;;
+    --fonts) NERDFONTS=$2 && shift ;;
     -h|--help) usage ;;
     -*) echo "unknown option: $1"; exit 0 ;;
     *) break ;;
@@ -583,7 +606,7 @@ for app in "${apps[@]}"; do
     continue
   fi
   verbose "app=$1 repo=$REPO pkg=$PKG cmd=$CMD method=$METHOD"
-  [[ -n "$CMD" ]] || continue
+  # [[ -n "$CMD" ]] || continue
   if $REMOVE; then
     log_info "Unistalling $app"
     [[ -n "$PKG" ]] && PKG_APPS+=($PKG)
@@ -628,11 +651,11 @@ for app in "${apps[@]}"; do
   fi
 done
 printf "\n${BLUE}==>${NC} %s\n" "PACKAGE MANAGER"
-# [[ $EUID -eq 0 ]] || exit
-[[ $APP_ALL == true ]] && [[ $UPGRADE == true ]] && pm_upgrade_all
-[[ ${#PKG_APPS[@]} -gt 0 ]] || exit
+# [[ $EUID -eq 0 ]] || exit 0
+[[ $APP_ALL == true ]] && [[ $UPGRADE == true ]] && pm_upgrade_all || true
+[[ ${#PKG_APPS[@]} -gt 0 ]] || exit 0
 if [[ $REMOVE == true ]]; then
   pm_remove ${PKG_APPS[@]}
-  exit
+  exit 0
 fi
-[[ $INSTALL == true ]] && pm_install ${PKG_APPS[@]}
+[[ $INSTALL == true ]] && pm_install ${PKG_APPS[@]} || true

@@ -54,13 +54,18 @@ TZ='America/Los_Angeles' date
 
 ###############################################
 
-date -r /etc/hosts  # last mod date of file
+date -r /etc/hosts          # last mod date of file
 echo "$(date  )"
 
-date +%m   # month
-date +%H   # HOUR 
+date +%m                           # month
+date +%H                          # HOUR
 date +%h
 
 date +"%Y-%m-%d_%H%M%S"
+date +"%Y-%m-%dT%H:%M:%S:%Z"      # Z time zone
 sudo date --set="20240826 14:47"
 date +%A -d "1970-07-01"
+date +%F                          # %Y-%m-%d
+date +%s                          # second after 1970
+date -d @1774803400               # convert seconds after 1970 to normal
+date -s "YYYY-...."                          # set date

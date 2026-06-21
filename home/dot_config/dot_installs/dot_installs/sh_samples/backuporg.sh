@@ -16,7 +16,6 @@ sudo cp /usr/lib/os-release $bkdir/
 sudo cp -r /etc/ssh $bkdir/
 sudo cp -r /etc/conf.d $bkdir/
 
-
 #iptables -F
 #iptables-restore < savedrules.txt
 # iptables-save > /root/iptables-backup-$(date +%F)

@@ -1,0 +1,29 @@
+##########    VIM
+
+- name: users | ozgur | checkout git repositories
+  git:
+    repo: "https://github.com/{{ item.repo }}"
+    dest: "/home/ozgur/{{ item.dest }}"
+  loop:
+    - { repo: "ctrlpvim/ctrlp.vim.git", dest: ".vim/bundle/ctrlp.vim" }
+    - { repo: "davidhalter/jedi-vim.git", dest: ".vim/bundle/jedi-vim" }
+    - { repo: "pearofducks/ansible-vim", dest: ".vim/bundle/ansible-vim" }
+    - { repo: "rhysd/vim-grammarous.git", dest: ".vim/bundle/vim-grammarous" }
+    - { repo: "ron89/thesaurus_query.vim", dest: ".vim/bundle/thesaurus_query" }
+    - { repo: "scrooloose/nerdtree.git", dest: ".vim/bundle/nerdtree" }
+    - { repo: "tpope/vim-obsession.git", dest: ".vim/bundle/vim-obsession" }
+    - { repo: "vim-syntastic/syntastic.git", dest: ".vim/bundle/syntastic" }
+  notify: update_vim_bundle_perms
+
+########   TMUX
+
+- name: users | ozgur | checkout git repositories
+  git:
+    repo: "https://github.com/{{ item.repo }}"
+    dest: "/home/ozgur/{{ item.dest }}"
+  loop:
+    - { repo: "gpakosz/.tmux.git", dest: ".oh-my-tmux" }
+    - { repo: "srsudar/tmux-completion.git", dest: ".tmux/plugins/completion" }
+    - { repo: "tmux-plugins/tmux-continuum", dest: ".tmux/plugins/continuum" }
+    - { repo: "tmux-plugins/tmux-resurrect", dest: ".tmux/plugins/resurrect" }
+  notify: update_tmux_plugin_perms
