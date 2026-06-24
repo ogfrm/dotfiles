@@ -11,7 +11,7 @@ sudo $SCRIPT_DIR/i_install -i curl unzip git wget tar jq less
 # {{ include "dotconfig/dot_rc/${name}_i.sh.sh" | sha256sum }}
 APPINSTALL_ALL="oh-my-posh starship zoxide fzf fastfetch fresh eza fd ripgrep tmux bat"
 # sudo $SCRIPT_DIR/i_install -u $APPINSTALL_ALL
-# sudo $SCRIPT_DIR/i_install -i -g $APPINSTALL_ALL
+sudo $SCRIPT_DIR/i_install -i -g $APPINSTALL_ALL
 # sudo $SCRIPT_DIR/i_install -i -g pipx ansible
 
 # ./nerdfonts_i.sh install CascadiaCode FiraCode Meslo JetBrainsMono
