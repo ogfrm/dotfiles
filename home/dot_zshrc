@@ -228,6 +228,7 @@ zinit snippet OMZP::command-not-found
 # zsh_add_plugin "zsh-users/zsh-syntax-highlighting" # syntax highlighting for ZSH in standard repos
 # zsh_add_plugin "Aloxaf/fzf-tab" # syntax highlighting for ZSH in standard repos
 
+####  LAST
 for f in ~/.config/.rc/sh_*.sh; do  source "$f"; done
 for f in ~/.config/.rc/shlast_*.sh; do  source "$f"; done
 
