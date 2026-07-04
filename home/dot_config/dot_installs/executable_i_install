@@ -27,6 +27,7 @@ declare -A APPS=(
   [cheat_sh]="::cht.sh::custom"
   [cheat]="cheat/cheat::cheat"
   [nerdfonts]="::::custom"
+  [yazi]="sxyazi/yazi:yazi:yazi"
 )
 
 load_app() {
@@ -478,6 +479,10 @@ github_install() {
       curl -fsSL "$url" -o "$tmp/pkg.tar.gz"
       tar -xzf "$tmp/pkg.tar.gz" -C "$tmp"
       ;;
+    *.zip)
+      curl -fsSL "$url" -o "$tmp/pkg.zip"
+      gunzip -c "$tmp/pkg.zip" -c > "$tmp/$CMD"
+      ;;
     *.gz)
       curl -fsSL "$url" -o "$tmp/pkg.gz"
       gunzip -c "$tmp/pkg.gz" -c > "$tmp/$CMD"
@@ -571,15 +576,34 @@ fi
 PATTERN_LIST=()
 if command -v apt >/dev/null && command -v dpkg >/dev/null; then
   PATTERN_LIST+=( "_${ARCH}.deb" )
+  PATTERN_LIST+=( "${ARCH}-unknown-linux-gnu.deb" )
 fi
-if $ISALPINE; then PATTERN_LIST+=("${ARCH}-unknown-linux-musl.tar.gz"); fi
+if $ISALPINE; then
+  PATTERN_LIST+=("${ARCH}-unknown-linux-musl.tar.gz")
+  PATTERN_LIST+=("${ARCH}-unknown-linux-musl.zip")
+fi
 PATTERN_LIST+=("${ARCH}-unknown-linux-gnu.tar.gz")
-if ! $ISALPINE; then PATTERN_LIST+=("${ARCH}-unknown-linux-musl.tar.gz"); fi
-if $ISALPINE; then PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz"); fi
+PATTERN_LIST+=("${ARCH}-unknown-linux-gnu.zip")
+if ! $ISALPINE; then
+  PATTERN_LIST+=("${ARCH}-unknown-linux-musl.tar.gz")
+  PATTERN_LIST+=("${ARCH}-unknown-linux-musl.zip")
+fi
+if $ISALPINE; then
+  PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz");
+  PATTERN_LIST+=("musl-linux-${ARCH}.zip");
+fi
 PATTERN_LIST+=( "gnu-linux-${ARCH}.tar.gz" )
-if ! $ISALPINE; then PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz"); fi
-if $ISALPINE; then PATTERN_LIST+=("musl-${ARCH}.tar.gz"); fi
+PATTERN_LIST+=( "gnu-linux-${ARCH}.zip" )
+if ! $ISALPINE; then
+  PATTERN_LIST+=("musl-linux-${ARCH}.tar.gz");
+  PATTERN_LIST+=("musl-linux-${ARCH}.zip");
+fi
+if $ISALPINE; then
+  PATTERN_LIST+=("musl-${ARCH}.tar.gz");
+  PATTERN_LIST+=("musl-${ARCH}.zip");
+fi
 PATTERN_LIST+=( "-linux-${ARCH}.tar.gz" "-linux_${ARCH}.tar.gz" "_Linux_${ARCH}.tar.gz" "-linux-${ARCH}" )
+PATTERN_LIST+=( "-linux-${ARCH}.zip" "-linux_${ARCH}.zip" "_Linux_${ARCH}.zip" "-linux-${ARCH}" )
 
 verbose "Package Manager: $PM"
 verbose "ARCH           : $ARCH"
