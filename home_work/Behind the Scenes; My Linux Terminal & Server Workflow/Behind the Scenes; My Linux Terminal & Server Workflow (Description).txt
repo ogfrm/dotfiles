@@ -1,0 +1,70 @@
+url : https://www.youtube.com/watch?v=Q8Fv_BfQuuc
+views : 660
+date : July 2, 2026 10:00:07 AM EDT
+name : Learn Linux TV
+channel : www.youtube.com/channel/UCxQKHvKbmSzGMvUrVtJYnUA
+
+Your terminal setup says a lot about your workflow - in this video, I walk through how I configure my Linux terminal environment, covering tmux, Vim, my Bash configuration, and even a live Ansible provisioning run to deploy this setup across my LLTV servers.
+
+If you're looking to build a faster, more efficient terminal workflow on Linux, this video covers the core tools I rely on every day as a sysadmin.
+
+Download my dotfiles here ➜ https://learnlinux.link/dotfiles
+
+━━━━━━━━━━━━━━━━━━━━━━
+*📖 Switch to Linux with my latest book! (Available Now!)*
+
+Thinking about making the jump to Linux? This step-by-step guide will help you choose the right distribution, install Linux with confidence! Purchase your copy here:
+https://learnlinux.link/switch-to-linux
+
+━━━━━━━━━━━━━━━━━━━━━━
+*🐧 Save up to 75% on Linux Foundation Certifications*
+
+Whether you're starting a Linux career or advancing your existing skills, Linux Foundation training can help you stand out in a competitive industry. Check out the available courses and certifications, and save!
+https://learnlinux.link/get-certified
+
+━━━━━━━━━━━━━━━━━━━━━━
+*❤️ Support the Channel and Get Awesome Stuff*
+
+Books, discounts, shirts and more!
+
+- Switching to Linux Book (New!) ➜ https://learnlinux.link/switch-to-linux
+- Ansible Course ➜ https://learnlinux.link/ansible
+- Linux Essentials Course ➜ https://learnlinux.link/linux-essentials
+- eBook Bundle ➜ https://learnlinux.link/ebook-bundle
+- Linux Merch Shop ➜ https://merch.learnlinux.tv
+- Linode Starter Credit ➜ https://learnlinux.link/linode
+- Paid Assistance ➜ https://www.learnlinux.tv/request-assistance
+
+━━━━━━━━━━━━━━━━━━━━━━
+*🕐 Time Codes*
+
+00:00 - Intro
+01:20 – Why tmux Is a Game-Changer for My Terminal Workflow
+05:12 – Save 30% on Linux Foundation Certifications (Support LLTV)
+06:27 – Provisioning LLTV servers with Ansible
+07:40 – My tmux Configuration, Explained
+11:58 – My Vim Configuration, Explained
+14:16 – My Favorite Linux Shell (and Why)
+15:20 – How I Configure Bash
+
+━━━━━━━━━━━━━━━━━━━━━━
+*🎓 Learn Linux TV*
+
+Your source for Linux-related Fun and Learning!
+
+https://www.learnlinux.tv
+https://community.learnlinux.tv
+https://learnlinux.link/jay
+
+━━━━━━━━━━━━━━━━━━━━━━
+*🤝 Affiliate Notice*
+
+Some of the links mentioned in this description are affiliate links. If you purchase through them, it helps keep the content flowing.
+https://www.learnlinux.tv/content-ethics
+
+━━━━━━━━━━━━━━━━━━━━━━
+*⚠️ Use Content Responsibly*
+
+Learn Linux TV shares technical content intended to teach and help you, but it comes with no warranty. The channel is not liable for any damages from its use. Always ensure you have proper permissions, follow company policies, and comply with all applicable laws while working with technology.
+
+#Linux #LinuxTerminal #tmux #Vim #Bash #Ansible #Sysadmin #Homelab #Dotfiles #DevOps #CommandLine #LinuxTutorial #OpenSource #LearnLinuxTV
