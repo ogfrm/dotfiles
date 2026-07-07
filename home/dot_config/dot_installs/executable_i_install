@@ -28,6 +28,7 @@ declare -A APPS=(
   [cheat]="cheat/cheat::cheat"
   [nerdfonts]="::::custom"
   [yazi]="sxyazi/yazi:yazi:yazi"
+  [zshplugins]="::::custom"
 )
 
 load_app() {
@@ -230,6 +231,31 @@ cheat_i_uninstall() {
 cheat_i_upgrade() {
   local cheat_config="$(real_home)/.config/cheat/cheatsheets/community"
   [ -d "$cheat_config" ] && git -C "$cheat_config" pull
+}
+zshplugins_i_install() {
+  # zplugindir=/usr/share/zsh/plugins  # $HOME/.local/share/zsh/plugins /usr/local/share/zsh/plugins zplugindir=/usr/local/share
+  zplugindir=${HOME}/.local/share/zinit/plugins
+  mkdir -p "$zplugindir"
+  # /zsh-users---zsh-autosuggestions
+  zsh_add_plugin() {
+      # PLUGIN_NAME=$(echo $1 | cut -d "/" -f 2)
+      PLUGIN_NAME=$1
+      PLUGIN_NAME=${PLUGIN_NAME//\//---}
+      echo $PLUGIN_NAME
+      # sudo rm -rf "$zplugindir/$PLUGIN_NAME"
+      [ ! -d "$zplugindir/$PLUGIN_NAME" ] && (
+          # sudo rm -f $HOME/.zcompdump
+          git clone ${2-} "https://github.com/$1.git" "$zplugindir/$PLUGIN_NAME"
+      )
+      #        git pull
+      # zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.plugin.zsh" || zsh_add_file "$zplugindir/$PLUGIN_NAME/$PLUGIN_NAME.zsh"
+  }
+  # Plugins # Load ; should be last.
+  zsh_add_plugin "zsh-users/zsh-autosuggestions" # Suggestions based on your history
+  zsh_add_plugin "zsh-users/zsh-completions"
+  zsh_add_plugin "zsh-users/zsh-syntax-highlighting" # syntax highlighting for ZSH in standard repos
+  zsh_add_plugin "Aloxaf/fzf-tab" # syntax highlighting for ZSH in standard repos
+  # chown $(real_user):$(real_user) -R "$zplugindir"
 }
 ##############################################################################
 # colors / logging

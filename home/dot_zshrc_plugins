@@ -1,0 +1,28 @@
+#######################################################
+# Zinit Plugins more plugins: https://github.com/unixorn/awesome-zsh-plugins https://github.com/MichaelAquilina/zsh-you-should-use
+#######################################################
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git" # Set the directory we want to store zinit and plugins
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
+
+zinit cdreplay -q    # Completion   add after compinit command  to replay cache recommended
+
+# zinit ice depth=1; zinit light romkatv/powerlevel10k
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab   # fzf to complition menu
+
+# Add in snippets
+zinit snippet OMZL::git.zsh  # OhMyZsh lib/git.zsh  (like git_prompt_info or parse_git_dirty) many Zsh themes uses
+# https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins
+zinit snippet OMZP::git    # OhMyZsh plugin -> git  (alias ga gst glog)
+zinit snippet OMZP::sudo   # escape escape (doble esc) adds sudo to last command
+# zinit snippet OMZP::archlinux
+# zinit snippet OMZP::aws
+# zinit snippet OMZP::kubectl
+# zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
