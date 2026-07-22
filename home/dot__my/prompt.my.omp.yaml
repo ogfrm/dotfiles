@@ -8,11 +8,11 @@ transient_prompt:
     foreground_templates:
       - '{{if gt .Code 0}}red{{end}}'
       - '{{if eq .Code 0}}#7a7a7a{{end}}'
-# secondary_prompt:
-#   foreground: '#7a7a7a'
-#   # background: 'transparent'
-#   background: '#2f2f2f'
-#   template: "    ❯❯ "
+secondary_prompt:
+  foreground: '#7a7a7a'
+  # background: 'transparent'
+  background: '#2f2f2f'
+  template: " {{.Shell}} ❯❯ "
 upgrade:
     source: cdn
     interval: 168h
