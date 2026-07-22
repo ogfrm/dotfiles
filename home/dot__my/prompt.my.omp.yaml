@@ -1,5 +1,18 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 
+transient_prompt:
+    template: ' {{ .Shell }} > '
+    # background: '#2f2f2f'
+    background: 'transparent'
+    # foreground: '#7a7a7a'
+    foreground_templates:
+      - '{{if gt .Code 0}}red{{end}}'
+      - '{{if eq .Code 0}}#7a7a7a{{end}}'
+secondary_prompt:
+  foreground: '#7a7a7a'
+  # background: 'transparent'
+  background: '#2f2f2f'
+  template: " {{.Shell}} ❯❯ "
 upgrade:
     source: cdn
     interval: 168h
@@ -26,18 +39,105 @@ blocks:
             raspbian: 
             ubuntu: 
             windows: 
-          leading_diamond: '  '
-          template: ' {{ if .WSL }}wsl {{ end }}</>'
+          leading_diamond: ▓
+          template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> ></>'
           # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> ></>'
           foreground: '#26C6DA'
           background: '#2f2f2f'
           type: os
           style: diamond
+        - template: ' <#7a7a7a> ></>'
+          foreground: '#ffff66'
+          background: '#2f2f2f'
+          type: root
+          style: diamond
+        - options:
+            # folder_icon: <#B5B2C2> </>
+            style: full
+          # template: '<#f2f200>  </>{{ .Path }} '
+          foreground: '#fafafa'
+          background: '#2f2f2f'
+          type: path
+          style: diamond
+        - options:
+            fetch_status: true
+            fetch_upstream_icon: true
+          template: '<#7a7a7a>> </>{{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}<#E84855>  {{ .Working.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}<#2FDA4E>  {{ .Staging.String }}</>{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} '
+          foreground: '#ffeb3b'
+          background: '#2f2f2f'
+          type: git
+          style: diamond
+          foreground_templates:
+            - '{{ if or (.Working.Changed) (.Staging.Changed) }}#ffeb3b{{ end }}'
+            - '{{ if gt .Ahead 0 }}#2EC4B6{{ end }}'
+            - '{{ if gt .Behind 0 }}#8A4FFF{{ end }}'
+        - trailing_diamond: 
+          foreground: '#fafafa'
+          background: '#2f2f2f'
+          type: text
+          style: diamond
+    - type: prompt
+      alignment: right
+      segments:
+        - leading_diamond: 
+          foreground: '#fafafa'
+          background: '#2f2f2f'
+          type: text
+          style: diamond
+        - template: '  {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}<#7a7a7a> </>'
+          foreground: '#6CA35E'
+          background: '#2f2f2f'
+          type: node
+          style: diamond
+        - template: '  {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }}<#7a7a7a> </>'
+          foreground: '#96E072'
+          background: '#2f2f2f'
+          type: python
+          style: diamond
+        - template: '  {{ if .Unsupported }}{{ else }}{{ .Full }}{{ end }}<#7a7a7a> </>'
+          foreground: '#3891A6'
+          background: '#2f2f2f'
+          type: dotnet
+          style: diamond
+        - template: ' <#2EEFBF>{{ .HostName }}</><#7a7a7a> ></>'
+          foreground: '#fafafa'
+          background: '#2f2f2f'
+          type: session
+          style: diamond
+
+        - options:
+        # https://ohmyposh.dev/docs/segments/system/executiontime
+            style: round # roundrock
+            threshold: 1000 # 5000
+          template: ' {{ .FormattedMs }}</>'
+          foreground: '#FFCE5C'
+          type: executiontime
+          style: plain
+        - options:
+            always_enabled: true
+          template: '  {{ if gt .Code 0 }}{{ .Code }}{{ end }} '
+          foreground: '#9FD356'
+          type: status
+          style: plain
+          foreground_templates:
+            - '{{ if gt .Code 0 }}#E84855{{ end }}'
+
 
     - type: prompt
       alignment: left
       segments:
-        - template: '  '
+        - options:
+            mapped_shell_names:
+                bash: '#_'
+                pwsh: 
+                zsh: '%_'
+          leading_diamond: '  '
+          # leading_diamond: ▓
+          foreground: '#26C6DA'
+          background: '#2f2f2f'
+          type: shell
+          style: diamond
+        - template: '  ❯'
           # foreground: '#7a7a7a'
           foreground_templates:
             - '{{if gt .Code 0}}red{{end}}'
