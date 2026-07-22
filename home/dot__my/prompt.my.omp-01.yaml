@@ -3,7 +3,7 @@
 transient_prompt:
     template: ' {{ .Shell }} ❯ '
     background: '#2f2f2f'
-    # background = 'transparent'
+    # background: 'transparent'
     # foreground: '#7a7a7a'
     foreground_templates:
       - '{{if gt .Code 0}}red{{end}}'

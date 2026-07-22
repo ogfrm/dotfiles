@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 
 transient_prompt:
-    template: ' {{ .Shell }} ❯ '
-    background: '#2f2f2f'
-    # background: 'transparent'
+    template: ' {{ .Shell }} > '
+    # background: '#2f2f2f'
+    background: 'transparent'
     # foreground: '#7a7a7a'
     foreground_templates:
       - '{{if gt .Code 0}}red{{end}}'
@@ -12,7 +12,7 @@ secondary_prompt:
   foreground: '#7a7a7a'
   # background: 'transparent'
   background: '#2f2f2f'
-  template: " ❯❯ "
+  template: " {{.Shell}} ❯❯ "
 upgrade:
     source: cdn
     interval: 168h
@@ -40,13 +40,13 @@ blocks:
             ubuntu: 
             windows: 
           leading_diamond: ▓
-          template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> </>'
-          # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> </>'
+          template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> ></>'
+          # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> ></>'
           foreground: '#26C6DA'
           background: '#2f2f2f'
           type: os
           style: diamond
-        - template: ' <#7a7a7a> </>'
+        - template: ' <#7a7a7a> ></>'
           foreground: '#ffff66'
           background: '#2f2f2f'
           type: root
@@ -62,7 +62,7 @@ blocks:
         - options:
             fetch_status: true
             fetch_upstream_icon: true
-          template: '<#7a7a7a> </>{{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}<#E84855>  {{ .Working.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}<#2FDA4E>  {{ .Staging.String }}</>{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} '
+          template: '<#7a7a7a>> </>{{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}<#E84855>  {{ .Working.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}<#2FDA4E>  {{ .Staging.String }}</>{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} '
           foreground: '#ffeb3b'
           background: '#2f2f2f'
           type: git
@@ -99,11 +99,30 @@ blocks:
           background: '#2f2f2f'
           type: dotnet
           style: diamond
-        - template: ' {{ if ne .Env.POSH_SESSION_DEFAULT_USER .UserName }}<#77f5d6>{{ .UserName }}</><#7a7a7a></>{{ end }}<#2EEFBF>{{ .HostName }}</><#7a7a7a> </>'
+        - template: ' <#2EEFBF>{{ .HostName }}</><#7a7a7a> ></>'
           foreground: '#fafafa'
           background: '#2f2f2f'
           type: session
           style: diamond
+
+        - options:
+        # https://ohmyposh.dev/docs/segments/system/executiontime
+            style: round # roundrock
+            threshold: 1000 # 5000
+          template: ' {{ .FormattedMs }}</>'
+          foreground: '#FFCE5C'
+          type: executiontime
+          style: plain
+        - options:
+            always_enabled: true
+          template: '  {{ if gt .Code 0 }}{{ .Code }}{{ end }} '
+          foreground: '#9FD356'
+          type: status
+          style: plain
+          foreground_templates:
+            - '{{ if gt .Code 0 }}#E84855{{ end }}'
+
+
     - type: prompt
       alignment: left
       segments:
@@ -128,31 +147,5 @@ blocks:
           type: text
           style: plain
       newline: true
-    - type: rprompt
-      alignment: right
-      segments:
-        - template: ' ❮ '
-          foreground: '#7a7a7a'
-          type: text
-          style: plain
-        - options:
-        # https://ohmyposh.dev/docs/segments/system/executiontime
-            style: round # roundrock
-            threshold: 1000 # 5000
-          template: ' {{ .FormattedMs }}</>'
-          foreground: '#FFCE5C'
-          type: executiontime
-          style: plain
-        - options:
-            always_enabled: true
-          template: '  {{ if gt .Code 0 }}{{ .Code }}{{ end }} '
-          foreground: '#9FD356'
-          type: status
-          style: plain
-          foreground_templates:
-            - '{{ if gt .Code 0 }}#E84855{{ end }}'
-
-
-
 version: 4
 final_space: true
