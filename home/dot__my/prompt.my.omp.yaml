@@ -63,52 +63,6 @@ blocks:
           background: '#2f2f2f'
           type: text
           style: diamond
-    - type: prompt
-      alignment: right
-      segments:
-        - leading_diamond: 
-          foreground: '#fafafa'
-          background: '#2f2f2f'
-          type: text
-          style: diamond
-        - template: '  {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}<#7a7a7a> </>'
-          foreground: '#6CA35E'
-          background: '#2f2f2f'
-          type: node
-          style: diamond
-        - template: '  {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }}<#7a7a7a> </>'
-          foreground: '#96E072'
-          background: '#2f2f2f'
-          type: python
-          style: diamond
-        - template: '  {{ if .Unsupported }}{{ else }}{{ .Full }}{{ end }}<#7a7a7a> </>'
-          foreground: '#3891A6'
-          background: '#2f2f2f'
-          type: dotnet
-          style: diamond
-        - template: ' <#2EEFBF>{{ .HostName }}</><#7a7a7a> ></>'
-          foreground: '#fafafa'
-          background: '#2f2f2f'
-          type: session
-          style: diamond
-
-        - options:
-        # https://ohmyposh.dev/docs/segments/system/executiontime
-            style: round # roundrock
-            threshold: 1000 # 5000
-          template: ' {{ .FormattedMs }}</>'
-          foreground: '#FFCE5C'
-          type: executiontime
-          style: plain
-        - options:
-            always_enabled: true
-          template: '  {{ if gt .Code 0 }}{{ .Code }}{{ end }} '
-          foreground: '#9FD356'
-          type: status
-          style: plain
-          foreground_templates:
-            - '{{ if gt .Code 0 }}#E84855{{ end }}'
-
 
     - type: prompt
       alignment: left
