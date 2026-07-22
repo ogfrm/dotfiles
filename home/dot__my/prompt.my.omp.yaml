@@ -47,7 +47,7 @@ blocks:
           background: '#2f2f2f'
           type: shell
           style: diamond
-        - template: '  ❯'
+        - template: '  >'
           # foreground: '#7a7a7a'
           foreground_templates:
             - '{{if gt .Code 0}}red{{end}}'
