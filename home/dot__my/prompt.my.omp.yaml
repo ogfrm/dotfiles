@@ -22,6 +22,7 @@ console_title_template: '{{if .Root}}root :: {{end}}{{.Shell}} :: {{.Folder}}'
 blocks:
     - type: prompt
       alignment: left
+      enable_cursor_positioning: true
       segments:
         - options:
             alpine: 
