@@ -8,11 +8,11 @@ transient_prompt:
     foreground_templates:
       - '{{if gt .Code 0}}red{{end}}'
       - '{{if eq .Code 0}}#7a7a7a{{end}}'
-# secondary_prompt:
-  # foreground: '#7a7a7a'
+secondary_prompt:
+  foreground: '#7a7a7a'
   # background: 'transparent'
-  # background: '#2f2f2f'
-  # template: " {{.Shell}} >> "
+  background: '#2f2f2f'
+  template: " {{.Shell}} ❯❯ "
 upgrade:
     source: cdn
     interval: 168h
@@ -22,7 +22,6 @@ console_title_template: '{{if .Root}}root :: {{end}}{{.Shell}} :: {{.Folder}}'
 blocks:
     - type: prompt
       alignment: left
-      enable_cursor_positioning: true
       segments:
         - options:
             alpine: 
@@ -132,12 +131,13 @@ blocks:
                 bash: '#_'
                 pwsh: 
                 zsh: '%_'
-          leading_diamond: ▓
+          leading_diamond: '  '
+          # leading_diamond: ▓
           foreground: '#26C6DA'
           background: '#2f2f2f'
           type: shell
           style: diamond
-        - template: ' >'
+        - template: '  ❯'
           # foreground: '#7a7a7a'
           foreground_templates:
             - '{{if gt .Code 0}}red{{end}}'
