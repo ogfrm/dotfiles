@@ -123,6 +123,7 @@ blocks:
 
 
     - type: prompt
+      enable_cursor_positioning: true
       alignment: left
       segments:
         - options:
