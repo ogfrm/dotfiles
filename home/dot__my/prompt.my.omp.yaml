@@ -125,14 +125,15 @@ blocks:
 
     - type: prompt
       alignment: left
+      enable_cursor_positioning: true
       segments:
         - options:
             mapped_shell_names:
                 bash: '#_'
                 pwsh: 
                 zsh: '%_'
-          leading_diamond: '  '
-          # leading_diamond: ▓
+          # leading_diamond: '  '
+          leading_diamond: ▓
           foreground: '#26C6DA'
           background: '#2f2f2f'
           type: shell

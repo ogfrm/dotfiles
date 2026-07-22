@@ -125,6 +125,7 @@ blocks:
     - type: prompt
       enable_cursor_positioning: true
       alignment: left
+      newline: true
       segments:
         - options:
             mapped_shell_names:
@@ -145,6 +146,5 @@ blocks:
           background: '#2f2f2f'
           type: text
           style: plain
-      newline: true
 version: 4
 final_space: true
