@@ -2,7 +2,7 @@
 
 transient_prompt:
     template: ' {{ .Shell }} ❯ '
-    background: '#2f2f2f'
+    background: '#202020'  # #09aa7f'#2f2f2f'
     # background: 'transparent'
     # foreground: '#7a7a7a'
     foreground_templates:
