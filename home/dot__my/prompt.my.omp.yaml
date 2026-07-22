@@ -2,15 +2,16 @@
 
 transient_prompt:
     template: ' {{ .Shell }} > '
-    background: '#2f2f2f'
-    # background = 'transparent'
+    # background: '#2f2f2f'
+    background: 'transparent'
     # foreground: '#7a7a7a'
     foreground_templates:
       - '{{if gt .Code 0}}red{{end}}'
       - '{{if eq .Code 0}}#7a7a7a{{end}}'
 secondary_prompt:
   # foreground: '#7a7a7a'
-  background: '#2f2f2f'
+  background: 'transparent'
+  # background: '#2f2f2f'
   template: " {{.Shell}} >> "
 upgrade:
     source: cdn
