@@ -40,7 +40,7 @@ blocks:
             ubuntu: 
             windows: 
           leading_diamond: ▓
-          template: '{{ if .WSL }}{{ else }}  {{ end }}{{ .Icon }}     <#7a7a7a></>'
+          template: '{{ if .WSL }}{{ end }}{{ .Icon }}     <#7a7a7a></>'
           # template: ' {{ if .WSL }}wsl {{ else }}{{ end }}{{ .Icon }}<#7a7a7a> </>'
           # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> </>'
           foreground: '#26C6DA'
