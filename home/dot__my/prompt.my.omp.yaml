@@ -7,6 +7,32 @@ upgrade:
     notice: false
 console_title_template: '{{if .Root}}root :: {{end}}{{.Shell}} :: {{.Folder}}'
 blocks:
+    - type: prompt
+      alignment: left
+      segments:
+        - options:
+            alpine: 
+            arch: 
+            centos: 
+            debian: 
+            elementary: 
+            fedora: 
+            gentoo: 
+            linux: 
+            macos: 
+            manjaro: 
+            mint: 
+            opensuse: 
+            raspbian: 
+            ubuntu: 
+            windows: 
+          leading_diamond: ▓
+          template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> ></>'
+          # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> ></>'
+          foreground: '#26C6DA'
+          background: '#2f2f2f'
+          type: os
+          style: diamond
 
     - type: prompt
       alignment: left
