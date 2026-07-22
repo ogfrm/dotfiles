@@ -41,7 +41,8 @@ blocks:
             windows: 
           # leading_diamond: ▓
           leading_diamond: ''
-          template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> ></>'
+          # template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> ></>'
+          template: ' {{ if .WSL }}wsl {{ end }}<#7a7a7a> ></>'
           # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> ></>'
           foreground: '#26C6DA'
           background: '#2f2f2f'
