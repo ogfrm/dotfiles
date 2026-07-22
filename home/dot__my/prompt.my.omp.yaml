@@ -1,5 +1,18 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 
+transient_prompt:
+    template: ' {{ .Shell }} > '
+    # background: '#2f2f2f'
+    background: 'transparent'
+    # foreground: '#7a7a7a'
+    foreground_templates:
+      - '{{if gt .Code 0}}red{{end}}'
+      - '{{if eq .Code 0}}#7a7a7a{{end}}'
+secondary_prompt:
+  foreground: '#7a7a7a'
+  # background: 'transparent'
+  background: '#2f2f2f'
+  template: " {{.Shell}} ❯❯ "
 upgrade:
     source: cdn
     interval: 168h
@@ -7,12 +20,10 @@ upgrade:
     notice: false
 console_title_template: '{{if .Root}}root :: {{end}}{{.Shell}} :: {{.Folder}}'
 blocks:
-
     - type: prompt
-      newline: true
       alignment: left
       segments:
-        - template: '>'
+        - template: '  ❯'
           # foreground: '#7a7a7a'
           foreground_templates:
             - '{{if gt .Code 0}}red{{end}}'
@@ -21,5 +32,30 @@ blocks:
           background: '#2f2f2f'
           type: text
           style: plain
+
+    - type: prompt
+      alignment: left
+      segments:
+        - options:
+            mapped_shell_names:
+                bash: '#_'
+                pwsh: 
+                zsh: '%_'
+          leading_diamond: '  '
+          # leading_diamond: ▓
+          foreground: '#26C6DA'
+          background: '#2f2f2f'
+          type: shell
+          style: diamond
+        - template: '  ❯'
+          # foreground: '#7a7a7a'
+          foreground_templates:
+            - '{{if gt .Code 0}}red{{end}}'
+            # - '{{if eq .Code 0}}#7a7a7a{{end}}'
+            - '{{if eq .Code 0}}#26C6DA{{end}}'
+          background: '#2f2f2f'
+          type: text
+          style: plain
+      newline: true
 version: 4
 final_space: true
