@@ -48,36 +48,6 @@ blocks:
           background: '#2f2f2f'
           type: os
           style: diamond
-        - template: ' <#7a7a7a> ></>'
-          foreground: '#ffff66'
-          background: '#2f2f2f'
-          type: root
-          style: diamond
-        - options:
-            # folder_icon: <#B5B2C2> </>
-            style: full
-          # template: '<#f2f200>  </>{{ .Path }} '
-          foreground: '#fafafa'
-          background: '#2f2f2f'
-          type: path
-          style: diamond
-        - options:
-            fetch_status: true
-            fetch_upstream_icon: true
-          template: '<#7a7a7a>> </>{{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}<#E84855>  {{ .Working.String }}</>{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}<#2FDA4E>  {{ .Staging.String }}</>{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} '
-          foreground: '#ffeb3b'
-          background: '#2f2f2f'
-          type: git
-          style: diamond
-          foreground_templates:
-            - '{{ if or (.Working.Changed) (.Staging.Changed) }}#ffeb3b{{ end }}'
-            - '{{ if gt .Ahead 0 }}#2EC4B6{{ end }}'
-            - '{{ if gt .Behind 0 }}#8A4FFF{{ end }}'
-        - trailing_diamond: 
-          foreground: '#fafafa'
-          background: '#2f2f2f'
-          type: text
-          style: diamond
     - type: prompt
       alignment: right
       segments:
