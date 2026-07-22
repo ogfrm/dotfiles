@@ -1,13 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
 
-transient_prompt:
-    template: ' {{ .Shell }} > '
-    # background: '#2f2f2f'
-    background: 'transparent'
-    # foreground: '#7a7a7a'
-    foreground_templates:
-      - '{{if gt .Code 0}}red{{end}}'
-      - '{{if eq .Code 0}}#7a7a7a{{end}}'
 upgrade:
     source: cdn
     interval: 168h
