@@ -23,24 +23,7 @@ blocks:
     - type: prompt
       alignment: left
       segments:
-        - options:
-            alpine: 
-            arch: 
-            centos: 
-            debian: 
-            elementary: 
-            fedora: 
-            gentoo: 
-            linux: 
-            macos: 
-            manjaro: 
-            mint: 
-            opensuse: 
-            raspbian: 
-            ubuntu: 
-            windows: 
-          # leading_diamond: ▓
-          leading_diamond: ''
+        - leading_diamond: ''
           # template: ' {{ if .WSL }}wsl {{ end }}{{ .Icon }}<#7a7a7a> ></>'
           template: ' {{ if .WSL }}wsl {{ end }}<#7a7a7a> ></>'
           # template: ' {{ if .WSL }} on {{ end }}{{ .Icon }}<#7a7a7a> ></>'
